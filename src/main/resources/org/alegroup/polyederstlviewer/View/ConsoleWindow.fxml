@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Label?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.alegroup.polyederstlviewer.View.ConsoleWindow.ConsoleWindowController"
+      spacing="0"
+      style="-fx-background-color: black;">
+
+    <!-- Console output -->
+    <ScrollPane fitToWidth="true"
+                fitToHeight="true"
+                VBox.vgrow="ALWAYS"
+                style="-fx-background: black; -fx-background-color: black;">
+
+        <TextArea fx:id="consoleOutput"
+                  editable="false"
+                  wrapText="true"
+                  style="
+                      -fx-control-inner-background: black;
+                      -fx-text-fill: white;
+                      -fx-font-family: 'Consolas';
+                      -fx-highlight-fill: #444444;
+                      -fx-highlight-text-fill: white;
+                      -fx-focus-color: transparent;
+                      -fx-faint-focus-color: transparent;
+                      -fx-font-size: 14px;
+                  "/>
+
+    </ScrollPane>
+
+    <!-- Console input -->
+    <StackPane alignment="CENTER_LEFT">
+        <!-- ghost text for the auto complete-->
+        <Label fx:id="ghostLabel"
+               alignment="CENTER_LEFT"
+               prefHeight="40"
+               style="
+                   -fx-background-color: transparent;
+                   -fx-text-fill: gray;
+                   -fx-prompt-text-fill: gray;
+                   -fx-font-family: 'Consolas';
+                   -fx-border-color: #444444;
+                   -fx-border-width: 1 0 0 0;
+                   -fx-font-size: 14px;
+                   -fx-padding: 0 0 0 7;
+               "
+        />
+
+        <!-- Console input text field -->
+        <TextField fx:id="consoleInput"
+                   promptText="Enter command..."
+                   prefHeight="40"
+                   alignment="CENTER_LEFT"
+                   style="
+                   -fx-background-color: transparent;
+                   -fx-text-fill: white;
+                   -fx-prompt-text-fill: gray;
+                   -fx-font-family: 'Consolas';
+                   -fx-border-color: #444444;
+                   -fx-padding: 0 0 0 5;
+                   -fx-border-width: 1 0 0 0;
+                   -fx-font-size: 14px;
+               "/>
+
+    </StackPane>
+
+</VBox>
