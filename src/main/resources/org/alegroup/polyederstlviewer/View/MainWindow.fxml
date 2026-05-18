@@ -26,9 +26,7 @@
 
     <!-- Main stuff -->
     <center>
-        <StackPane>
-            <Label text="Main Content Area"/>
-        </StackPane>
+        <fx:include source="RenderingView.fxml"/>
     </center>
 
     <!-- Statusleiste -->
