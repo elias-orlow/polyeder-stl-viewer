@@ -1,14 +1,12 @@
 package org.alegroup.polyederstlviewer.View.MainWindow;
 
 import javafx.fxml.FXML;
-import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Line;
-import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 
 public class RenderingViewController {
@@ -75,9 +73,9 @@ public class RenderingViewController {
         rootPane.getChildren().add(subScene);
 
         // Rotation
-        Affine affine = new Affine();
-        root3D.getTransforms().add(affine);
-
+        Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
+        Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
+        root3D.getTransforms().addAll(rotateX, rotateY);
 
         subScene.setOnMousePressed(e -> {
             lastMouseX = e.getSceneX();
@@ -88,9 +86,8 @@ public class RenderingViewController {
             double dx = e.getSceneX() - lastMouseX;
             double dy = e.getSceneY() - lastMouseY;
 
-            // (angle, pivotX, pivotY, pivotZ, axisX, axisY, axisZ)
-            affine.prependRotation( -dx * 0.3, 0, 0, 0,  0, 1, 0); // um Y-Weltachse
-            affine.prependRotation(dy * 0.3, 0, 0, 0,  1, 0, 0); // um X-Weltachse
+            rotateY.setAngle(rotateY.getAngle() - dx * 0.3);
+            rotateX.setAngle(rotateX.getAngle() + dy * 0.3);
 
             lastMouseX = e.getSceneX();
             lastMouseY = e.getSceneY();
