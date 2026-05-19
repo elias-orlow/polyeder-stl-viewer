@@ -116,7 +116,7 @@ public class ConsoleWindowController {
 
                         break;
 
-                    } else if (command.getCommandString().contains(userCommand[i]) && !userCommand[i].isEmpty()) {
+                    } else if (command.getCommandString().startsWith(userCommand[i]) && !userCommand[i].isEmpty()) {
 
                         // only contains a part
                         suggestion += command.getCommandString();
