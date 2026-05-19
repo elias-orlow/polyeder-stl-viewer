@@ -2,7 +2,7 @@ package org.alegroup.polyederstlviewer.Constants;
 
 import javafx.scene.control.TextArea;
 
-public interface SubCommand {
+public interface ConsoleCommandEnum {
 
     public String getCommandString();
 
@@ -10,5 +10,5 @@ public interface SubCommand {
     public void execute(String consoleInput, TextArea consoleOutput);
 
     // get the subcommands, will return empty array if null
-    public SubCommand[] getSubCommands();
+    public ConsoleCommandEnum[] getSubCommands();
 }

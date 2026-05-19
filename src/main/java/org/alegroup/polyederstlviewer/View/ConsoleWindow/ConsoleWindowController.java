@@ -5,8 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import org.alegroup.polyederstlviewer.Constants.KnownBaseCommands;
-import org.alegroup.polyederstlviewer.Constants.SubCommand;
+import org.alegroup.polyederstlviewer.Constants.BaseCommands;
+import org.alegroup.polyederstlviewer.Constants.ConsoleCommandEnum;
 
 public class ConsoleWindowController {
 
@@ -15,58 +15,120 @@ public class ConsoleWindowController {
     public TextField consoleInput;
     public TextArea consoleOutput;
     public Label ghostLabel;
+    public Label inputLabel;
 
     public void initialize(){
 
         // This is listening for input ENTERED in Console and sending the message to output
         consoleInput.setOnAction((event) -> {
 
-            String command = consoleInput.getText();
+            String userInput = consoleInput.getText();
 
             // maybe extract logic for sending text to another method?
-            consoleOutput.appendText(">> " + command + "\n");
+            consoleOutput.appendText(">> " + userInput + "\n");
             consoleInput.clear();
 
-            // need to check if valid command against enum
-            // first check against BaseCommands
-            for(KnownBaseCommands knownCommand : KnownBaseCommands.values()){
 
-                // check if the command from the user contains a base command
-                if(command.contains(knownCommand.getCommandString())){
+            // search for deepest subcommand and execute
+            ConsoleCommandEnum[] subCommands = BaseCommands.values();
+            String userCommand = userInput;
+            boolean foundValidCommand = false;
 
-                    // der bums muss loopen für unendlich viele subcommands
-                    // it does so check against possible subCommands
-                    if(knownCommand.getSubCommands().length > 0){
-                        // subcommands exist check for valid subcommands
-                        for(SubCommand subCommand : knownCommand.getSubCommands()){
+            searchForValidCommand:
+            while (true){
 
-                            if(command.contains(subCommand.getCommandString())){
-                                subCommand.execute(command, consoleOutput);
+                // subCommands is now baseCommands = starting point
+                // check if userInput starts with valid command
+                boolean startValid = false;
+
+                iterateCommands:
+                for (ConsoleCommandEnum command : subCommands){
+
+                    if(userCommand.startsWith(command.getCommandString())){
+
+                        // We found a valid command, remove String and find subcommands or execute
+                        startValid = true;
+
+                        userCommand = userCommand.substring(command.getCommandString().length());
+                        userCommand = userCommand.strip();
+
+                        if(command.getSubCommands().length > 0){
+                            // contains sub commands so go deeper in loop
+                            subCommands = command.getSubCommands();
+                            break iterateCommands;
+                        }else{
+                            // no further subcommands, execute if valid
+                            if(userCommand.isEmpty()){
+                                command.execute(userInput, consoleOutput);
+                                foundValidCommand = true;
                             }
+
+                            break searchForValidCommand;
                         }
                     }
                 }
 
-                if(command.equals(knownCommand.getCommandString())){
-                    // command is known and should be executed - no twin/double commands?
-                    knownCommand.execute(command, consoleOutput);
-                    break;
+                if(!startValid){
+                    break searchForValidCommand;
                 }
+            }
+
+            if(!foundValidCommand){
+                consoleOutput.appendText(">> " + "Invalid Command!" + "\n");
             }
         });
 
-        // This is listening for ANY input into the ConsoleInput and giving suggestions
+        // This is listening for ANY input into the ConsoleInput and giving suggestions - autocomplete
         consoleInput.textProperty().addListener((observable, oldText, newText) -> {
 
+            // overlay so input and ghost input overlay perfectly
+            inputLabel.setText(newText);
+
+            // auto suggestion
+            ConsoleCommandEnum[] subCommands = BaseCommands.values();
+            String[] userCommand = newText.split(" ");
             String suggestion = "";
-            if(!newText.isEmpty()){
-                for (KnownBaseCommands knownCommand : KnownBaseCommands.values()) {
-                    if (knownCommand.getCommandString().startsWith(newText)) {
-                        suggestion = knownCommand.getCommandString();
+            boolean possibleMatchFound = false;
+            int i = 0;
+
+            searchDeepMatch:
+            while (true){
+
+                // check if input already equals to a command.
+
+                iterateCommands:
+                for (ConsoleCommandEnum command : subCommands) {
+
+                    // either the userCommand already contains the whole command or just a part
+
+                    if (userCommand[i].equals(command.getCommandString()) && !userCommand[i].isEmpty()) {
+
+                        // it already starts with the whole String. check sub Commands
+
+                        suggestion += command.getCommandString() + " ";
+
+                        if(!command.getCommandString().isEmpty() && userCommand.length > i + 1){
+                            i++;
+                            subCommands = command.getSubCommands();
+                        }else{
+                            break searchDeepMatch;
+                        }
+
                         break;
+
+                    } else if (command.getCommandString().contains(userCommand[i]) && !userCommand[i].isEmpty()) {
+
+                        // only contains a part
+                        suggestion += command.getCommandString();
+                        break searchDeepMatch;
+                    } else {
+                        break searchDeepMatch;
                     }
                 }
+
+
             }
+
 
             ghostLabel.setText(suggestion);
         });

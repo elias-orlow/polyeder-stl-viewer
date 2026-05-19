@@ -6,13 +6,13 @@ import org.alegroup.polyederstlviewer.Control.Commands.ConsoleCommand;
 
 import java.awt.*;
 
-public enum ColorSubCommands implements SubCommand{
+public enum ColorSubCommands implements ConsoleCommandEnum {
 
     RED("red", new ColorCommand(), null);
 
     private final String commandString;
     private final ConsoleCommand command;
-    private final SubCommand[] subCommands;
+    private final ConsoleCommandEnum[] subCommands;
 
     /**
      *
@@ -20,7 +20,7 @@ public enum ColorSubCommands implements SubCommand{
      * @param command the command to execute, can be null
      * @param subCommands The commands that can be appended to this command, can be null
      */
-    ColorSubCommands(String commandString, ConsoleCommand command, SubCommand[] subCommands){
+    ColorSubCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands){
         this.commandString = commandString;
         this.command = command;
         this.subCommands = subCommands;
@@ -37,11 +37,11 @@ public enum ColorSubCommands implements SubCommand{
     }
 
     // get the subcommands, will return empty array if null
-    public SubCommand[] getSubCommands(){
+    public ConsoleCommandEnum[] getSubCommands(){
         if(this.subCommands != null){
             return this.subCommands;
         }else{
-            return new SubCommand[0];
+            return new ConsoleCommandEnum[0];
         }
     }
 }

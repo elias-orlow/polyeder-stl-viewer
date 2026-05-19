@@ -15,12 +15,11 @@ public class ColorCommand implements ConsoleCommand{
             Color color = (Color) data;
 
             // make hex from Color
-            String hex = String.format("#%02X%02X%02X",
-                    (int)(color.getRed() * 255),
-                    (int)(color.getGreen() * 255),
-                    (int)(color.getBlue() * 255));
+            String hex = String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
 
-            consoleOutput.setStyle("-fx-text-fill: #" + hex + ";");
+            String style = " -fx-control-inner-background: black; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px;";
+
+            consoleOutput.setStyle(style + "-fx-text-fill: " + hex + ";");
         }else{
             // some exception handling bs
         }

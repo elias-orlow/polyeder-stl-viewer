@@ -5,14 +5,14 @@ import org.alegroup.polyederstlviewer.Control.Commands.ConsoleCommand;
 
 // Wie wäre es Command als eigene Klasse zu behandeln und Command Objekte zu erzeugen?
 
-public enum KnownBaseCommands {
+public enum BaseCommands implements ConsoleCommandEnum {
 
     //CLEAR("clear", new ClearCommand());
     COLOR_RED("color", null, ColorSubCommands.values());
 
     private final String commandString;
     private final ConsoleCommand command;
-    private final SubCommand[] subCommands;
+    private final ConsoleCommandEnum[] subCommands;
 
     /**
      *
@@ -20,7 +20,7 @@ public enum KnownBaseCommands {
      * @param command the command to execute, can be null
      * @param subCommands The commands that can be appended to this command
      */
-    KnownBaseCommands(String commandString, ConsoleCommand command, SubCommand[] subCommands){
+    BaseCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands){
         this.commandString = commandString;
         this.command = command;
         this.subCommands = subCommands;
@@ -36,11 +36,11 @@ public enum KnownBaseCommands {
     }
 
     // get the subcommands, will return empty array if null
-    public SubCommand[] getSubCommands(){
+    public ConsoleCommandEnum[] getSubCommands(){
         if(this.subCommands != null){
             return this.subCommands;
         }else{
-            return new SubCommand[0];
+            return new ConsoleCommandEnum[0];
         }
     }
 }
