@@ -9,7 +9,8 @@ import java.awt.*;
 
 public enum ClientSubCommands implements ConsoleCommandEnum{
 
-    CONNECT("connect", new ClientConnectCommand(), null, true);
+    CONNECT("connect", new ClientConnectCommand(), null, true),
+    EXIT("exit", null, null, true);
     //TRANSLATE("translate", );
 
 
@@ -24,6 +25,8 @@ public enum ClientSubCommands implements ConsoleCommandEnum{
      * @param command the command to execute, can be null
      * @param subCommands The commands that can be appended to this command, can be null
      */
+    // Anstelle des Boolean muss hier ein ConsoleCommandEnum[] als context rein. So kann jeder beliebige context verschachtelt werden und auch von jeder
+    // tiefe wieder auf base referenziert werden
     ClientSubCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands, boolean changeContext){
         this.commandString = commandString;
         this.command = command;
