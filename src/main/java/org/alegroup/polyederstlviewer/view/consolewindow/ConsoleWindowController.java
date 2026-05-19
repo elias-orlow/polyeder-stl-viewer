@@ -1,12 +1,12 @@
-package org.alegroup.polyederstlviewer.View.ConsoleWindow;
+package org.alegroup.polyederstlviewer.view.consolewindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import org.alegroup.polyederstlviewer.Constants.BaseCommands;
-import org.alegroup.polyederstlviewer.Constants.ConsoleCommandEnum;
+import org.alegroup.polyederstlviewer.constants.BaseCommands;
+import org.alegroup.polyederstlviewer.constants.ConsoleCommandEnum;
 
 public class ConsoleWindowController {
 

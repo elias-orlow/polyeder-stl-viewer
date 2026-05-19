@@ -9,7 +9,7 @@
 <BorderPane fx:id="mainWindow"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.alegroup.polyederstlviewer.View.MainWindow.MainWindowController">
+            fx:controller="org.alegroup.polyederstlviewer.view.mainwindow.MainWindowController">
 
     <!-- Toolbar -->
     <top>

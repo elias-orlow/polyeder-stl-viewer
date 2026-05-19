@@ -9,7 +9,7 @@
 <AnchorPane fx:id="rootPane"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.alegroup.polyederstlviewer.View.MainWindow.RenderingViewController">
+            fx:controller="org.alegroup.polyederstlviewer.view.mainwindow.RenderingViewController">
 
     <!-- SubScene wird im Controller dynamisch eingefügt -->
 

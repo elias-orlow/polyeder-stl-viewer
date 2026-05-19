@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.View.MainWindow;
+package org.alegroup.polyederstlviewer.view.mainwindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.*;
@@ -6,7 +6,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
 public class RenderingViewController {

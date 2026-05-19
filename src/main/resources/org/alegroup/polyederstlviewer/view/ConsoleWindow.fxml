@@ -11,7 +11,7 @@
 <?import javafx.scene.control.Label?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.alegroup.polyederstlviewer.View.ConsoleWindow.ConsoleWindowController"
+      fx:controller="org.alegroup.polyederstlviewer.view.consolewindow.ConsoleWindowController"
       spacing="0"
       style="-fx-background-color: black;">
 

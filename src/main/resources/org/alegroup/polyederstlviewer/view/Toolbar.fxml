@@ -8,7 +8,7 @@
 
 <MenuBar xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
-         fx:controller="org.alegroup.polyederstlviewer.View.MainWindow.ToolbarController">
+         fx:controller="org.alegroup.polyederstlviewer.view.mainwindow.ToolbarController">
     <Menu text="File">
         <MenuItem text="Moin"/>
         <MenuItem text="Moin"/>

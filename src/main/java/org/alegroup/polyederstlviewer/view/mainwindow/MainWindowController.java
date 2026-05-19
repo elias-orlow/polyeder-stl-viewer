@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.View.MainWindow;
+package org.alegroup.polyederstlviewer.view.mainwindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;

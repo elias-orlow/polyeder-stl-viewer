@@ -1,7 +1,7 @@
 package org.alegroup.polyederstlviewer;
 
 import javafx.application.Application;
-import org.alegroup.polyederstlviewer.Control.STLViewerApplication;
+import org.alegroup.polyederstlviewer.control.STLViewerApplication;
 
 public class Main {
 

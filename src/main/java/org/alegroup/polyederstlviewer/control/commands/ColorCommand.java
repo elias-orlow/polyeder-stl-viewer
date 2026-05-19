@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.Control.Commands;
+package org.alegroup.polyederstlviewer.control.commands;
 
 import javafx.scene.control.TextArea;
 import java.awt.*;

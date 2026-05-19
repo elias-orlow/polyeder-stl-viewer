@@ -8,11 +8,11 @@ module org.alegroup.polyederstlviewer {
     requires javafx.graphics;
     requires java.desktop;
 
-    opens org.alegroup.polyederstlviewer to javafx.fxml;
-    opens org.alegroup.polyederstlviewer.View to javafx.fxml;
     exports org.alegroup.polyederstlviewer;
-    exports org.alegroup.polyederstlviewer.Control;
-    opens org.alegroup.polyederstlviewer.View.MainWindow to javafx.fxml;
-    opens org.alegroup.polyederstlviewer.View.ConsoleWindow to javafx.fxml;
-    exports org.alegroup.polyederstlviewer.Control.Commands;
+    exports org.alegroup.polyederstlviewer.control;
+    exports org.alegroup.polyederstlviewer.control.commands;
+
+    opens org.alegroup.polyederstlviewer to javafx.fxml;
+    opens org.alegroup.polyederstlviewer.view.mainwindow to javafx.fxml;
+    opens org.alegroup.polyederstlviewer.view.consolewindow to javafx.fxml;
 }

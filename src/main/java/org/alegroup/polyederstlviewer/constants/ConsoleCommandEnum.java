@@ -1,9 +1,6 @@
-package org.alegroup.polyederstlviewer.Constants;
+package org.alegroup.polyederstlviewer.constants;
 
 import javafx.scene.control.TextArea;
-import org.alegroup.polyederstlviewer.Control.Commands.ConsoleCommand;
-
-import java.awt.*;
 
 public interface ConsoleCommandEnum {
 

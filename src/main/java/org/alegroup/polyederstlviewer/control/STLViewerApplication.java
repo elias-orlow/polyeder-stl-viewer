@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.Control;
+package org.alegroup.polyederstlviewer.control;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +13,7 @@ public class STLViewerApplication extends Application
     @Override
     public void start (Stage stage) throws IOException
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(STLViewerApplication.class.getResource("/org/alegroup/polyederstlviewer/View/MainWindow.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(STLViewerApplication.class.getResource("/org/alegroup/polyederstlviewer/view/MainWindow.fxml"));
         // Scale Scene to fit screen (kind of)
         double screenX = Screen.getPrimary().getBounds().getMaxX() - 150;
         double screenY = Screen.getPrimary().getBounds().getMaxY() - 150;
