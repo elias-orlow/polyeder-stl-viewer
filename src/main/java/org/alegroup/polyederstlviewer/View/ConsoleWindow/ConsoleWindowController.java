@@ -88,11 +88,12 @@ public class ConsoleWindowController {
             ConsoleCommandEnum[] subCommands = BaseCommands.values();
             String[] userCommand = newText.split(" ");
             String suggestion = "";
-            boolean possibleMatchFound = false;
             int i = 0;
 
             searchDeepMatch:
             while (true){
+
+                boolean possibleMatchFound = false;
 
                 // check if input already equals to a command.
 
@@ -104,6 +105,7 @@ public class ConsoleWindowController {
                     if (userCommand[i].equals(command.getCommandString()) && !userCommand[i].isEmpty()) {
 
                         // it already starts with the whole String. check sub Commands
+                        possibleMatchFound = true;
 
                         suggestion += command.getCommandString() + " ";
 
@@ -121,12 +123,12 @@ public class ConsoleWindowController {
                         // only contains a part
                         suggestion += command.getCommandString();
                         break searchDeepMatch;
-                    } else {
-                        break searchDeepMatch;
                     }
                 }
 
-
+                if(!possibleMatchFound){
+                    break searchDeepMatch;
+                }
             }
 
 

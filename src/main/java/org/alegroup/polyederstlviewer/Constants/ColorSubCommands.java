@@ -8,11 +8,15 @@ import java.awt.*;
 
 public enum ColorSubCommands implements ConsoleCommandEnum {
 
-    RED("red", new ColorCommand(), null);
+    RED("red", new ColorCommand(), null, Color.RED),
+    BLUE("blue", new ColorCommand(), null, Color.BLUE),
+    GREEN("green", new ColorCommand(), null, Color.GREEN),
+    WHITE("white", new ColorCommand(), null, Color.WHITE);
 
     private final String commandString;
     private final ConsoleCommand command;
     private final ConsoleCommandEnum[] subCommands;
+    private final Color color;
 
     /**
      *
@@ -20,10 +24,11 @@ public enum ColorSubCommands implements ConsoleCommandEnum {
      * @param command the command to execute, can be null
      * @param subCommands The commands that can be appended to this command, can be null
      */
-    ColorSubCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands){
+    ColorSubCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands, Color color){
         this.commandString = commandString;
         this.command = command;
         this.subCommands = subCommands;
+        this.color = color;
     }
 
     public String getCommandString(){
@@ -33,7 +38,7 @@ public enum ColorSubCommands implements ConsoleCommandEnum {
     ///  String consoleInput, TextArea consoleOutput   outsource to "Console" class? Containing input and way to write to TextArea? Plus maybe some basic functions
     public void execute(String consoleInput, TextArea consoleOutput){
         // Platzhalter
-        this.command.execute(consoleInput, consoleOutput, Color.red);
+        this.command.execute(consoleInput, consoleOutput, this.color);
     }
 
     // get the subcommands, will return empty array if null
