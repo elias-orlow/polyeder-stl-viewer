@@ -8,15 +8,16 @@ import java.awt.*;
 
 public enum ColorSubCommands implements ConsoleCommandEnum {
 
-    RED("red", new ColorCommand(), null, Color.RED),
-    BLUE("blue", new ColorCommand(), null, Color.BLUE),
-    GREEN("green", new ColorCommand(), null, Color.GREEN),
-    WHITE("white", new ColorCommand(), null, Color.WHITE);
+    RED("red", new ColorCommand(), null, Color.RED, false),
+    BLUE("blue", new ColorCommand(), null, Color.BLUE, false),
+    GREEN("green", new ColorCommand(), null, Color.GREEN, false),
+    WHITE("white", new ColorCommand(), null, Color.WHITE, false);
 
     private final String commandString;
     private final ConsoleCommand command;
     private final ConsoleCommandEnum[] subCommands;
     private final Color color;
+    private final Boolean changeContext;
 
     /**
      *
@@ -24,11 +25,12 @@ public enum ColorSubCommands implements ConsoleCommandEnum {
      * @param command the command to execute, can be null
      * @param subCommands The commands that can be appended to this command, can be null
      */
-    ColorSubCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands, Color color){
+    ColorSubCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands, Color color, boolean changeContext){
         this.commandString = commandString;
         this.command = command;
         this.subCommands = subCommands;
         this.color = color;
+        this.changeContext = changeContext;
     }
 
     public String getCommandString(){
@@ -48,5 +50,10 @@ public enum ColorSubCommands implements ConsoleCommandEnum {
         }else{
             return new ConsoleCommandEnum[0];
         }
+    }
+
+    @Override
+    public Boolean getChangeContext() {
+        return this.changeContext;
     }
 }

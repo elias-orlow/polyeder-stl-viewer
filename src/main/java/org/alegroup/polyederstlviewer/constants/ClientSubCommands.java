@@ -1,17 +1,17 @@
 package org.alegroup.polyederstlviewer.constants;
 
 import javafx.scene.control.TextArea;
-import org.alegroup.polyederstlviewer.control.commands.ClearCommand;
+import org.alegroup.polyederstlviewer.control.commands.ClientConnectCommand;
+import org.alegroup.polyederstlviewer.control.commands.ColorCommand;
 import org.alegroup.polyederstlviewer.control.commands.ConsoleCommand;
 
-// Wie wäre es Command als eigene Klasse zu behandeln und Command Objekte zu erzeugen?
+import java.awt.*;
 
-public enum BaseCommands implements ConsoleCommandEnum {
+public enum ClientSubCommands implements ConsoleCommandEnum{
 
-    //CLEAR("clear", new ClearCommand());
-    COLOR("color", null, ColorSubCommands.values(), false),
-    CLEAR("clear", new ClearCommand(), null, false),
-    CLIENT("client", null, ClientSubCommands.values(), false);
+    CONNECT("connect", new ClientConnectCommand(), null, true);
+    //TRANSLATE("translate", );
+
 
     private final String commandString;
     private final ConsoleCommand command;
@@ -22,9 +22,9 @@ public enum BaseCommands implements ConsoleCommandEnum {
      *
      * @param commandString the String the user has to type in the console
      * @param command the command to execute, can be null
-     * @param subCommands The commands that can be appended to this command
+     * @param subCommands The commands that can be appended to this command, can be null
      */
-    BaseCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands, boolean changeContext){
+    ClientSubCommands(String commandString, ConsoleCommand command, ConsoleCommandEnum[] subCommands, boolean changeContext){
         this.commandString = commandString;
         this.command = command;
         this.subCommands = subCommands;
@@ -37,6 +37,7 @@ public enum BaseCommands implements ConsoleCommandEnum {
 
     ///  String consoleInput, TextArea consoleOutput   outsource to "Console" class? Containing input and way to write to TextArea? Plus maybe some basic functions
     public void execute(String consoleInput, TextArea consoleOutput){
+        // Platzhalter
         this.command.execute(consoleInput, consoleOutput, null);
     }
 

@@ -19,6 +19,9 @@ public class ConsoleWindowController {
 
     public void initialize(){
 
+        ConsoleCommandEnum[] commandContext = BaseCommands.values();
+        ConsoleHandler consoleHandler = new ConsoleHandler(commandContext);
+
         // This is listening for input ENTERED in Console and sending the message to output
         consoleInput.setOnAction((event) -> {
 
@@ -28,54 +31,8 @@ public class ConsoleWindowController {
             consoleOutput.appendText(">> " + userInput + "\n");
             consoleInput.clear();
 
-
-            // search for deepest subcommand and execute
-            ConsoleCommandEnum[] subCommands = BaseCommands.values();
-            String userCommand = userInput;
-            boolean foundValidCommand = false;
-
-            searchForValidCommand:
-            while (true){
-
-                // subCommands is now baseCommands = starting point
-                // check if userInput starts with valid command
-                boolean startValid = false;
-
-                iterateCommands:
-                for (ConsoleCommandEnum command : subCommands){
-
-                    if(userCommand.startsWith(command.getCommandString())){
-
-                        // We found a valid command, remove String and find subcommands or execute
-                        startValid = true;
-
-                        userCommand = userCommand.substring(command.getCommandString().length());
-                        userCommand = userCommand.strip();
-
-                        if(command.getSubCommands().length > 0){
-                            // contains sub commands so go deeper in loop
-                            subCommands = command.getSubCommands();
-                            break iterateCommands;
-                        }else{
-                            // no further subcommands, execute if valid
-                            if(userCommand.isEmpty()){
-                                command.execute(userInput, consoleOutput);
-                                foundValidCommand = true;
-                            }
-
-                            break searchForValidCommand;
-                        }
-                    }
-                }
-
-                if(!startValid){
-                    break searchForValidCommand;
-                }
-            }
-
-            if(!foundValidCommand){
-                consoleOutput.appendText(">> " + "Invalid Command!" + "\n");
-            }
+            // baseCommands hier nur als Platzhalter. Nachher state dependent
+            consoleHandler.executeCommand(userInput, consoleOutput);
         });
 
         // This is listening for ANY input into the ConsoleInput and giving suggestions - autocomplete

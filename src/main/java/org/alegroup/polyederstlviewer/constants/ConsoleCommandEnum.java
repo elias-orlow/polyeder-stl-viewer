@@ -11,4 +11,6 @@ public interface ConsoleCommandEnum {
 
     // get the subcommands, will return empty array if null
     public ConsoleCommandEnum[] getSubCommands();
+
+    public Boolean getChangeContext();
 }
