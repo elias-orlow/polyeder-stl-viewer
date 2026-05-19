@@ -20,7 +20,7 @@ public class ColorCommand implements ConsoleCommand{
                     (int)(color.getGreen() * 255),
                     (int)(color.getBlue() * 255));
 
-            consoleOutput.setStyle("-fx-text-fill: " + hex + ";");
+            consoleOutput.setStyle("-fx-text-fill: #" + hex + ";");
         }else{
             // some exception handling bs
         }

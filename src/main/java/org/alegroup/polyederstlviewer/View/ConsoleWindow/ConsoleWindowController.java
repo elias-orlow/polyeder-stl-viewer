@@ -6,6 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.alegroup.polyederstlviewer.Constants.KnownBaseCommands;
+import org.alegroup.polyederstlviewer.Constants.SubCommand;
 
 public class ConsoleWindowController {
 
@@ -30,7 +31,21 @@ public class ConsoleWindowController {
             // first check against BaseCommands
             for(KnownBaseCommands knownCommand : KnownBaseCommands.values()){
 
-                // check if the command from the user 
+                // check if the command from the user contains a base command
+                if(command.contains(knownCommand.getCommandString())){
+
+                    // der bums muss loopen für unendlich viele subcommands
+                    // it does so check against possible subCommands
+                    if(knownCommand.getSubCommands().length > 0){
+                        // subcommands exist check for valid subcommands
+                        for(SubCommand subCommand : knownCommand.getSubCommands()){
+
+                            if(command.contains(subCommand.getCommandString())){
+                                subCommand.execute(command, consoleOutput);
+                            }
+                        }
+                    }
+                }
 
                 if(command.equals(knownCommand.getCommandString())){
                     // command is known and should be executed - no twin/double commands?
