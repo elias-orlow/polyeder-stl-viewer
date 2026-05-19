@@ -13,4 +13,5 @@ module org.alegroup.polyederstlviewer {
     exports org.alegroup.polyederstlviewer.Control;
     opens org.alegroup.polyederstlviewer.View.MainWindow to javafx.fxml;
     opens org.alegroup.polyederstlviewer.View.ConsoleWindow to javafx.fxml;
+    exports org.alegroup.polyederstlviewer.Control.Commands;
 }

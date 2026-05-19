@@ -21,11 +21,18 @@ public class ConsoleWindowController implements ConsoleWindowConstants {
         // This is listening for input ENTERED in Console and sending the message to output
         consoleInput.setOnAction((event) -> {
 
-            // need to check if valid command against enum
+            String command = consoleInput.getText();
 
+            // need to check if valid command against enum
+            for(KnownCommands knownCommand : KnownCommands.values()){
+                if(command.equals(knownCommand.getCommandString())){
+                    // command is known and should be executed - no twin/double commands?
+                    knownCommand.execute(command, consoleOutput);
+                    break;
+                }
+            }
 
             // maybe extract logic for sending text to another method?
-            String command = consoleInput.getText();
             consoleOutput.appendText(">> " + command + "\n");
             consoleInput.clear();
         });
@@ -35,7 +42,7 @@ public class ConsoleWindowController implements ConsoleWindowConstants {
 
             String suggestion = "";
             if(!newText.isEmpty()){
-                for (KnownCommands knownCommand : ConsoleWindowConstants.KnownCommands.values()) {
+                for (KnownCommands knownCommand : KnownCommands.values()) {
                     if (knownCommand.getCommandString().startsWith(newText)) {
                         suggestion = knownCommand.getCommandString();
                         break;
