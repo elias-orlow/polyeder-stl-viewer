@@ -4,5 +4,5 @@ import javafx.scene.control.TextArea;
 
 public interface ConsoleCommand {
 
-    public void execute(String consoleInput, TextArea consoleOutput);
+    public <D> void execute(String consoleInput, TextArea consoleOutput, D data);
 }

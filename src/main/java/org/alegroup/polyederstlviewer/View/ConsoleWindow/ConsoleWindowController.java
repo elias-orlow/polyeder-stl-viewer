@@ -2,13 +2,12 @@ package org.alegroup.polyederstlviewer.View.ConsoleWindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import org.alegroup.polyederstlviewer.Constants.ConsoleWindowConstants;
+import org.alegroup.polyederstlviewer.Constants.KnownBaseCommands;
 
-public class ConsoleWindowController implements ConsoleWindowConstants {
+public class ConsoleWindowController {
 
     @FXML
     public VBox console_text;
@@ -23,18 +22,22 @@ public class ConsoleWindowController implements ConsoleWindowConstants {
 
             String command = consoleInput.getText();
 
+            // maybe extract logic for sending text to another method?
+            consoleOutput.appendText(">> " + command + "\n");
+            consoleInput.clear();
+
             // need to check if valid command against enum
-            for(KnownCommands knownCommand : KnownCommands.values()){
+            // first check against BaseCommands
+            for(KnownBaseCommands knownCommand : KnownBaseCommands.values()){
+
+                // check if the command from the user 
+
                 if(command.equals(knownCommand.getCommandString())){
                     // command is known and should be executed - no twin/double commands?
                     knownCommand.execute(command, consoleOutput);
                     break;
                 }
             }
-
-            // maybe extract logic for sending text to another method?
-            consoleOutput.appendText(">> " + command + "\n");
-            consoleInput.clear();
         });
 
         // This is listening for ANY input into the ConsoleInput and giving suggestions
@@ -42,7 +45,7 @@ public class ConsoleWindowController implements ConsoleWindowConstants {
 
             String suggestion = "";
             if(!newText.isEmpty()){
-                for (KnownCommands knownCommand : KnownCommands.values()) {
+                for (KnownBaseCommands knownCommand : KnownBaseCommands.values()) {
                     if (knownCommand.getCommandString().startsWith(newText)) {
                         suggestion = knownCommand.getCommandString();
                         break;

@@ -6,6 +6,7 @@ module org.alegroup.polyederstlviewer {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires javafx.graphics;
+    requires java.desktop;
 
     opens org.alegroup.polyederstlviewer to javafx.fxml;
     opens org.alegroup.polyederstlviewer.View to javafx.fxml;

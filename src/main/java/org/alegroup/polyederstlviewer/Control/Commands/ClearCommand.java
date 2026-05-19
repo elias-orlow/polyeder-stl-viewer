@@ -5,8 +5,8 @@ import javafx.scene.control.TextArea;
 public class ClearCommand implements ConsoleCommand{
 
     @Override
-    public void execute(String consoleInput, TextArea consoleOutput) {
+    public <D> void execute(String consoleInput, TextArea consoleOutput, D data) {
 
-        consoleOutput.setText(">> \n");
+        consoleOutput.setText("");
     }
 }
