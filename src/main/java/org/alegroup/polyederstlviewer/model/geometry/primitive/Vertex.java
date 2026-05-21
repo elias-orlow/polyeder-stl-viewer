@@ -4,10 +4,12 @@ public class Vertex
 {
     private final float x;
     private final float y;
+    private final float z;
 
-    public Vertex(float x, float y){
+    public Vertex(float x, float y, float z){
         this.x = x;
         this.y = y;
+        this.z = z;
     }
 
     public float getX ()
@@ -18,6 +20,10 @@ public class Vertex
     {
         return y;
     }
+    public float getZ ()
+    {
+        return z;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -25,6 +31,6 @@ public class Vertex
         if (obj == null || getClass() != obj.getClass()) return false;
 
         Vertex other = (Vertex) obj;
-        return this.x == other.x && this.y == other.y;
+        return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 }
