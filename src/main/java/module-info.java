@@ -7,10 +7,10 @@ module org.alegroup.polyederstlviewer {
     requires org.kordamp.ikonli.javafx;
     requires javafx.graphics;
     requires java.desktop;
+    requires com.google.gson;
 
     exports org.alegroup.polyederstlviewer;
     exports org.alegroup.polyederstlviewer.control;
-    exports org.alegroup.polyederstlviewer.control.commands;
 
     opens org.alegroup.polyederstlviewer to javafx.fxml;
     opens org.alegroup.polyederstlviewer.view.mainwindow to javafx.fxml;
