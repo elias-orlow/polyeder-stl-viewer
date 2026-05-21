@@ -1,8 +1,8 @@
 package org.alegroup.polyederstlviewer.control.commands;
 
-import javafx.scene.control.TextArea;
+import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 public interface ConsoleCommand {
 
-    public <D> void execute(String consoleInput, TextArea consoleOutput, D data);
+    public <D> void execute(ConsoleObject console, D data);
 }

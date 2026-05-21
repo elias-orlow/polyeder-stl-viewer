@@ -1,25 +1,26 @@
 package org.alegroup.polyederstlviewer.view.consolewindow;
 
-import javafx.scene.control.TextArea;
-import org.alegroup.polyederstlviewer.constants.BaseCommands;
 import org.alegroup.polyederstlviewer.constants.ConsoleCommandEnum;
-import org.alegroup.polyederstlviewer.model.geometry.ConsoleClient;
+import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
-
+// make static method to globally get List of consoles if necessary?
 public class ConsoleHandler {
 
     ConsoleCommandEnum[] currentCommandContext;
 
+    // should also take console object?
     public ConsoleHandler(ConsoleCommandEnum[] currentCommandContext){
         this.currentCommandContext = currentCommandContext;
     }
 
 
-    public void executeCommand(String userInput, TextArea consoleOutput){
+
+    // Hier nur console übergeben
+    public void executeCommand(ConsoleObject console){
 
         // search for deepest subcommand and execute
         ConsoleCommandEnum[] subCommands = this.currentCommandContext;
-        String userCommand = userInput;
+        String userCommand = console.getUserInput(false);
         boolean foundValidCommand = false;
 
         searchForValidCommand:
@@ -47,7 +48,7 @@ public class ConsoleHandler {
                     }else{
                         // no further subcommands, execute if valid
                         if(userCommand.isEmpty()){
-                            command.execute(userInput, consoleOutput);
+                            command.execute(console);
                             foundValidCommand = true;
 
                             // check for context switch
@@ -67,7 +68,10 @@ public class ConsoleHandler {
         }
 
         if(!foundValidCommand){
-            consoleOutput.appendText(">> " + "Invalid Command!" + "\n");
+            console.makeOutput("Invalid Command!");
         }
+
+        // flush
+        console.getUserInput(true);
     }
 }

@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.alegroup.polyederstlviewer.constants.BaseCommands;
 import org.alegroup.polyederstlviewer.constants.ConsoleCommandEnum;
+import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 public class ConsoleWindowController {
 
@@ -21,6 +22,7 @@ public class ConsoleWindowController {
 
         ConsoleCommandEnum[] commandContext = BaseCommands.values();
         ConsoleHandler consoleHandler = new ConsoleHandler(commandContext);
+        ConsoleObject console = new ConsoleObject(consoleOutput, consoleInput);
 
         // This is listening for input ENTERED in Console and sending the message to output
         consoleInput.setOnAction((event) -> {
@@ -28,11 +30,10 @@ public class ConsoleWindowController {
             String userInput = consoleInput.getText();
 
             // maybe extract logic for sending text to another method?
-            consoleOutput.appendText(">> " + userInput + "\n");
-            consoleInput.clear();
+            console.writeUserInputToConsole(userInput);
 
             // baseCommands hier nur als Platzhalter. Nachher state dependent
-            consoleHandler.executeCommand(userInput, consoleOutput);
+            consoleHandler.executeCommand(console);
         });
 
         // This is listening for ANY input into the ConsoleInput and giving suggestions - autocomplete

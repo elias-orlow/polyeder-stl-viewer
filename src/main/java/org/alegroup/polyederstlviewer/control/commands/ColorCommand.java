@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.control.commands;
 
-import javafx.scene.control.TextArea;
+import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
+
 import java.awt.*;
 
 public class ColorCommand implements ConsoleCommand{
@@ -8,7 +9,7 @@ public class ColorCommand implements ConsoleCommand{
     // We have to expect data to be of a certain type. Maybe make this an array later to provide infinite data
     // Though this data type would be specific to the command and maybe we need error handling
     @Override
-    public <D> void execute(String consoleInput, TextArea consoleOutput, D data) {
+    public <D> void execute(ConsoleObject console, D data) {
 
         if(data.getClass().equals(Color.class)){
 
@@ -19,7 +20,8 @@ public class ColorCommand implements ConsoleCommand{
 
             String style = " -fx-control-inner-background: black; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px;";
 
-            consoleOutput.setStyle(style + "-fx-text-fill: " + hex + ";");
+            console.getOutputArea().setStyle(style + "-fx-text-fill: " + hex + ";");
+
         }else{
             // some exception handling bs
         }

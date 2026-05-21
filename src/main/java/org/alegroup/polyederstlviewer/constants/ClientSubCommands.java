@@ -4,6 +4,7 @@ import javafx.scene.control.TextArea;
 import org.alegroup.polyederstlviewer.control.commands.ClientConnectCommand;
 import org.alegroup.polyederstlviewer.control.commands.ColorCommand;
 import org.alegroup.polyederstlviewer.control.commands.ConsoleCommand;
+import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 import java.awt.*;
 
@@ -39,9 +40,9 @@ public enum ClientSubCommands implements ConsoleCommandEnum{
     }
 
     ///  String consoleInput, TextArea consoleOutput   outsource to "Console" class? Containing input and way to write to TextArea? Plus maybe some basic functions
-    public void execute(String consoleInput, TextArea consoleOutput){
+    public void execute(ConsoleObject console){
         // Platzhalter
-        this.command.execute(consoleInput, consoleOutput, null);
+        this.command.execute(console, null);
     }
 
     // get the subcommands, will return empty array if null

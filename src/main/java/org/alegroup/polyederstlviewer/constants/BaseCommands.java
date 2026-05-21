@@ -1,8 +1,8 @@
 package org.alegroup.polyederstlviewer.constants;
 
-import javafx.scene.control.TextArea;
 import org.alegroup.polyederstlviewer.control.commands.ClearCommand;
 import org.alegroup.polyederstlviewer.control.commands.ConsoleCommand;
+import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 // Wie wäre es Command als eigene Klasse zu behandeln und Command Objekte zu erzeugen?
 
@@ -36,8 +36,8 @@ public enum BaseCommands implements ConsoleCommandEnum {
     }
 
     ///  String consoleInput, TextArea consoleOutput   outsource to "Console" class? Containing input and way to write to TextArea? Plus maybe some basic functions
-    public void execute(String consoleInput, TextArea consoleOutput){
-        this.command.execute(consoleInput, consoleOutput, null);
+    public void execute(ConsoleObject console){
+        this.command.execute(console, null);
     }
 
     // get the subcommands, will return empty array if null
