@@ -10,35 +10,44 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-public class Mesh {
+public class Mesh
+{
 
     private final List<Triangle> triangles;
 
-    public Mesh(List<Triangle> triangles) {
-        if (!isMesh(triangles)) {
+    public Mesh (List<Triangle> triangles)
+    {
+        if (!isMesh(triangles))
+        {
             throw new IllegalArgumentException("The given triangles do not form a connected triangle mesh.");
         }
 
         this.triangles = List.copyOf(triangles);
     }
 
-    public Mesh(Triangle[] triangles) {
+    public Mesh (Triangle[] triangles)
+    {
         this(Arrays.asList(triangles));
     }
 
-    private boolean isMesh(List<Triangle> triangles) {
+    private boolean isMesh (List<Triangle> triangles)
+    {
         return hasTriangles(triangles)
                 && hasNoNullTriangles(triangles)
                 && isConnected(triangles);
     }
 
-    private boolean hasTriangles(List<Triangle> triangles) {
+    private boolean hasTriangles (List<Triangle> triangles)
+    {
         return triangles != null && !triangles.isEmpty();
     }
 
-    private boolean hasNoNullTriangles(List<Triangle> triangles) {
-        for (Triangle triangle : triangles) {
-            if (triangle == null) {
+    private boolean hasNoNullTriangles (List<Triangle> triangles)
+    {
+        for (Triangle triangle : triangles)
+        {
+            if (triangle == null)
+            {
                 return false;
             }
         }
@@ -46,7 +55,8 @@ public class Mesh {
         return true;
     }
 
-    private boolean isConnected(List<Triangle> triangles) {
+    private boolean isConnected (List<Triangle> triangles)
+    {
         Set<Triangle> visitedTriangles = new HashSet<>();
         Queue<Triangle> queue = new ArrayDeque<>();
 
@@ -55,12 +65,15 @@ public class Mesh {
         visitedTriangles.add(startTriangle);
         queue.add(startTriangle);
 
-        while (!queue.isEmpty()) {
+        while (!queue.isEmpty())
+        {
             Triangle currentTriangle = queue.poll();
 
-            for (Triangle otherTriangle : triangles) {
+            for (Triangle otherTriangle : triangles)
+            {
                 if (!visitedTriangles.contains(otherTriangle)
-                        && shareEdge(currentTriangle, otherTriangle)) {
+                        && shareEdge(currentTriangle, otherTriangle))
+                {
                     visitedTriangles.add(otherTriangle);
                     queue.add(otherTriangle);
                 }
@@ -70,10 +83,14 @@ public class Mesh {
         return visitedTriangles.size() == triangles.size();
     }
 
-    private boolean shareEdge(Triangle firstTriangle, Triangle secondTriangle) {
-        for (Edge firstEdge : firstTriangle.getEdges()) {
-            for (Edge secondEdge : secondTriangle.getEdges()) {
-                if (isSameUndirectedEdge(firstEdge, secondEdge)) {
+    private boolean shareEdge (Triangle firstTriangle, Triangle secondTriangle)
+    {
+        for (Edge firstEdge : firstTriangle.getEdges())
+        {
+            for (Edge secondEdge : secondTriangle.getEdges())
+            {
+                if (isSameUndirectedEdge(firstEdge, secondEdge))
+                {
                     return true;
                 }
             }
@@ -82,7 +99,8 @@ public class Mesh {
         return false;
     }
 
-    private boolean isSameUndirectedEdge(Edge firstEdge, Edge secondEdge) {
+    private boolean isSameUndirectedEdge (Edge firstEdge, Edge secondEdge)
+    {
         boolean sameDirection =
                 firstEdge.getStart().equals(secondEdge.getStart())
                         && firstEdge.getEnd().equals(secondEdge.getEnd());
@@ -94,11 +112,13 @@ public class Mesh {
         return sameDirection || oppositeDirection;
     }
 
-    public List<Triangle> getTriangles() {
+    public List<Triangle> getTriangles ()
+    {
         return triangles;
     }
 
-    public int getTriangleCount() {
+    public int getTriangleCount ()
+    {
         return triangles.size();
     }
 }
