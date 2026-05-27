@@ -8,7 +8,6 @@ module org.alegroup.polyederstlviewer {
     requires javafx.graphics;
     requires java.desktop;
     requires com.google.gson;
-    requires org.alegroup.polyederstlviewer;
 
 
     exports org.alegroup.polyederstlviewer;

@@ -1,1 +1,1 @@
-{"commands":[{"command":"clear","methodName":"clear","contextName":"main"},{"command":"color","methodName":"color","contextName":"main"}]}
+{"commands":[{"command":"clear","methodName":"clear","executableFromContext":"main","nextContext":"main"},{"command":"color","methodName":"color","executableFromContext":"main","nextContext":"main"}]}
