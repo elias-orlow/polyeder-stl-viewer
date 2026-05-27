@@ -1,5 +1,7 @@
 package org.alegroup.polyederstlviewer.model.geometry.primitive;
 
+import java.util.Objects;
+
 /**
  * Vertex wrapper for a 3D point.
  *
@@ -31,6 +33,22 @@ public class Vertex
 
         Vertex other = (Vertex) obj;
         return this.x == other.x && this.y == other.y && this.z == other.z;
+    }
+
+    @Override
+    public String toString ()
+    {
+        return "Vertex{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        return Objects.hash(getX(), getY(), getZ());
     }
 
     public float getX ()

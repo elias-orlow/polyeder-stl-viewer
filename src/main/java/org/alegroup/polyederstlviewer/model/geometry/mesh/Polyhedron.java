@@ -126,6 +126,12 @@ public class Polyhedron extends Mesh
         }
 
         @Override
+        public String toString ()
+        {
+            return this.end + "" + this.start;
+        }
+
+        @Override
         public boolean equals (Object object)
         {
             if (this == object)

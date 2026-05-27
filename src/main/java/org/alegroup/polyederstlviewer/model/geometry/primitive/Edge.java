@@ -1,5 +1,7 @@
 package org.alegroup.polyederstlviewer.model.geometry.primitive;
 
+import java.util.Objects;
+
 public class Edge
 {
     private final Vertex start;
@@ -18,5 +20,21 @@ public class Edge
     public Vertex getEnd ()
     {
         return end;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Edge other = (Edge) obj;
+        return this.start.equals(other.start) && this.end.equals(other.end);
+    }
+
+    @Override
+    public int hashCode ()
+    {
+        return Objects.hash(getStart(), getEnd());
     }
 }

@@ -111,34 +111,25 @@ public class STLParser
                 if (lower.startsWith("facet normal"))
                 {
                     StringTokenizer st = new StringTokenizer(line);
-                    st.nextToken(); // facet
-                    st.nextToken(); // normal
+                    st.nextToken(); // skip "facet"
+                    st.nextToken(); // skip "normal"
 
                     float nx = Float.parseFloat(st.nextToken());
                     float ny = Float.parseFloat(st.nextToken());
                     float nz = Float.parseFloat(st.nextToken());
                     normal = new Vector3D(nx, ny, nz);
-
-                    vertexIndex = 0;
-                    continue;
-                }
-
-                if (lower.startsWith("outer loop"))
-                {
-                    continue;
                 }
 
                 if (lower.startsWith("vertex"))
                 {
                     StringTokenizer st = new StringTokenizer(line);
-                    st.nextToken(); // vertex
+                    st.nextToken(); // skip "vertex"
 
                     float x = Float.parseFloat(st.nextToken());
                     float y = Float.parseFloat(st.nextToken());
                     float z = Float.parseFloat(st.nextToken());
 
                     currentVertices[vertexIndex++] = new Vertex(x, y, z);
-                    continue;
                 }
 
                 if (lower.startsWith("endfacet"))
@@ -154,98 +145,14 @@ public class STLParser
                     edges.add(new Edge(currentVertices[2], currentVertices[0]));
 
                     triangleList.add(new Triangle(edges, normal));
+
+                    vertexIndex = 0;
                 }
             }
         }
-        // todo entfernen
-        for (Triangle t: triangleList)
-        {
-            System.out.println(t.toString());
-        }
+
         return new Polyhedron(triangleList);
     }
-
-//    private static Polyhedron parseAscii(File file)
-//            throws IOException, STLFormatException
-//    {
-//        Polyhedron poly = null;
-//
-//        try (BufferedReader br = new BufferedReader(new FileReader(file)))
-//        {
-//            String line;
-//            Vector3D normal = null;
-//            List<Edge> edgeList = new ArrayList<>();
-//            Vertex[] currentVertices = new Vertex[3];
-//            int vertexIndex = 0;
-//            List<Triangle> triangleList = new ArrayList<>();
-//            boolean inFacet = false;
-//
-//            while ((line = br.readLine()) != null)
-//            {
-//                line = line.trim();
-//                if (line.isEmpty())
-//                {
-//                    continue;
-//                }
-//
-//                String lower = line.toLowerCase(Locale.ROOT);
-//                if (lower.startsWith("facet normal"))
-//                {
-//                    inFacet = true;
-//                    vertexIndex = 0;
-//                    StringTokenizer st = new StringTokenizer(line);
-//                    st.nextToken(); // skip 'facet'
-//                    st.nextToken(); // skip 'normal'
-//                    if (st.countTokens() < 3)
-//                    {
-//                        throw new STLFormatException("Normal line does not contain 3 coordinates: " + line);
-//                    }
-//                    float x = Float.parseFloat(st.nextToken());
-//                    float y = Float.parseFloat(st.nextToken());
-//                    float z = Float.parseFloat(st.nextToken());
-//                    normal = new Vector3D(x, y, z);
-//
-//                    line = br.readLine(); // skip 'outer loop' line
-//
-//                    for (int i = 0; i < 3; i++)
-//                    {
-//                        line = br.readLine().trim(); // a 'vertex' line
-//                        if (line.isEmpty())
-//                        {
-//                            continue;
-//                        }
-//
-//                        lower = line.toLowerCase(Locale.ROOT);
-//                        if (lower.startsWith("vertex"))
-//                        {
-//                            StringTokenizer st2 = new StringTokenizer(line);
-//                            st2.nextToken(); // skip 'vertex'
-//                            if (st2.countTokens() < 3)
-//                            {
-//                                throw new STLFormatException("Vertex line does not contain 3 coordinates: " + line);
-//                            }
-//                            float u = Float.parseFloat(st2.nextToken());
-//                            float v = Float.parseFloat(st2.nextToken());
-//                            float w = Float.parseFloat(st2.nextToken());
-//                            currentVertices[vertexIndex++] = new Vertex(u, v, w);
-//                            continue;
-//                        }
-//                        else
-//                        {
-//                            throw new STLFormatException("Vertex line expected but not found: " + line);
-//                        }
-//                    }
-//                    edgeList.add(new Edge(currentVertices[0], currentVertices[1]));
-//                    edgeList.add(new Edge(currentVertices[1], currentVertices[2]));
-//                    edgeList.add(new Edge(currentVertices[2], currentVertices[0]));
-//                }
-//                triangleList.add(new Triangle(edgeList, normal));
-//                edgeList.clear();
-//            }
-//            poly = new Polyhedron(triangleList);
-//        }
-//        return poly;
-//    }
 
     /**
      * Parse binary STL.

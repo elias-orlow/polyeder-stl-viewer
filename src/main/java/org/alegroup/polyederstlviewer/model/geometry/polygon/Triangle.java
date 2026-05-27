@@ -107,7 +107,7 @@ public class Triangle extends Polygon
         return "Triangle {\n" +
                 "  A = " + getA().getX() + " | " + getA().getY() + " | " + getA().getZ() + ",\n" +
                 "  B = " + getB().getX() + " | " + getB().getY() + " | " + getB().getZ() + ",\n" +
-                "  B = " + getC().getX() + " | " + getC().getY() + " | " + getC().getZ() + ",\n" +
+                "  C = " + getC().getX() + " | " + getC().getY() + " | " + getC().getZ() + ",\n" +
                 "  normal = " + getNormalVector() + ",\n" +
                 "  area = " + area() + "\n" +
                 "}";
