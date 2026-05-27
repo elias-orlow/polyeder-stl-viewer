@@ -11,4 +11,32 @@ public class CommandBlueprint {
         this.methodName = methodName;
         this.contextName = contextName;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(this.getClass().equals(obj.getClass())){
+            if(     ((CommandBlueprint) obj).command.equals(this.command) &&
+                    ((CommandBlueprint) obj).methodName.equals(this.methodName) &&
+                    ((CommandBlueprint) obj).contextName.equals(this.contextName)){
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /* getter */
+
+    public String getCommand() {
+        return command;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public String getContextName() {
+        return contextName;
+    }
 }
