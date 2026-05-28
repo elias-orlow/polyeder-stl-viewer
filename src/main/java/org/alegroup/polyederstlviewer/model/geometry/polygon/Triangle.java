@@ -4,6 +4,7 @@ import org.alegroup.polyederstlviewer.model.geometry.primitive.Edge;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Vector3D;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -79,45 +80,75 @@ public class Triangle extends Polygon
      */
     public float area ()
     {
-//        // todo debug statement entfernen
-//        System.out.println("Triangle {\n" +
-//                "  A = " + getA().getX() + " | " + getA().getY() + " | " + getA().getZ() + ",\n" +
-//                "  B = " + getB().getX() + " | " + getB().getY() + " | " + getB().getZ() + ",\n" +
-//                "  C = " + getC().getX() + " | " + getC().getY() + " | " + getC().getZ() + ",\n" +
-//                "  normal = " + getNormalVector() + ",\n" +
-//                "  area = " + area() + "\n" +
-//                "}");
-
         Vector3D a = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getB().getX(), getB().getY(), getB().getZ()));
         Vector3D b = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getC().getX(), getC().getY(), getC().getZ()));
-
-        // todo debug statement entfernen
-//        System.out.println("Vektor a : " + a.getX() + " | " + a.getY() + " | " + a.getZ());
-//        System.out.println("Vektor b : " + b.getX() + " | " + b.getY() + " | " + b.getZ());
-
         Vector3D cross = a.cross(b);
-
-        // todo debug statement entfernen
-        System.out.println("Vektor cross : " + cross.getX() + " | " + cross.getY() + " | " + cross.getZ());
-
         return 0.5f * cross.magnitude();
     }
 
+//    /**
+//     * Signed volume contribution of the tetrahedron formed by triangle and origin.
+//     * Formula: (1/6) * (v0 dot (v1 x v2))
+//     *
+//     * @precondition Vertices are in absolute coordinates.
+//     * @postcondition Returns signed volume contribution (can be negative).
+//     */
+//    public float signedVolumeContribution()
+//    {
+//        Vector3D A = new Vector3D(getA().getX(), getA().getY(), getA().getZ());
+//        Vector3D B = new Vector3D(getB().getX(), getB().getY(), getB().getZ());
+//        Vector3D C = new Vector3D(getC().getX(), getC().getY(), getC().getZ());
+//
+//        Vector3D b = B.subtract(A);
+//        Vector3D c = C.subtract(A);
+//
+//        return b.cross(c).dot(A) / 6.0f;
+//    }
+
     /**
-     * Signed volume contribution of the tetrahedron formed by triangle and origin.
-     * Formula: (1/6) * (v0 dot (v1 x v2))
+     * Signed volume contribution using the STL normal to determine orientation.
      *
-     * @precondition Vertices are in absolute coordinates.
-     * @postcondition Returns signed volume contribution (can be negative).
+     * @precondition Vertices and normal are in absolute coordinates.
+     * @postcondition Returns signed volume contribution (translation invariant).
      */
-    public float signedVolumeContribution()
+    public float signedVolumeContribution(Vertex reference)
     {
-        Vector3D p0 = new Vector3D(getA().getX(), getA().getY(), getA().getZ());
-        Vector3D p1 = new Vector3D(getB().getX(), getB().getY(), getB().getZ());
-        Vector3D p2 = new Vector3D(getC().getX(), getC().getY(), getC().getZ());
-        float triple = p0.dot(p1.cross(p2));
-        return triple / 6.0f;
+        Vector3D A = new Vector3D(getA().getX(), getA().getY(), getA().getZ());
+        Vector3D B = new Vector3D(getB().getX(), getB().getY(), getB().getZ());
+        Vector3D C = new Vector3D(getC().getX(), getC().getY(), getC().getZ());
+
+        Vector3D referenceVertex = new Vector3D(reference.getX(), reference.getY(), reference.getZ());
+
+        Vector3D a = referenceVertex.subtract(A);
+
+        Vector3D b = B.subtract(A);
+        Vector3D c = C.subtract(A);
+
+        float unsignedVolume = a.dot(b.cross(c)) / 6.0f; // das macht halt gar kein Sinn ?!
+        float orientation = getNormalVector().dot(b.cross(c));
+
+        return (orientation >= 0 ? unsignedVolume : -unsignedVolume);
     }
+
+    public boolean hasReference (Vertex reference)
+    {
+        boolean hasReference = false;
+        List<Edge> edges = getEdges();
+        List<Vertex> vertices = new ArrayList<>();
+
+        for (Edge e : edges)
+        {
+            vertices.add(e.getStart());
+            vertices.add(e.getEnd());
+        }
+
+        if (vertices.contains(reference))
+        {
+            return true;
+        }
+        else return false;
+    }
+
 
     @Override
     public String toString()

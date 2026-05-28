@@ -36,6 +36,7 @@ public class TestRunner
             File tmp = File.createTempFile("tetra", ".stl");
             try (FileWriter fw = new FileWriter(tmp))
             {
+                // Normalen sind ausdrücklich richtig orientiert
                 fw.write("solid tetra\n");
                 fw.write("facet normal 7 4 5 \n");
                 fw.write("outer loop\n");
@@ -156,6 +157,4 @@ public class TestRunner
             e.printStackTrace();
         }
     }
-
-    // todo: flächeninhalt wird noch nicht richtig berechnet
 }

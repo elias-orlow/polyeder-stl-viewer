@@ -2,6 +2,7 @@ package org.alegroup.polyederstlviewer.model.geometry.mesh;
 
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Edge;
+import org.alegroup.polyederstlviewer.model.geometry.primitive.Vector3D;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 
 import java.util.*;
@@ -92,12 +93,17 @@ public class Polyhedron extends Mesh
      * @precondition Mesh is closed and oriented (consistent vertex winding).
      * @postcondition Returns absolute volume (non-negative).
      */
-    public double volume ()
+    public float volume ()
     {
-        double signedSum = 0.0;
+        float signedSum = 0.0f;
+        Vertex reference = getTriangles().getFirst().getA();
+
         for (Triangle t : getTriangles())
         {
-            signedSum += t.signedVolumeContribution();
+            if (!t.hasReference(reference))
+            {
+                signedSum += t.signedVolumeContribution(reference);
+            }
         }
         return Math.abs(signedSum);
     }
