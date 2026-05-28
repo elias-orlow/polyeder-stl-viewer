@@ -2,29 +2,28 @@ package org.alegroup.polyederstlviewer.control.commands;
 
 import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
-import java.awt.*;
-
-public class ColorCommand implements ConsoleCommand{
-
-    // We have to expect data to be of a certain type. Maybe make this an array later to provide infinite data
-    // Though this data type would be specific to the command and maybe we need error handling
+public class ColorCommand implements CommandExecuter{
     @Override
-    public <D> void execute(ConsoleObject console, D data) {
+    public boolean execute(ConsoleObject console, String[] args) {
 
-        if(data.getClass().equals(Color.class)){
+        if(args.length == 1){
 
-            Color color = (Color) data;
+            System.out.println(args[0]);
 
-            // make hex from Color
-            String hex = String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue());
+            switch (args[0]){
+                case "red": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: red; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
+                case "blue": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: blue; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
+                case "green": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: green; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
+                case "white": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: white; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
+                case "purple": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: purple; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
+                default: console.makeOutput("Invalid color command!"); return false;
+            }
 
-            String style = " -fx-control-inner-background: black; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px;";
-
-            console.getOutputArea().setStyle(style + "-fx-text-fill: " + hex + ";");
+            return true;
 
         }else{
-            // some exception handling bs
+            console.makeOutput("Invalid color command!");
+            return false;
         }
-
     }
 }

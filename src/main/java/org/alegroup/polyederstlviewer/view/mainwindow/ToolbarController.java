@@ -23,8 +23,9 @@ public class ToolbarController {
 
             stage.show();
 
-        } catch (IOException e) {
-            System.out.println("Something went wrong trying to load ConsoleWindow.fxml!");
+        } catch (Exception e) {
+            System.out.println("Something went wrong trying to load ConsoleWindow.fxml! " + e.toString() + e.getCause());
+            e.printStackTrace();
         }
     }
 }

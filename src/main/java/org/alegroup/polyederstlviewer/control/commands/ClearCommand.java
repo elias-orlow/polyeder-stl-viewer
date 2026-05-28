@@ -1,13 +1,11 @@
 package org.alegroup.polyederstlviewer.control.commands;
 
-import javafx.scene.control.TextArea;
 import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
-public class ClearCommand implements ConsoleCommand{
-
+public class ClearCommand implements CommandExecuter{
     @Override
-    public <D> void execute(ConsoleObject console, D data) {
-
+    public boolean execute(ConsoleObject console, String[] args) {
         console.clearConsole();
+        return true;
     }
 }

@@ -1,0 +1,21 @@
+package org.alegroup.polyederstlviewer.control.commands;
+
+import org.alegroup.polyederstlviewer.control.CommandWriter;
+import org.alegroup.polyederstlviewer.model.geometry.CommandBlueprint;
+import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
+
+public class NewCommandCommand implements CommandExecuter{
+    @Override
+    public boolean execute(ConsoleObject console, String[] args) {
+
+        if(args.length != 4){
+            console.makeOutput("Invalid arguments given as new command. 'new command --COMMAND --METHOD_NAME --NEEDED_CONTEXT --NEXT_CONTEXT'");
+            return false;
+        }else{
+            CommandBlueprint newCommand = new CommandBlueprint(args[0], args[1], args[2], args[3]);
+            CommandWriter commandWriter = new CommandWriter();
+            commandWriter.writeCommand(newCommand);
+            return true;
+        }
+    }
+}
