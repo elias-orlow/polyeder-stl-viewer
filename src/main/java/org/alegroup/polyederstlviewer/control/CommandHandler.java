@@ -8,12 +8,14 @@ import org.alegroup.polyederstlviewer.model.geometry.CommandFile;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class CommandHandler {
 
     final String source = "src/main/java/org/alegroup/polyederstlviewer/constants/commands.json";
 
     // check if command exists and return commandBlueprint
+    // Könnte man mit getSameContextCommands kombinieren und hier nur die Liste der sameContextCommands durchgehen
     public CommandBlueprint validateCommand(String command){
 
         // check if valid
@@ -75,7 +77,38 @@ public class CommandHandler {
         return null;
     }
 
-    public AllCommands[] getSameContextCommands(String context){
-        return null;
+    public ArrayList<CommandBlueprint> getSameContextCommands(String context){
+
+
+        // check if valid
+        Gson gson = new Gson();
+        File file = new File(source);
+        CommandFile data;
+        ArrayList<CommandBlueprint> commandsOfSameContext = new ArrayList<CommandBlueprint>();
+
+        try {
+            FileReader reader = new FileReader(file);
+            data = gson.fromJson(reader, CommandFile.class);
+            reader.close();
+
+            if(data == null){
+                return commandsOfSameContext;
+            }
+
+            for (CommandBlueprint knownCommand : data.commands){
+
+                if(knownCommand.getNeededContext().equals(context)){
+                    commandsOfSameContext.add(knownCommand);
+                }
+            }
+
+            return commandsOfSameContext;
+
+
+        } catch (IOException e) {
+            System.out.println("Something went wrong trying to load the json file " + e.toString());
+        }
+
+        return commandsOfSameContext;
     }
 }
