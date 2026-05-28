@@ -8,8 +8,8 @@ import javafx.scene.layout.VBox;
 import org.alegroup.polyederstlviewer.constants.AllCommands;
 import org.alegroup.polyederstlviewer.control.commands.CommandHandler;
 import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
-import org.alegroup.polyederstlviewer.model.geometry.CommandBlueprint;
-import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.commands.CommandBlueprint;
+import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;

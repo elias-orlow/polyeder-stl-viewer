@@ -4,7 +4,7 @@ import org.alegroup.polyederstlviewer.control.commandExecutables.ClearCommand;
 import org.alegroup.polyederstlviewer.control.commandExecutables.ColorCommand;
 import org.alegroup.polyederstlviewer.control.commandExecutables.CommandExecuter;
 import org.alegroup.polyederstlviewer.control.commandExecutables.NewCommandCommand;
-import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
 
 public enum AllCommands {
 

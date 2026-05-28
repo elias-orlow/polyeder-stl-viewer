@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.model.geometry;
+package org.alegroup.polyederstlviewer.model.commands;
 
 import java.util.ArrayList;
 

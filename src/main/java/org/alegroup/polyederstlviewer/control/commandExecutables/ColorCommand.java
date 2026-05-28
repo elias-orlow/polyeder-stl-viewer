@@ -1,6 +1,6 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
-import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
 
 public class ColorCommand implements CommandExecuter{
     @Override
