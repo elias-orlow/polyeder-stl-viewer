@@ -79,9 +79,27 @@ public class Triangle extends Polygon
      */
     public float area ()
     {
-        Vector3D a = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getB().getX(), getA().getY(), getA().getZ()));
+//        // todo debug statement entfernen
+//        System.out.println("Triangle {\n" +
+//                "  A = " + getA().getX() + " | " + getA().getY() + " | " + getA().getZ() + ",\n" +
+//                "  B = " + getB().getX() + " | " + getB().getY() + " | " + getB().getZ() + ",\n" +
+//                "  C = " + getC().getX() + " | " + getC().getY() + " | " + getC().getZ() + ",\n" +
+//                "  normal = " + getNormalVector() + ",\n" +
+//                "  area = " + area() + "\n" +
+//                "}");
+
+        Vector3D a = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getB().getX(), getB().getY(), getB().getZ()));
         Vector3D b = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getC().getX(), getC().getY(), getC().getZ()));
+
+        // todo debug statement entfernen
+//        System.out.println("Vektor a : " + a.getX() + " | " + a.getY() + " | " + a.getZ());
+//        System.out.println("Vektor b : " + b.getX() + " | " + b.getY() + " | " + b.getZ());
+
         Vector3D cross = a.cross(b);
+
+        // todo debug statement entfernen
+        System.out.println("Vektor cross : " + cross.getX() + " | " + cross.getY() + " | " + cross.getZ());
+
         return 0.5f * cross.magnitude();
     }
 

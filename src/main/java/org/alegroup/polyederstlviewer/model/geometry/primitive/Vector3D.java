@@ -68,6 +68,8 @@ public class Vector3D {
      */
     public float magnitude()
     {
+//        // todo: debug statement entfernen
+//        System.out.println(x + " " + y + " " + z);
         return (float)Math.sqrt(x * x + y * y + z * z);
     }
 

@@ -37,7 +37,7 @@ public class TestRunner
             try (FileWriter fw = new FileWriter(tmp))
             {
                 fw.write("solid tetra\n");
-                fw.write("facet normal 7 4 6 \n");
+                fw.write("facet normal 7 4 5 \n");
                 fw.write("outer loop\n");
                 fw.write("vertex 2 1 3 \n");
                 fw.write("vertex 4 0 1 \n");
@@ -58,7 +58,7 @@ public class TestRunner
                 fw.write("vertex  1 1 0 \n");
                 fw.write("endloop\n");
                 fw.write("endfacet\n");
-                fw.write("facet normal -4 -2 -8 \n");
+                fw.write("facet normal 2 -2 -8 \n");
                 fw.write("outer loop\n");
                 fw.write("vertex 3 3 0 \n");
                 fw.write("vertex 1 1 0 \n");
