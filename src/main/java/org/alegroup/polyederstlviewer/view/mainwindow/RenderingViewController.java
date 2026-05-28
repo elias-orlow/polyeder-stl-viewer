@@ -65,22 +65,26 @@ public class RenderingViewController {
 
         // Mouse: Orbit
         subScene.setOnMousePressed(e -> {
-            lastMouseX = e.getSceneX();
-            lastMouseY = e.getSceneY();
+            if(e.isMiddleButtonDown()){
+                lastMouseX = e.getSceneX();
+                lastMouseY = e.getSceneY();
+            }
         });
 
         subScene.setOnMouseDragged(e -> {
-            double dx = e.getSceneX() - lastMouseX;
-            double dy = e.getSceneY() - lastMouseY;
+            if(e.isMiddleButtonDown()){
+                double dx = e.getSceneX() - lastMouseX;
+                double dy = e.getSceneY() - lastMouseY;
 
-            orbitY.setAngle(orbitY.getAngle() + dx * 0.3);
+                orbitY.setAngle(orbitY.getAngle() + dx * 0.3);
 
-            // Vertikale Rotation auf ±89° begrenzen → kein Überschlag
-            double newX = orbitX.getAngle() - dy * 0.3;
-            orbitX.setAngle(Math.max(-89, Math.min(89, newX)));
+                // Vertikale Rotation auf ±89° begrenzen → kein Überschlag
+                double newX = orbitX.getAngle() - dy * 0.3;
+                orbitX.setAngle(Math.max(-89, Math.min(89, newX)));
 
-            lastMouseX = e.getSceneX();
-            lastMouseY = e.getSceneY();
+                lastMouseX = e.getSceneX();
+                lastMouseY = e.getSceneY();
+            }
         });
 
         // Zoom: Kamera vor/zurück entlang ihrer Z-Achse
