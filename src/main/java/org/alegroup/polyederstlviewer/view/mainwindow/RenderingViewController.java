@@ -3,6 +3,7 @@ package org.alegroup.polyederstlviewer.view.mainwindow;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
@@ -10,7 +11,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
+import javafx.scene.transform.Translate;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,15 +67,22 @@ public class RenderingViewController {
 
         rootPane.getChildren().add(subScene); // Das fehlt auch!
 
-        // Mouse: Orbit
         subScene.setOnMousePressed(e -> {
+            // Mouse: Orbit
             if(e.isMiddleButtonDown()){
+                lastMouseX = e.getSceneX();
+                lastMouseY = e.getSceneY();
+            }
+
+            // Mouse: drag
+            if(e.isSecondaryButtonDown()){
                 lastMouseX = e.getSceneX();
                 lastMouseY = e.getSceneY();
             }
         });
 
         subScene.setOnMouseDragged(e -> {
+            // Mouse: Orbit
             if(e.isMiddleButtonDown()){
                 double dx = e.getSceneX() - lastMouseX;
                 double dy = e.getSceneY() - lastMouseY;
@@ -81,6 +92,27 @@ public class RenderingViewController {
                 // Vertikale Rotation auf ±89° begrenzen → kein Überschlag
                 double newX = orbitX.getAngle() - dy * 0.3;
                 orbitX.setAngle(Math.max(-89, Math.min(89, newX)));
+
+                lastMouseX = e.getSceneX();
+                lastMouseY = e.getSceneY();
+            }
+
+            if (e.isSecondaryButtonDown()) {
+                double dx = e.getSceneX() - lastMouseX;
+                double dy = e.getSceneY() - lastMouseY;
+
+                double panSpeed = Math.abs(camera.getTranslateZ()) * 0.0005;
+
+                // Kamera-eigene Achsen in Weltkoordinaten umrechnen
+                Point3D right = cameraPivot.localToParent(1, 0, 0)
+                        .subtract(cameraPivot.localToParent(0, 0, 0));
+                Point3D up    = cameraPivot.localToParent(0, 1, 0)
+                        .subtract(cameraPivot.localToParent(0, 0, 0));
+
+                // Pivot entlang dieser Achsen verschieben
+                cameraPivot.setTranslateX(cameraPivot.getTranslateX() - dx * panSpeed * right.getX() - dy * panSpeed * up.getX());
+                cameraPivot.setTranslateY(cameraPivot.getTranslateY() - dx * panSpeed * right.getY() - dy * panSpeed * up.getY());
+                cameraPivot.setTranslateZ(cameraPivot.getTranslateZ() - dx * panSpeed * right.getZ() - dy * panSpeed * up.getZ());
 
                 lastMouseX = e.getSceneX();
                 lastMouseY = e.getSceneY();
