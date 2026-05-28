@@ -55,7 +55,7 @@ public class Vector3D {
      * @precondition other != null.
      * @postcondition Returns scalar dot product.
      */
-    public double dot(Vector3D other)
+    public float dot(Vector3D other)
     {
         return this.x * other.x + this.y * other.y + this.z * other.z;
     }
@@ -66,9 +66,9 @@ public class Vector3D {
      * @precondition None.
      * @postcondition Returns non-negative magnitude.
      */
-    public double magnitude()
+    public float magnitude()
     {
-        return Math.sqrt(x * x + y * y + z * z);
+        return (float)Math.sqrt(x * x + y * y + z * z);
     }
 
     /**

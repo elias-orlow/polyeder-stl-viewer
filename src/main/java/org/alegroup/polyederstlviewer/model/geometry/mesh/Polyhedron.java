@@ -75,9 +75,9 @@ public class Polyhedron extends Mesh
      * @precondition Triangles represent the surface (no duplicates expected).
      * @postcondition Returns non-negative surface area.
      */
-    public double surfaceArea ()
+    public float surfaceArea ()
     {
-        double sum = 0.0;
+        float sum = 0.0f;
         for (Triangle t : getTriangles())
         {
             sum += t.area();

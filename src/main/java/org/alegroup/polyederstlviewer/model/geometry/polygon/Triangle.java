@@ -77,12 +77,12 @@ public class Triangle extends Polygon
      * @precondition Vertices define a non-degenerate triangle (area >= 0).
      * @postcondition Returns non-negative area.
      */
-    public float area()
+    public float area ()
     {
         Vector3D a = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getB().getX(), getA().getY(), getA().getZ()));
-        Vector3D b = new Vector3D(getB().getX(), getB().getY(), getB().getZ()).subtract(new Vector3D(getB().getX(), getB().getY(), getB().getZ()));
+        Vector3D b = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getC().getX(), getC().getY(), getC().getZ()));
         Vector3D cross = a.cross(b);
-        return (float)(0.5 * cross.magnitude());
+        return 0.5f * cross.magnitude();
     }
 
     /**
@@ -92,13 +92,13 @@ public class Triangle extends Polygon
      * @precondition Vertices are in absolute coordinates.
      * @postcondition Returns signed volume contribution (can be negative).
      */
-    public double signedVolumeContribution()
+    public float signedVolumeContribution()
     {
         Vector3D p0 = new Vector3D(getA().getX(), getA().getY(), getA().getZ());
         Vector3D p1 = new Vector3D(getB().getX(), getB().getY(), getB().getZ());
         Vector3D p2 = new Vector3D(getC().getX(), getC().getY(), getC().getZ());
-        double triple = p0.dot(p1.cross(p2));
-        return triple / 6.0;
+        float triple = p0.dot(p1.cross(p2));
+        return triple / 6.0f;
     }
 
     @Override
