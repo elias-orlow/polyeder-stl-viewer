@@ -3,12 +3,14 @@ package org.alegroup.polyederstlviewer.constants;
 import org.alegroup.polyederstlviewer.control.commands.ClearCommand;
 import org.alegroup.polyederstlviewer.control.commands.ColorCommand;
 import org.alegroup.polyederstlviewer.control.commands.CommandExecuter;
+import org.alegroup.polyederstlviewer.control.commands.NewCommandCommand;
 import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 public enum AllCommands {
 
     CLEAR("clear", new ClearCommand()),
-    COLOR("color", new ColorCommand());
+    COLOR("color", new ColorCommand()),
+    NEW_COMMAND("new command", new NewCommandCommand());
 
 
     private final String methodName;
@@ -19,6 +21,9 @@ public enum AllCommands {
     }
 
     public boolean execute(ConsoleObject console, String[] args){
+        if(this.command == null){
+            return false;
+        }
         return this.command.execute(console, args);
     }
 

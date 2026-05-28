@@ -34,7 +34,7 @@ public class ConsoleWindowController {
 
         commandWriter.writeCommand(new CommandBlueprint("clear", "clear", "main", "main"));
         commandWriter.writeCommand(new CommandBlueprint("color", "color", "main", "main"));
-        //commandWriter.writeCommand(new CommandBlueprint("new command"));
+        commandWriter.writeCommand(new CommandBlueprint("new command", "new command", "main", "main"));
 
         consoleInput.setOnAction(e -> {
 
@@ -98,6 +98,10 @@ public class ConsoleWindowController {
             // now we have a valid command. Execute only if context matches
             if(this.currentContext.equals(commandBlueprint.getNeededContext())){
                 AllCommands executable = commandHandler.getExecutable(commandBlueprint.getMethodName());
+                if(executable == null){
+                    console.makeOutput("no executable found for command: " + commandBlueprint.getCommand());
+                    return;
+                }
                 boolean executed = executable.execute(console, args);
 
                 if(executed){
