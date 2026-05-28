@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.control;
+package org.alegroup.polyederstlviewer.control.commands;
 
 import com.google.gson.Gson;
 import org.alegroup.polyederstlviewer.model.geometry.CommandBlueprint;
@@ -6,7 +6,6 @@ import org.alegroup.polyederstlviewer.model.geometry.CommandFile;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CommandWriter {
 

@@ -6,8 +6,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.alegroup.polyederstlviewer.constants.AllCommands;
-import org.alegroup.polyederstlviewer.control.CommandHandler;
-import org.alegroup.polyederstlviewer.control.CommandWriter;
+import org.alegroup.polyederstlviewer.control.commands.CommandHandler;
+import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
 import org.alegroup.polyederstlviewer.model.geometry.CommandBlueprint;
 import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 

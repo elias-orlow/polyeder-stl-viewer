@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.control;
+package org.alegroup.polyederstlviewer.control.commands;
 
 import com.google.gson.Gson;
 import org.alegroup.polyederstlviewer.constants.AllCommands;

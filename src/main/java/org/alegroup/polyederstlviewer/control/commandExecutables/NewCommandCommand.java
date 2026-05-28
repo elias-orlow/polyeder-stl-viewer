@@ -1,6 +1,6 @@
-package org.alegroup.polyederstlviewer.control.commands;
+package org.alegroup.polyederstlviewer.control.commandExecutables;
 
-import org.alegroup.polyederstlviewer.control.CommandWriter;
+import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
 import org.alegroup.polyederstlviewer.model.geometry.CommandBlueprint;
 import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 

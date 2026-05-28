@@ -1,9 +1,9 @@
 package org.alegroup.polyederstlviewer.constants;
 
-import org.alegroup.polyederstlviewer.control.commands.ClearCommand;
-import org.alegroup.polyederstlviewer.control.commands.ColorCommand;
-import org.alegroup.polyederstlviewer.control.commands.CommandExecuter;
-import org.alegroup.polyederstlviewer.control.commands.NewCommandCommand;
+import org.alegroup.polyederstlviewer.control.commandExecutables.ClearCommand;
+import org.alegroup.polyederstlviewer.control.commandExecutables.ColorCommand;
+import org.alegroup.polyederstlviewer.control.commandExecutables.CommandExecuter;
+import org.alegroup.polyederstlviewer.control.commandExecutables.NewCommandCommand;
 import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 public enum AllCommands {

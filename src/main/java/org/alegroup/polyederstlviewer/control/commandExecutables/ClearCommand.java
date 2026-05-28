@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.control.commands;
+package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 

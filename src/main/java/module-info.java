@@ -12,7 +12,7 @@ module org.alegroup.polyederstlviewer {
 
     exports org.alegroup.polyederstlviewer;
     exports org.alegroup.polyederstlviewer.control;
-    exports org.alegroup.polyederstlviewer.control.commands;
+    exports org.alegroup.polyederstlviewer.control.commandExecutables;
 
     opens org.alegroup.polyederstlviewer to javafx.fxml;
     opens org.alegroup.polyederstlviewer.view.mainwindow to javafx.fxml;
@@ -20,4 +20,5 @@ module org.alegroup.polyederstlviewer {
     opens org.alegroup.polyederstlviewer.model.geometry to com.google.gson;
     exports org.alegroup.polyederstlviewer.util;
     opens org.alegroup.polyederstlviewer.util to javafx.fxml;
+    exports org.alegroup.polyederstlviewer.control.commands;
 }
