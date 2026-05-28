@@ -4,5 +4,6 @@ import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 public interface CommandExecuter {
 
-    public void execute(ConsoleObject console, String[] args);
+    // true if executed normally, false if it didnt
+    public boolean execute(ConsoleObject console, String[] args);
 }

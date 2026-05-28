@@ -4,13 +4,13 @@ public class CommandBlueprint {
 
     private String command;
     private String methodName;
-    private String executableFromContext;
+    private String neededContext;
     private String nextContext;
 
-    public CommandBlueprint(String command, String methodName, String executableFromContext, String nextContext){
+    public CommandBlueprint(String command, String methodName, String neededContext, String nextContext){
         this.command = command;
         this.methodName = methodName;
-        this.executableFromContext = executableFromContext;
+        this.neededContext = neededContext;
         this.nextContext = nextContext;
     }
 
@@ -19,7 +19,7 @@ public class CommandBlueprint {
         if(this.getClass().equals(obj.getClass())){
             if(     ((CommandBlueprint) obj).command.equals(this.command) &&
                     ((CommandBlueprint) obj).methodName.equals(this.methodName) &&
-                    ((CommandBlueprint) obj).executableFromContext.equals(this.executableFromContext) &&
+                    ((CommandBlueprint) obj).neededContext.equals(this.neededContext) &&
                     ((CommandBlueprint) obj).nextContext.equals(this.nextContext)){
 
                 return true;
@@ -40,8 +40,8 @@ public class CommandBlueprint {
         return methodName;
     }
 
-    public String getExecutableFromContext() {
-        return executableFromContext;
+    public String getNeededContext() {
+        return neededContext;
     }
 
     public String getNextContext() {

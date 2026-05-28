@@ -4,7 +4,8 @@ import org.alegroup.polyederstlviewer.model.geometry.ConsoleObject;
 
 public class ClearCommand implements CommandExecuter{
     @Override
-    public void execute(ConsoleObject console, String[] args) {
+    public boolean execute(ConsoleObject console, String[] args) {
         console.clearConsole();
+        return true;
     }
 }

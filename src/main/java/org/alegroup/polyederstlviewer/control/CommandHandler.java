@@ -74,4 +74,8 @@ public class CommandHandler {
 
         return null;
     }
+
+    public AllCommands[] getSameContextCommands(String context){
+        return null;
+    }
 }
