@@ -32,10 +32,18 @@ public class ConsoleWindowController {
         CommandHandler commandHandler = new CommandHandler();
         ConsoleObject console = new ConsoleObject(consoleOutput, consoleInput);
 
+        // Basic command - command definition can be outsourced theoretically to make code cleaner
         commandWriter.writeCommand(new CommandBlueprint("clear", "clear", "main", "main"));
         commandWriter.writeCommand(new CommandBlueprint("color", "color", "main", "main"));
         commandWriter.writeCommand(new CommandBlueprint("new command", "new command", "main", "main"));
-
+        // Server commands
+        /*
+        commandWriter.writeCommand(new CommandBlueprint("server start", "server start", "main", "server"));
+        commandWriter.writeCommand(new CommandBlueprint("info", "server info", "server", "server"));
+        commandWriter.writeCommand(new CommandBlueprint("return", "server return", "server", "main"));
+        commandWriter.writeCommand(new CommandBlueprint("stop", "server stop", "server", "main"));
+         */
+        
         consoleInput.setOnAction(e -> {
 
             String userInput = consoleInput.getText();
