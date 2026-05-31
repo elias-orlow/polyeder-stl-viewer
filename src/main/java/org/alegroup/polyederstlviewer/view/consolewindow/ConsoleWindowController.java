@@ -23,7 +23,7 @@ public class ConsoleWindowController {
     public Label ghostLabel;
     public Label inputLabel;
 
-    private String currentContext = "main";
+    private String currentBaseContext = "main";
 
     public void initialize(){
 
@@ -41,13 +41,13 @@ public class ConsoleWindowController {
         commandWriter.writeCommand(new CommandBlueprint("server start", "server start", "main", "server"));
         commandWriter.writeCommand(new CommandBlueprint("info", "server info", "server", "server"));
         commandWriter.writeCommand(new CommandBlueprint("return", "server return", "server", "main"));
-        commandWriter.writeCommand(new CommandBlueprint("stop", "server stop", "server", "main"));
+        commandWriter.writeCommand(new CommandBlueprint("stop", "server stop", "server", "server"));
          */
         
         consoleInput.setOnAction(e -> {
 
             String userInput = consoleInput.getText();
-            console.writeUserInputToConsole("STATE: " + currentContext + "| " + userInput);
+            console.writeUserInputToConsole("STATE: " + currentBaseContext + "| " + userInput);
             consoleInput.clear();
             System.out.println("User entered something in the console: " + userInput);
 
@@ -67,7 +67,7 @@ public class ConsoleWindowController {
 
     private void autoSuggestion(String input, CommandHandler commandHandler){
 
-        ArrayList<CommandBlueprint> possibleCommands = commandHandler.getSameContextCommands(this.currentContext);
+        ArrayList<CommandBlueprint> possibleCommands = commandHandler.getSameContextCommands(this.currentBaseContext);
 
         if(possibleCommands.isEmpty() || input.isEmpty()){
             this.ghostLabel.setText("");
@@ -87,7 +87,7 @@ public class ConsoleWindowController {
         String[] cmd = commandHandler.getCommandFromRaw(userInput);
 
         if(cmd == null){
-            console.makeOutput("Invalid Command");
+            console.makeOutputToCurrentContext("Invalid Command");
         }else{
 
             int argSize = cmd.length - 1;
@@ -99,27 +99,27 @@ public class ConsoleWindowController {
 
             CommandBlueprint commandBlueprint = commandHandler.validateCommand(cmd[0]);
             if(commandBlueprint == null){
-                console.makeOutput("Invalid Command");
+                console.makeOutputToCurrentContext("Invalid Command");
                 return;
             }
 
             // now we have a valid command. Execute only if context matches
-            if(this.currentContext.equals(commandBlueprint.getNeededContext())){
+            if(this.currentBaseContext.equals(commandBlueprint.getNeededContext())){
                 AllCommands executable = commandHandler.getExecutable(commandBlueprint.getMethodName());
                 if(executable == null){
-                    console.makeOutput("no executable found for command: " + commandBlueprint.getCommand());
+                    console.makeOutputToCurrentContext("no executable found for command: " + commandBlueprint.getCommand());
                     return;
                 }
                 boolean executed = executable.execute(console, args);
 
                 if(executed){
-                    currentContext = commandBlueprint.getNextContext();
+                    currentBaseContext = commandBlueprint.getNextContext();
                 }else{
-                    console.makeOutput("Command did not execute correctly");
+                    console.makeOutputToCurrentContext("Command did not execute correctly");
                 }
 
             }else{
-                console.makeOutput("Invalid context for this command");
+                console.makeOutputToCurrentContext("Invalid context for this command");
             }
         }
     }

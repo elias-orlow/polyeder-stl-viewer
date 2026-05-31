@@ -9,7 +9,7 @@ public class NewCommandCommand implements CommandExecuter{
     public boolean execute(ConsoleObject console, String[] args) {
 
         if(args.length != 4){
-            console.makeOutput("Invalid arguments given as new command. 'new command --COMMAND --METHOD_NAME --NEEDED_CONTEXT --NEXT_CONTEXT'");
+            console.makeOutputToCurrentContext("Invalid arguments given as new command. 'new command --COMMAND --METHOD_NAME --NEEDED_CONTEXT --NEXT_CONTEXT'");
             return false;
         }else{
             CommandBlueprint newCommand = new CommandBlueprint(args[0], args[1], args[2], args[3]);

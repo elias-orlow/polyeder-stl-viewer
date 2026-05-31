@@ -16,13 +16,13 @@ public class ColorCommand implements CommandExecuter{
                 case "green": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: green; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
                 case "white": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: white; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
                 case "purple": console.getOutputArea().setStyle("-fx-control-inner-background: black; -fx-text-fill: purple; -fx-font-family: 'Consolas'; -fx-highlight-fill: #444444; -fx-highlight-text-fill: white; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-font-size: 14px; "); break;
-                default: console.makeOutput("Invalid color command!"); return false;
+                default: console.makeOutputToCurrentContext("Invalid color command!"); return false;
             }
 
             return true;
 
         }else{
-            console.makeOutput("Invalid color command!");
+            console.makeOutputToCurrentContext("Invalid color command!");
             return false;
         }
     }
