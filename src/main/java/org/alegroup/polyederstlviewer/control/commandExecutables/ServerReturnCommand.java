@@ -7,7 +7,7 @@ public class ServerReturnCommand implements CommandExecuter{
     @Override
     public boolean execute(ConsoleObject console, String[] args) {
 
-        String context = ConsoleBufferContext.MAIN.getContext();
+        String context = ConsoleBufferContext.MAIN.context();
         console.loadContext(context);
 
         return true;

@@ -14,6 +14,9 @@ public enum AllCommands {
     SERVER_START("server start", new ServerStartCommand()),
     SERVER_RETURN("server return", new ServerReturnCommand());
 
+    // Client
+
+
 
     private final String methodName;
     private final CommandExecuter command;
@@ -23,9 +26,11 @@ public enum AllCommands {
     }
 
     public boolean execute(ConsoleObject console, String[] args){
+        // command execution is always seen as a "success" when respective method is 'null'
         if(this.command == null){
-            return false;
+            return true;
         }
+
         return this.command.execute(console, args);
     }
 

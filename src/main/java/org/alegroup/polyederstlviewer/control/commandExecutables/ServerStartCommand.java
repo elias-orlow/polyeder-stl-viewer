@@ -4,7 +4,6 @@ import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
 import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
 import org.alegroup.polyederstlviewer.model.server.STLServer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerStartCommand implements CommandExecuter{
@@ -28,7 +27,7 @@ public class ServerStartCommand implements CommandExecuter{
             try {
                 portNumber = Integer.parseInt(args[0]);
                 // context is simply a combination of the server context standard plus the port number
-                String context = ConsoleBufferContext.SERVER.getContext() + "-" + args[0];
+                String context = ConsoleBufferContext.SERVER.context() + "-" + args[0];
                 console.loadContext(context);
 
                 if(threads.get(portNumber) == null){

@@ -23,7 +23,7 @@ public class ConsoleObject {
         this.consoleInput = consoleInput;
 
         // default to main
-        this.currentContext = ConsoleBufferContext.MAIN.getContext();
+        this.currentContext = ConsoleBufferContext.MAIN.context();
         this.contextBasedBuffer = new HashMap<String, String>();
     }
 
@@ -77,15 +77,21 @@ public class ConsoleObject {
         loadContext(this.currentContext);
     }
 
-    public String getUserInput(boolean flush){
+    /**
+     * Returns the String the user send into the console. The Buffer is not flushed. The input can only be retrieved with the right context.
+     * Objects that are only working within a single context should never retrieve user input outside their own context scope (could result in objects reacting to input not meant for them)
+     * @param context
+     * @return
+     */
+    public String getUserInput(String context){
 
         String userInput = consoleInput.getText();
 
-        if(flush){
-            this.consoleInput.clear();
+        if(this.currentContext.equals(context)){
+            return userInput;
+        }else{
+            return "";
         }
-
-        return userInput;
     }
 
     /**
@@ -105,5 +111,8 @@ public class ConsoleObject {
     }
     public TextField getInputField(){
         return this.consoleInput;
+    }
+    public String getCurrentContext(){
+        return this.currentContext;
     }
 }

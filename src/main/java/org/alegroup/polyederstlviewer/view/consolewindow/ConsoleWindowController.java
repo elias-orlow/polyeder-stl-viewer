@@ -6,6 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.alegroup.polyederstlviewer.constants.AllCommands;
+import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
 import org.alegroup.polyederstlviewer.control.commands.CommandHandler;
 import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
 import org.alegroup.polyederstlviewer.model.commands.CommandBlueprint;
@@ -33,26 +34,36 @@ public class ConsoleWindowController {
         ConsoleObject console = new ConsoleObject(consoleOutput, consoleInput);
 
         // Basic command - command definition can be outsourced theoretically to make code cleaner
-        commandWriter.writeCommand(new CommandBlueprint("clear", "clear", "main", "main"));
-        commandWriter.writeCommand(new CommandBlueprint("color", "color", "main", "main"));
-        commandWriter.writeCommand(new CommandBlueprint("new command", "new command", "main", "main"));
+        commandWriter.writeCommand(new CommandBlueprint("clear", "clear", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint("color", "color", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint("new command", "new command", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
         // Server commands
-
-        commandWriter.writeCommand(new CommandBlueprint("server start", "server start", "main", "server"));
-        commandWriter.writeCommand(new CommandBlueprint("return", "server return", "server", "main"));
+        commandWriter.writeCommand(new CommandBlueprint("server start", "server start", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.SERVER.context()));
+        commandWriter.writeCommand(new CommandBlueprint("return", "server return", ConsoleBufferContext.SERVER.context(), ConsoleBufferContext.MAIN.context()));
         /*
         commandWriter.writeCommand(new CommandBlueprint("info", "server info", "server", "server"));
         commandWriter.writeCommand(new CommandBlueprint("stop", "server stop", "server", "server"));
          */
-        
+        // client commands
+        commandWriter.writeCommand(new CommandBlueprint("client connect", "client connect", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.CLIENT.context()));
+        /*
+        commandWriter.writeCommand(new CommandBlueprint("translate", "client translate", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint("rotate", "client rotate", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint("stop", "client stop", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.MAIN.context()));
+         */
+
+
+
         consoleInput.setOnAction(e -> {
 
             String userInput = consoleInput.getText();
             console.writeUserInputToConsole("STATE: " + currentBaseContext + "| " + userInput);
-            consoleInput.clear();
             System.out.println("User entered something in the console: " + userInput);
 
             reactToUserInput(userInput, console, commandHandler);
+
+            // clear last as some commands may need the user input
+            consoleInput.clear();
         });
 
         consoleInput.textProperty().addListener((obs, oldText, newText) -> {
