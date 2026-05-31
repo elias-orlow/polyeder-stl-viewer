@@ -42,13 +42,18 @@ public class ConsoleObject {
 
     }
 
-    // does not load the context but lets you still write to the selected context
+    // does not load the context (if not current one) but lets you still write to the selected context
     public void makeOutputToSpecifiedContext(String outputText, String toContext){
         String append = ">> " + outputText + "\n";
 
         // retrieve old value, empty if null
         String old = (this.contextBasedBuffer.get(toContext) == null) ? "" : this.contextBasedBuffer.get(toContext);
         this.contextBasedBuffer.put(toContext, old + append);
+
+        // if current context is the specified one then load it to show the effects
+        if(toContext.equals(this.currentContext)){
+            loadContext(this.currentContext);
+        }
     }
 
     // This would be the text the user input into the console, always uses the current context and loads it

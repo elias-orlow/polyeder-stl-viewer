@@ -1,16 +1,18 @@
 package org.alegroup.polyederstlviewer.constants;
 
-import org.alegroup.polyederstlviewer.control.commandExecutables.ClearCommand;
-import org.alegroup.polyederstlviewer.control.commandExecutables.ColorCommand;
-import org.alegroup.polyederstlviewer.control.commandExecutables.CommandExecuter;
-import org.alegroup.polyederstlviewer.control.commandExecutables.NewCommandCommand;
+import org.alegroup.polyederstlviewer.control.commandExecutables.*;
 import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
 
 public enum AllCommands {
 
+    // Basic
     CLEAR("clear", new ClearCommand()),
     COLOR("color", new ColorCommand()),
-    NEW_COMMAND("new command", new NewCommandCommand());
+    NEW_COMMAND("new command", new NewCommandCommand()),
+
+    // Server
+    SERVER_START("server start", new ServerStartCommand()),
+    SERVER_RETURN("server return", new ServerReturnCommand());
 
 
     private final String methodName;

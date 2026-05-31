@@ -37,10 +37,11 @@ public class ConsoleWindowController {
         commandWriter.writeCommand(new CommandBlueprint("color", "color", "main", "main"));
         commandWriter.writeCommand(new CommandBlueprint("new command", "new command", "main", "main"));
         // Server commands
-        /*
+
         commandWriter.writeCommand(new CommandBlueprint("server start", "server start", "main", "server"));
-        commandWriter.writeCommand(new CommandBlueprint("info", "server info", "server", "server"));
         commandWriter.writeCommand(new CommandBlueprint("return", "server return", "server", "main"));
+        /*
+        commandWriter.writeCommand(new CommandBlueprint("info", "server info", "server", "server"));
         commandWriter.writeCommand(new CommandBlueprint("stop", "server stop", "server", "server"));
          */
         
@@ -78,6 +79,8 @@ public class ConsoleWindowController {
             if(command.getCommand().startsWith(input)){
                 this.ghostLabel.setText(command.getCommand());
                 break;
+            }else{
+                this.ghostLabel.setText("");
             }
         }
     }
