@@ -18,7 +18,7 @@ module org.alegroup.polyederstlviewer {
     opens org.alegroup.polyederstlviewer to javafx.fxml;
     opens org.alegroup.polyederstlviewer.view.mainwindow to javafx.fxml;
     opens org.alegroup.polyederstlviewer.view.consolewindow to javafx.fxml;
-    opens org.alegroup.polyederstlviewer.model.commands to com.google.gson;
+    opens org.alegroup.polyederstlviewer.model.console to com.google.gson;
     exports org.alegroup.polyederstlviewer.util;
     opens org.alegroup.polyederstlviewer.util to javafx.fxml;
     exports org.alegroup.polyederstlviewer.control.commands;

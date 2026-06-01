@@ -1,7 +1,7 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
-import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 import org.alegroup.polyederstlviewer.model.server.STLServer;
 
 import java.util.HashMap;

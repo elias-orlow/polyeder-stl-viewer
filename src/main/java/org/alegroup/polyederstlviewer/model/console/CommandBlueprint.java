@@ -1,4 +1,4 @@
-package org.alegroup.polyederstlviewer.model.commands;
+package org.alegroup.polyederstlviewer.model.console;
 
 public class CommandBlueprint {
 

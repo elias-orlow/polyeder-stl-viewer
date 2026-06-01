@@ -2,8 +2,8 @@ package org.alegroup.polyederstlviewer.control.commands;
 
 import com.google.gson.Gson;
 import org.alegroup.polyederstlviewer.constants.AllCommands;
-import org.alegroup.polyederstlviewer.model.commands.CommandBlueprint;
-import org.alegroup.polyederstlviewer.model.commands.CommandFile;
+import org.alegroup.polyederstlviewer.model.console.CommandBlueprint;
+import org.alegroup.polyederstlviewer.model.console.CommandFile;
 
 import java.io.File;
 import java.io.FileReader;

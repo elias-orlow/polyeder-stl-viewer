@@ -1,8 +1,9 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
+import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
 import org.alegroup.polyederstlviewer.model.client.STLClient;
-import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 import java.util.HashMap;
 
@@ -38,11 +39,12 @@ public class ClientConnectCommand implements CommandExecuter{
             String context = ConsoleBufferContext.CLIENT.context() + "-" + args[0] + "-" + args[1];
             console.loadContext(context);
 
-            if(threads.get(context) == null){
+            if(ActiveClientContainer.getInstance().getClient(context) == null){
                 STLClient stlClient = new STLClient(hostname, portNumber, console, context);
                 Thread clientThread = new Thread(stlClient);
                 clientThread.start();
-                threads.put(context, clientThread);
+
+                ActiveClientContainer.getInstance().addClient(stlClient, context);
 
             }else{
                 // exists, load only context?

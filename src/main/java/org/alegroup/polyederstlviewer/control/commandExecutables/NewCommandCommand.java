@@ -1,8 +1,8 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
-import org.alegroup.polyederstlviewer.model.commands.CommandBlueprint;
-import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.console.CommandBlueprint;
+import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 public class NewCommandCommand implements CommandExecuter{
     @Override

@@ -1,6 +1,6 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
-import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 public interface CommandExecuter {
 

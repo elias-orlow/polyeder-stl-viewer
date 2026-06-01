@@ -1,6 +1,6 @@
 package org.alegroup.polyederstlviewer.model.server;
 
-import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,33 +32,34 @@ public class STLServer implements Runnable{
     @Override
     public void run(){
 
-        ServerSocket server = null;
-        try {
-            server = new ServerSocket(this.portNumber);
-        } catch (IOException e) {
+        while (true){
+            this.console.makeOutputToSpecifiedContext("Trying to open server on port: " + this.portNumber, this.consoleContext);
 
-            this.console.makeOutputToSpecifiedContext("Error while opening server socket on port: " + this.portNumber, this.consoleContext);
-            return;
+
+            try (ServerSocket server = new ServerSocket(this.portNumber)) {
+
+                while (!Thread.currentThread().isInterrupted()){
+
+                    this.console.makeOutputToSpecifiedContext("Waiting for client to connect... (Port: " + this.portNumber + ")", this.consoleContext);
+                    Socket client = server.accept();
+
+                    this.console.makeOutputToSpecifiedContext("Client connected on port: " + this.portNumber, this.consoleContext);
+
+                    // blocking until exception or client disconnect
+                    serveClient(client);
+
+                }
+
+            } catch(IOException e){
+                this.console.makeOutputToSpecifiedContext("Error while opening server socket on port: " + this.portNumber, this.consoleContext);
+                return;
+            }
+
         }
-
-        this.console.makeOutputToSpecifiedContext("Waiting for client to connect... (Port: " + this.portNumber + ")", this.consoleContext);
-        Socket client = null;
-
-        try {
-            client = server.accept();
-            clientConnected = true;
-
-        } catch (IOException e) {
-
-            this.console.makeOutputToSpecifiedContext("Error while waiting for client to connect on port: " + this.portNumber, this.consoleContext);
-            return;
-        }
-
-        this.console.makeOutputToSpecifiedContext("Client connected on port: " + this.portNumber, this.consoleContext);
-        serveClient(client);
     }
 
-    public void serveClient(Socket client){
+
+    private void serveClient(Socket client){
 
         try{
             BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));

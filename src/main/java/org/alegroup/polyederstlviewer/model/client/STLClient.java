@@ -1,14 +1,12 @@
 package org.alegroup.polyederstlviewer.model.client;
 
-import com.sun.tools.jconsole.JConsoleContext;
-import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -55,6 +53,7 @@ public class STLClient implements Runnable {
         try {
             if (client != null && !client.isClosed()) {
                 this.console.makeOutputToSpecifiedContext("Client stopped!", this.consoleContext);
+                ActiveClientContainer.getInstance().removeClient(this.consoleContext);
                 client.close(); // Server receives null in stream
             }
         } catch (IOException e) {
@@ -73,6 +72,9 @@ public class STLClient implements Runnable {
             PrintWriter toServer = new PrintWriter(client.getOutputStream(), true);
 
             this.console.makeOutputToSpecifiedContext("Please input your command!", this.consoleContext);
+
+            // Instantly stop client to test server behaviour
+            //stop();
 
             while (true){
 
@@ -93,6 +95,7 @@ public class STLClient implements Runnable {
 
         } catch (IOException | InterruptedException e) {
             this.console.makeOutputToSpecifiedContext("Something went wrong with the client!", this.consoleContext);
+            stop();
         }
     }
 

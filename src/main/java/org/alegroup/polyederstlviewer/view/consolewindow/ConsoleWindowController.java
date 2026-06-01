@@ -9,8 +9,8 @@ import org.alegroup.polyederstlviewer.constants.AllCommands;
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
 import org.alegroup.polyederstlviewer.control.commands.CommandHandler;
 import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
-import org.alegroup.polyederstlviewer.model.commands.CommandBlueprint;
-import org.alegroup.polyederstlviewer.model.commands.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.console.CommandBlueprint;
+import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
