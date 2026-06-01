@@ -2,6 +2,7 @@ package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.server.ActiveServerContainer;
 import org.alegroup.polyederstlviewer.model.server.STLServer;
 
 import java.util.HashMap;
@@ -30,11 +31,12 @@ public class ServerStartCommand implements CommandExecuter{
                 String context = ConsoleBufferContext.SERVER.context() + "-" + args[0];
                 console.loadContext(context);
 
-                if(threads.get(portNumber) == null){
+                if(ActiveServerContainer.getInstance().getServer(portNumber) == null){
                     STLServer stlServer = new STLServer(portNumber, console, context);
                     Thread serverThread = new Thread(stlServer);
                     serverThread.start();
-                    threads.put(portNumber, serverThread);
+
+                    ActiveServerContainer.getInstance().addServer(stlServer, portNumber);
                 }else {
                     // exists, only load context?
                     //console.makeOutputToCurrentContext("Server exists already");

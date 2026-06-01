@@ -5,15 +5,8 @@ import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
 import org.alegroup.polyederstlviewer.model.client.STLClient;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
-import java.util.HashMap;
 
 public class ClientConnectCommand implements CommandExecuter{
-
-    private HashMap<String, Thread> threads;
-
-    public ClientConnectCommand(){
-        this.threads = new HashMap<String, Thread>();
-    }
 
     @Override
     public boolean execute(ConsoleObject console, String[] args) {

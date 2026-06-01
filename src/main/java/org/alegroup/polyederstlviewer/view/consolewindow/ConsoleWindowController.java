@@ -39,17 +39,17 @@ public class ConsoleWindowController {
         commandWriter.writeCommand(new CommandBlueprint("new command", "new command", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
         // Server commands
         commandWriter.writeCommand(new CommandBlueprint("server start", "server start", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.SERVER.context()));
+        commandWriter.writeCommand(new CommandBlueprint("ip", "server ip", ConsoleBufferContext.SERVER.context(), ConsoleBufferContext.SERVER.context()));
         commandWriter.writeCommand(new CommandBlueprint("return", "server return", ConsoleBufferContext.SERVER.context(), ConsoleBufferContext.MAIN.context()));
         /*
-        commandWriter.writeCommand(new CommandBlueprint("info", "server info", "server", "server"));
         commandWriter.writeCommand(new CommandBlueprint("stop", "server stop", "server", "server"));
          */
         // client commands
         commandWriter.writeCommand(new CommandBlueprint("client connect", "client connect", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint("stop", "client stop", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.MAIN.context()));
         /*
         commandWriter.writeCommand(new CommandBlueprint("translate", "client translate", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
         commandWriter.writeCommand(new CommandBlueprint("rotate", "client rotate", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
-        commandWriter.writeCommand(new CommandBlueprint("stop", "client stop", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.MAIN.context()));
          */
 
 
