@@ -14,9 +14,11 @@ public enum AllCommands {
     SERVER_START("server start", new ServerStartCommand()),
     SERVER_IP("server ip", new ServerIPCommand()),
     SERVER_RETURN("server return", new ServerReturnCommand()),
+    SERVER_STOP("server stop", new ServerStopCommand()),
 
     // Client
     CLIENT_CONNECT("client connect", new ClientConnectCommand()),
+    CLIENT_DATA_SEND("data send", new ClientDataSendCommand()),
     CLIENT_STOP("client stop", new ClientStopCommand());
 
 

@@ -9,10 +9,10 @@ public class ActiveServerContainer {
 
     private static ActiveServerContainer INSTANCE;
 
-    private HashMap<Integer, STLServer> activeServers;
+    private HashMap<String, STLServer> activeServers;
 
     private ActiveServerContainer(){
-        this.activeServers = new HashMap<Integer, STLServer>();
+        this.activeServers = new HashMap<String, STLServer>();
     }
 
     public static ActiveServerContainer getInstance(){
@@ -25,35 +25,35 @@ public class ActiveServerContainer {
 
     /**
      *
-     * @param portNumber
-     * @return null if no server found for this port
+     * @param context
+     * @return null if no server found for this context
      */
-    public STLServer getServer(int portNumber){
+    public STLServer getServer(String context){
 
         STLServer server;
-        if((server = this.activeServers.get(portNumber)) != null){
+        if((server = this.activeServers.get(context)) != null){
             return server;
         }else{
             return null;
         }
     }
 
-    public boolean addServer(STLServer server, int portNumber){
+    public boolean addServer(STLServer server, String context){
 
-        if(this.activeServers.get(portNumber) == null){
-            this.activeServers.put(portNumber, server);
+        if(this.activeServers.get(context) == null){
+            this.activeServers.put(context, server);
             return true;
         }else{
             return false;
         }
     }
 
-    public boolean removeServer(int portNumber){
+    public boolean removeServer(String context){
 
-        if(this.activeServers.get(portNumber) == null){
+        if(this.activeServers.get(context) == null){
             return false;
         }else{
-            this.activeServers.remove(portNumber);
+            this.activeServers.remove(context);
             return true;
         }
     }

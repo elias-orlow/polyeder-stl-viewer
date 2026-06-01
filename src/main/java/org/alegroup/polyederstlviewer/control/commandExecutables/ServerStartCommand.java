@@ -31,12 +31,12 @@ public class ServerStartCommand implements CommandExecuter{
                 String context = ConsoleBufferContext.SERVER.context() + "-" + args[0];
                 console.loadContext(context);
 
-                if(ActiveServerContainer.getInstance().getServer(portNumber) == null){
+                if(ActiveServerContainer.getInstance().getServer(context) == null){
                     STLServer stlServer = new STLServer(portNumber, console, context);
                     Thread serverThread = new Thread(stlServer);
                     serverThread.start();
 
-                    ActiveServerContainer.getInstance().addServer(stlServer, portNumber);
+                    ActiveServerContainer.getInstance().addServer(stlServer, context);
                 }else {
                     // exists, only load context?
                     //console.makeOutputToCurrentContext("Server exists already");
