@@ -30,7 +30,7 @@ public class STLServer implements Runnable{
 
 
     @Override
-    public void run() {
+    public void run(){
 
         ServerSocket server = null;
         try {
@@ -55,7 +55,7 @@ public class STLServer implements Runnable{
         }
 
         this.console.makeOutputToSpecifiedContext("Client connected on port: " + this.portNumber, this.consoleContext);
-
+        serveClient(client);
     }
 
     public void serveClient(Socket client){
@@ -68,11 +68,14 @@ public class STLServer implements Runnable{
             while ((line = inputFromClient.readLine()) != null){
                 if(!line.isEmpty()){
                     this.console.makeOutputToSpecifiedContext("Client sent '" + line + "'", this.consoleContext);
+
+                    // Should react to clients commands here idk how yet
                 }
             }
 
-            // Should react to clients commands here idk how yet
 
+            // client disconnected when line == null
+            this.console.makeOutputToSpecifiedContext("Client disconnected! Closing streams...", this.consoleContext);
 
             // close
             inputFromClient.close();
@@ -81,6 +84,8 @@ public class STLServer implements Runnable{
 
         } catch (IOException e) {
             this.console.makeOutputToSpecifiedContext("Something went wrong serving the client on port: " + this.portNumber, this.consoleContext);
+            // must remove itself from global list of servers based on its context
+            // or wait for a new connection to this port? Until .stop is called on the thread
         }
     }
 }

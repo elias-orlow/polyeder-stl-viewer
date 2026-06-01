@@ -12,10 +12,10 @@ public enum AllCommands {
 
     // Server
     SERVER_START("server start", new ServerStartCommand()),
-    SERVER_RETURN("server return", new ServerReturnCommand());
+    SERVER_RETURN("server return", new ServerReturnCommand()),
 
     // Client
-
+    CLIENT_CONNECT("client connect", new ClientConnectCommand());
 
 
     private final String methodName;

@@ -21,7 +21,11 @@ public class STLClient implements Runnable {
     private final ConsoleObject console;
     private final String consoleContext;
 
+    // waiting for commands send to this thread
     private final BlockingQueue<String> commandQueue = new LinkedBlockingQueue<>();
+
+    // closing the socket correctly
+    private volatile Socket client;
 
     public STLClient(String hostname, int portNumber, ConsoleObject console, String consoleContext){
 
@@ -36,7 +40,6 @@ public class STLClient implements Runnable {
     public void run() {
 
         // open socket
-        Socket client = null;
         try {
             client = new Socket(this.hostname, this.portNumber);
             this.console.makeOutputToSpecifiedContext("Successfully connected socket to " + this.hostname + " on port: " + this.portNumber, this.consoleContext);
@@ -45,10 +48,21 @@ public class STLClient implements Runnable {
             this.console.makeOutputToSpecifiedContext("Something went wrong opening a client socket to " + this.hostname + " on port: " + this.portNumber, this.consoleContext);
         }
 
-        sendCommandToServer(client);
+        sendCommandToServer();
     }
 
-    private void sendCommandToServer(Socket client){
+    public void stop() {
+        try {
+            if (client != null && !client.isClosed()) {
+                this.console.makeOutputToSpecifiedContext("Client stopped!", this.consoleContext);
+                client.close(); // Server receives null in stream
+            }
+        } catch (IOException e) {
+            // ignore?
+        }
+    }
+
+    private void sendCommandToServer(){
 
         if(client == null){
             return;

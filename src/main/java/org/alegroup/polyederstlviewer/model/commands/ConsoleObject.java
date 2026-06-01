@@ -13,6 +13,7 @@ public class ConsoleObject {
     private final TextArea consoleOutput;
     private final TextField consoleInput;
 
+    // make global singleton? This way individual console windows share the same context
     private HashMap<String, String> contextBasedBuffer;
     private String currentContext;
 
