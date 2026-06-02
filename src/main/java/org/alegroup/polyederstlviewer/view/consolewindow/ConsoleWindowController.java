@@ -111,7 +111,7 @@ public class ConsoleWindowController {
             }
 
 
-            CommandBlueprint commandBlueprint = commandHandler.validateCommand(cmd[0]);
+            CommandBlueprint commandBlueprint = commandHandler.validateCommand(cmd[0], this.currentBaseContext);
             if(commandBlueprint == null){
                 console.makeOutputToCurrentContext("Invalid Command");
                 return;
@@ -133,7 +133,7 @@ public class ConsoleWindowController {
                 }
 
             }else{
-                console.makeOutputToCurrentContext("Invalid context for this command");
+                console.makeOutputToCurrentContext("Invalid context for this command! Current context: " + this.currentBaseContext + ", needed context: " + commandBlueprint.getNeededContext());
             }
         }
     }

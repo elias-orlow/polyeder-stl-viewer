@@ -16,7 +16,7 @@ public class CommandHandler {
 
     // check if command exists and return commandBlueprint
     // Könnte man mit getSameContextCommands kombinieren und hier nur die Liste der sameContextCommands durchgehen
-    public CommandBlueprint validateCommand(String command){
+    public CommandBlueprint validateCommand(String command, String context){
 
         // check if valid
         Gson gson = new Gson();
@@ -33,7 +33,9 @@ public class CommandHandler {
             }
 
             // if return null -> invalid command
-            for (CommandBlueprint knownCommand : data.commands){
+            ArrayList<CommandBlueprint> possibleCommands = getSameContextCommands(context);
+
+            for (CommandBlueprint knownCommand : possibleCommands){
                 if (knownCommand.getCommand().equals(command)){
                     return knownCommand;
                 }
