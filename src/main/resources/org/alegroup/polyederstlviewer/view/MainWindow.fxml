@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.geometry.Insets?>
 <BorderPane fx:id="mainWindow"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -17,17 +18,24 @@
     </top>
 
     <!-- Der Bums zum rotieren etc -->
-    <left>
+    <right>
         <VBox spacing="10">
             <Button text="Home"/>
             <Button text="Projects"/>
             <Button text="Settings"/>
         </VBox>
-    </left>
+    </right>
 
     <!-- Main stuff -->
     <center>
-        <fx:include source="RenderingView.fxml"/>
+        <StackPane>
+            <fx:include fx:id="renderingView" source="RenderingView.fxml"/>
+            <Slider fx:id="zoomSlider" max="10" min="0.001" orientation="VERTICAL" StackPane.alignment="CENTER_LEFT">
+                <StackPane.margin>
+                    <Insets left="10"/>
+                </StackPane.margin>
+            </Slider>
+        </StackPane>
     </center>
 
     <!-- Statusleiste -->

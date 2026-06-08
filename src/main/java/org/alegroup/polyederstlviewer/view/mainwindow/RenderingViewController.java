@@ -18,6 +18,8 @@ import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.List;
 
+// --------!!!!!! Auslagern der Szene als SceneModel, damit Methoden zur Verfügung stellen die global verfügbar sind für zoom, translate, rotate, change of rendered object etc. -Singleton
+
 public class RenderingViewController {
 
     @FXML
