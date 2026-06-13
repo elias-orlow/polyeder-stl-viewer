@@ -32,6 +32,11 @@ public class STLParser
      *
      * @precondition file != null and file exists.
      * @postcondition Returns Polyhedron or throws STLFormatException on error.
+     *
+     * @param file the STL file to parse
+     * @return a Polyhedron parsed from the file
+     * @throws IOException if reading fails
+     * @throws STLFormatException if the file is malformed
      */
     public static Polyhedron parse(File file)
             throws IOException, STLFormatException
@@ -85,6 +90,11 @@ public class STLParser
      *
      * @precondition file is ASCII STL.
      * @postcondition Returns Polyhedron.
+     *
+     * @param file the ASCII STL file
+     * @return a Polyhedron parsed from the ASCII file
+     * @throws IOException if reading fails
+     * @throws STLFormatException if the file is malformed
      */
     private static Polyhedron parseAscii(File file)
             throws IOException, STLFormatException
@@ -159,6 +169,11 @@ public class STLParser
      *
      * @precondition file is binary STL.
      * @postcondition Returns Polyhedron.
+     *
+     * @param file the binary STL file
+     * @return a Polyhedron parsed from the binary file
+     * @throws IOException if reading fails
+     * @throws STLFormatException if the file is malformed
      */
     private static Polyhedron parseBinary(File file)
             throws IOException, STLFormatException
