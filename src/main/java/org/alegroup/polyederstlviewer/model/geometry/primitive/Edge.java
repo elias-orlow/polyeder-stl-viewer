@@ -20,14 +20,12 @@ public class Edge
      * Creates an edge with the given start and end vertices.
      *
      * @param start the start vertex of the edge
-     * @param end the end vertex of the edge
-     *
+     * @param end   the end vertex of the edge
+     * @throws NullPointerException if start or end is null
      * @precondition start and end are not null.
      * @postcondition A new Edge object with the given start and end vertices is created.
-     *
-     * @throws NullPointerException if start or end is null
      */
-    public Edge(Vertex start, Vertex end)
+    public Edge (Vertex start, Vertex end)
     {
         this.start = Objects.requireNonNull(start, ErrorMessages.EDGE_START_NULL_MESSAGE);
         this.end = Objects.requireNonNull(end, ErrorMessages.EDGE_END_NULL_MESSAGE);
@@ -37,11 +35,10 @@ public class Edge
      * Returns the start vertex of this edge.
      *
      * @return the start vertex
-     *
      * @precondition None.
      * @postcondition The start vertex of this edge is returned.
      */
-    public Vertex getStart()
+    public Vertex getStart ()
     {
         return start;
     }
@@ -50,11 +47,10 @@ public class Edge
      * Returns the end vertex of this edge.
      *
      * @return the end vertex
-     *
      * @precondition None.
      * @postcondition The end vertex of this edge is returned.
      */
-    public Vertex getEnd()
+    public Vertex getEnd ()
     {
         return end;
     }
@@ -65,12 +61,11 @@ public class Edge
      *
      * @param obj the object to compare with this edge
      * @return true if the given object is equal to this edge, otherwise false
-     *
      * @precondition obj may be null or any object.
      * @postcondition The equality result is returned.
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals (Object obj)
     {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
@@ -83,12 +78,11 @@ public class Edge
      * Calculates the hash code of this edge based on its start and end vertices.
      *
      * @return the hash code of this edge
-     *
      * @precondition None.
      * @postcondition A hash code consistent with equals is returned.
      */
     @Override
-    public int hashCode()
+    public int hashCode ()
     {
         return Objects.hash(getStart(), getEnd());
     }

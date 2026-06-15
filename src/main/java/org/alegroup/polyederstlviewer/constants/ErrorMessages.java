@@ -7,4 +7,8 @@ public interface ErrorMessages
     String EDGES_ARRAY_NULL_MESSAGE = "Edge array must not be null.";
     String EDGE_START_NULL_MESSAGE = "Start vertex must not be null.";
     String EDGE_END_NULL_MESSAGE = "End vertex must not be null.";
+    String POLYGON_NOT_CLOSED_MESSAGE = "The given polygonal chain is not a closed polygon.";
+    String TRIANGLE_EDGE_COUNT_MESSAGE = "A triangle must have exactly three edges.";
+    String TRIANGLE_DEGENERATED_MESSAGE = "A triangle must not be degenerated.";
+    String TRIANGLE_NORMAL_VECTOR_NULL_MESSAGE = "A triangle needs a normal vector.";
 }
