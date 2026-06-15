@@ -192,7 +192,6 @@ public class STLParser
 
         Polyhedron poly = null;
         List<Triangle> triangleList = new ArrayList<>();
-        List<Edge> edgeList = new ArrayList<>();
 
         for (long i = 0; i < unsignedCount; i++)
         {
@@ -200,6 +199,7 @@ public class STLParser
             {
                 break;
             }
+
             float nx = bb.getFloat();
             float ny = bb.getFloat();
             float nz = bb.getFloat();
@@ -216,14 +216,15 @@ public class STLParser
             float v2y = bb.getFloat();
             float v2z = bb.getFloat();
 
-            // attribute short
             bb.getShort();
 
             Vector3D normal = new Vector3D(nx, ny, nz);
+
             Vertex a = new Vertex(v0x, v0y, v0z);
             Vertex b = new Vertex(v1x, v1y, v1z);
             Vertex c = new Vertex(v2x, v2y, v2z);
 
+            List<Edge> edgeList = new ArrayList<>();
             edgeList.add(new Edge(a, b));
             edgeList.add(new Edge(b, c));
             edgeList.add(new Edge(c, a));
