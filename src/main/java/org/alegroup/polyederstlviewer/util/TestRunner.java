@@ -1,5 +1,6 @@
 package org.alegroup.polyederstlviewer.util;
 
+import javafx.scene.shape.TriangleMesh;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 
@@ -76,6 +77,19 @@ public class TestRunner
             System.out.printf("Volume: %.6f\n", poly.volume());
             System.out.println("Top triangles:");
             poly.trianglesSortedByAreaDesc().forEach(t -> System.out.printf(" area=%.6f\n", t.area()));
+
+            TriangleMesh mesh = poly.toTriangleMesh();
+            float[] points = mesh.getPoints().toArray(null);
+
+            System.out.println("=== Mesh Points ===");
+            for (int i = 0; i < points.length; i += 3)
+            {
+                float x = points[i];
+                float y = points[i + 1];
+                float z = points[i + 2];
+
+                System.out.printf("Point %d: (%.3f, %.3f, %.3f)%n", i / 3, x, y, z);
+            }
         }
         catch (IOException | STLFormatException e)
         {
