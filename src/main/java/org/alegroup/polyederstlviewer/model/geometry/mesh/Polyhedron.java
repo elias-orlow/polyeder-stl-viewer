@@ -1,5 +1,6 @@
 package org.alegroup.polyederstlviewer.model.geometry.mesh;
 
+import javafx.scene.shape.TriangleMesh;
 import org.alegroup.polyederstlviewer.constants.ErrorMessages;
 import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.constants.ModelConstants;
@@ -7,12 +8,7 @@ import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Edge;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a polyhedron as a closed triangle mesh.
@@ -103,11 +99,12 @@ public class Polyhedron extends Mesh
     }
 
     /**
-     * Compute surface area as sum of triangle areas.
+     * Computes the total surface area of the polyhedron.
      *
-     * @return the total surface area of this polyhedron
-     * @precondition Triangles represent the surface (no duplicates expected).
-     * @postcondition Returns non-negative surface area.
+     * @return non-negative surface area
+     *
+     * @precondition Triangles represent the surface of the polyhedron
+     * @postcondition Returns sum of all triangle areas
      */
     public float surfaceArea ()
     {
@@ -122,12 +119,12 @@ public class Polyhedron extends Mesh
     }
 
     /**
-     * Compute volume using signed tetrahedron contributions relative to origin.
-     * Works for closed meshes (also non-convex) if triangles are consistently oriented.
+     * Computes the volume of the polyhedron using signed tetrahedron contributions.
      *
-     * @return the absolute volume of this polyhedron
-     * @precondition Mesh is closed and oriented (consistent vertex winding).
-     * @postcondition Returns absolute volume (non-negative).
+     * @return absolute volume of the polyhedron
+     *
+     * @precondition Mesh is closed and triangles are consistently oriented
+     * @postcondition Returns non-negative volume
      */
     public float volume ()
     {
@@ -141,16 +138,16 @@ public class Polyhedron extends Mesh
                 signedSum += t.signedVolumeContribution(reference);
             }
         }
-
         return Math.abs(signedSum);
     }
 
     /**
-     * Number of triangles.
+     * Returns the number of triangles in the polyhedron.
      *
-     * @return the number of triangles in this polyhedron
-     * @precondition None.
-     * @postcondition Returns integer >= 0.
+     * @return number of triangles
+     *
+     * @precondition none
+     * @postcondition integer >= 0
      */
     public int triangleCount ()
     {
@@ -166,7 +163,10 @@ public class Polyhedron extends Mesh
      */
     private static class EdgeKey
     {
+        /** Start vertex of the edge. */
         private final Vertex start;
+
+        /** End vertex of the edge. */
         private final Vertex end;
 
         /**
@@ -241,5 +241,85 @@ public class Polyhedron extends Mesh
         {
             return start.hashCode() + end.hashCode();
         }
+    }
+
+    // -------------------------------------------------------------------------
+    //  JAVA FX SUPPORT FOR TASK 4
+    // -------------------------------------------------------------------------
+
+    /**
+     * Converts the entire polyhedron into a JavaFX TriangleMesh.
+     * Each triangle becomes one face in the mesh.
+     *
+     * @return TriangleMesh representing the polyhedron
+     * @throws IllegalStateException if the polyhedron contains no triangles
+     *
+     * @precondition Polyhedron contains at least one triangle
+     * @postcondition A valid TriangleMesh is created with points, faces and dummy texture coordinates
+     */
+    public TriangleMesh toTriangleMesh()
+    {
+        if (getTriangles().isEmpty())
+        {
+            throw new IllegalStateException("Cannot create a mesh from an empty polyhedron.");
+        }
+
+        TriangleMesh mesh = new TriangleMesh();
+
+        // JavaFX requires at least one texture coordinate
+        mesh.getTexCoords().addAll(0, 0);
+
+        // Collect all unique vertices
+        Map<Vertex, Integer> vertexIndexMap = new LinkedHashMap<>();
+        List<Float> pointList = new ArrayList<>();
+
+        for (Triangle t : getTriangles())
+        {
+            List<Vertex> vertices = List.of(t.getA(), t.getB(), t.getC());
+
+            for (Vertex v : vertices)
+            {
+                if (!vertexIndexMap.containsKey(v))
+                {
+                    vertexIndexMap.put(v, vertexIndexMap.size());
+                    pointList.add(v.getX());
+                    pointList.add(v.getY());
+                    pointList.add(v.getZ());
+                }
+            }
+        }
+
+        // Convert points to float[]
+        float[] points = new float[pointList.size()];
+        for (int i = 0; i < pointList.size(); i++)
+        {
+            points[i] = pointList.get(i);
+        }
+        mesh.getPoints().addAll(points);
+
+        // Build faces (triangle indices)
+        List<Integer> faceList = new ArrayList<>();
+
+        for (Triangle t : getTriangles())
+        {
+            int a = vertexIndexMap.get(t.getA());
+            int b = vertexIndexMap.get(t.getB());
+            int c = vertexIndexMap.get(t.getC());
+
+            // JavaFX requires vertexIndex/texCoordIndex pairs
+            faceList.add(a); faceList.add(0);
+            faceList.add(b); faceList.add(0);
+            faceList.add(c); faceList.add(0);
+        }
+
+        // Convert faces to int[]
+        int[] faces = new int[faceList.size()];
+        for (int i = 0; i < faceList.size(); i++)
+        {
+            faces[i] = faceList.get(i);
+        }
+        mesh.getFaces().addAll(faces);
+
+        return mesh;
     }
 }
