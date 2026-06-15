@@ -18,5 +18,11 @@ public interface ModelConstants
               normal = %s,
               area = %.6f
             }""";
+
+    int CLOSED_MESH_EDGE_USAGE_COUNT = 2;
+    int EDGE_COUNTER_INCREMENT = 1;
+
+    String EDGE_KEY_TO_STRING_FORMAT = "%s%s";
+
 }
 
