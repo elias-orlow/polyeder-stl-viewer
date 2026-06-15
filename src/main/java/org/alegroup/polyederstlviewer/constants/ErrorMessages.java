@@ -14,4 +14,5 @@ public interface ErrorMessages
     String MESH_NOT_CONNECTED_MESSAGE = "The given triangles do not form a connected triangle mesh.";
     String POLYHEDRON_NOT_CLOSED_MESSAGE = "A polyhedron must be a closed triangle mesh.";
     String NO_STL_FILE = "No STL file found.";
+    String POLYHEDRON_EMPTY = "Cannot create a mesh from an empty polyhedron.";
 }

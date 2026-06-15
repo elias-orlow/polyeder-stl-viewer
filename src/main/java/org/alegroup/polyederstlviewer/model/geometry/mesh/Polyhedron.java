@@ -102,7 +102,6 @@ public class Polyhedron extends Mesh
      * Computes the total surface area of the polyhedron.
      *
      * @return non-negative surface area
-     *
      * @precondition Triangles represent the surface of the polyhedron
      * @postcondition Returns sum of all triangle areas
      */
@@ -122,7 +121,6 @@ public class Polyhedron extends Mesh
      * Computes the volume of the polyhedron using signed tetrahedron contributions.
      *
      * @return absolute volume of the polyhedron
-     *
      * @precondition Mesh is closed and triangles are consistently oriented
      * @postcondition Returns non-negative volume
      */
@@ -145,7 +143,6 @@ public class Polyhedron extends Mesh
      * Returns the number of triangles in the polyhedron.
      *
      * @return number of triangles
-     *
      * @precondition none
      * @postcondition integer >= 0
      */
@@ -163,10 +160,14 @@ public class Polyhedron extends Mesh
      */
     private static class EdgeKey
     {
-        /** Start vertex of the edge. */
+        /**
+         * Start vertex of the edge.
+         */
         private final Vertex start;
 
-        /** End vertex of the edge. */
+        /**
+         * End vertex of the edge.
+         */
         private final Vertex end;
 
         /**
@@ -253,21 +254,20 @@ public class Polyhedron extends Mesh
      *
      * @return TriangleMesh representing the polyhedron
      * @throws IllegalStateException if the polyhedron contains no triangles
-     *
      * @precondition Polyhedron contains at least one triangle
      * @postcondition A valid TriangleMesh is created with points, faces and dummy texture coordinates
      */
-    public TriangleMesh toTriangleMesh()
+    public TriangleMesh toTriangleMesh ()
     {
         if (getTriangles().isEmpty())
         {
-            throw new IllegalStateException("Cannot create a mesh from an empty polyhedron.");
+            throw new IllegalStateException(ErrorMessages.POLYHEDRON_EMPTY);
         }
 
         TriangleMesh mesh = new TriangleMesh();
 
         // JavaFX requires at least one texture coordinate
-        mesh.getTexCoords().addAll(0, 0);
+        mesh.getTexCoords().addAll(GeneralConstants.FIRST_INDEX, GeneralConstants.FIRST_INDEX);
 
         // Collect all unique vertices
         Map<Vertex, Integer> vertexIndexMap = new LinkedHashMap<>();
@@ -291,7 +291,7 @@ public class Polyhedron extends Mesh
 
         // Convert points to float[]
         float[] points = new float[pointList.size()];
-        for (int i = 0; i < pointList.size(); i++)
+        for (int i = GeneralConstants.FIRST_INDEX; i < pointList.size(); i++)
         {
             points[i] = pointList.get(i);
         }
@@ -307,14 +307,17 @@ public class Polyhedron extends Mesh
             int c = vertexIndexMap.get(t.getC());
 
             // JavaFX requires vertexIndex/texCoordIndex pairs
-            faceList.add(a); faceList.add(0);
-            faceList.add(b); faceList.add(0);
-            faceList.add(c); faceList.add(0);
+            faceList.add(a);
+            faceList.add(GeneralConstants.FIRST_INDEX);
+            faceList.add(b);
+            faceList.add(GeneralConstants.FIRST_INDEX);
+            faceList.add(c);
+            faceList.add(GeneralConstants.FIRST_INDEX);
         }
 
         // Convert faces to int[]
         int[] faces = new int[faceList.size()];
-        for (int i = 0; i < faceList.size(); i++)
+        for (int i = GeneralConstants.FIRST_INDEX; i < faceList.size(); i++)
         {
             faces[i] = faceList.get(i);
         }
