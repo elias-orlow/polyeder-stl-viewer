@@ -91,7 +91,7 @@ public class TestRunner
                 System.out.printf("Point %d: (%.3f, %.3f, %.3f)%n", i / 3, x, y, z);
             }
         }
-        catch (IOException | STLFormatException e)
+        catch (IOException e)
         {
             System.err.println("Test failed: " + e.getMessage());
             e.printStackTrace(System.err);

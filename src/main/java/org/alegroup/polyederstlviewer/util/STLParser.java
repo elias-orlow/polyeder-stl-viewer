@@ -1,17 +1,13 @@
 package org.alegroup.polyederstlviewer.util;
 
+import org.alegroup.polyederstlviewer.constants.ErrorMessages;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Edge;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Vector3D;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -39,7 +35,6 @@ public class STLParser
      * @throws STLFormatException if the file is malformed
      */
     public static Polyhedron parse(File file)
-            throws IOException, STLFormatException
     {
         if (file == null)
         {
@@ -68,6 +63,10 @@ public class STLParser
             {
                 return parseBinary(file);
             }
+        }
+        catch (STLFormatException | IOException e)
+        {
+            throw new RuntimeException(ErrorMessages.NO_STL_FILE);
         }
     }
 

@@ -11,4 +11,5 @@ public interface ErrorMessages
     String TRIANGLE_EDGE_COUNT_MESSAGE = "A triangle must have exactly three edges.";
     String TRIANGLE_DEGENERATED_MESSAGE = "A triangle must not be degenerated.";
     String TRIANGLE_NORMAL_VECTOR_NULL_MESSAGE = "A triangle needs a normal vector.";
+    String NO_STL_FILE = "No STL file found.";
 }

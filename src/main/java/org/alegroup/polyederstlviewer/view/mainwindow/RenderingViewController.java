@@ -29,6 +29,6 @@ public class RenderingViewController {
     public void initialize() {
 
         SceneModel.getInstance().addSubSceneToPane(rootPane);
-        SceneModel.getInstance().renderObject();
+        // SceneModel.getInstance().renderObject();
     }
 }

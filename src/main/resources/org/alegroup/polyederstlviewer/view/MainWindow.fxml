@@ -14,17 +14,29 @@
 
     <!-- Toolbar -->
     <top>
-            <fx:include source="Toolbar.fxml"/>
+            <fx:include fx:id="toolbar" source="Toolbar.fxml"/>
+
     </top>
 
     <!-- Der Bums zum rotieren etc -->
     <right>
-        <VBox spacing="10">
+
+    <VBox spacing="10"
+          style="-fx-border-color: #cccccc;
+                 -fx-border-width: 1;
+                 -fx-background-color: #f8f8f8;
+                 -fx-padding: 15;
+                 -fx-border-radius: 6;
+                 -fx-background-radius: 6;"
+          maxWidth="300">
+
             <Button text="Home"/>
             <Button text="Projects"/>
             <Button text="Settings"/>
+            <fx:include fx:id="polyInfoView" source="PolyInfoView.fxml"/>
         </VBox>
     </right>
+
 
     <!-- Main stuff -->
     <center>

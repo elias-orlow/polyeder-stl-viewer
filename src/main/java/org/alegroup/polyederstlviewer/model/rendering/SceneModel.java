@@ -9,8 +9,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,4 +219,27 @@ public class SceneModel {
         Box box = new Box(20, 20, 20);
         this.objectsGroup.getChildren().add(box);
     }
+
+    public void renderPolyhedron(Polyhedron poly) {
+
+        // 1. Gruppe leeren
+        this.objectsGroup.getChildren().clear();
+
+        // 2. Polyhedron → TriangleMesh
+        TriangleMesh mesh = poly.toTriangleMesh();
+
+        // 3. MeshView erzeugen
+        MeshView meshView = new MeshView(mesh);
+
+        // Optional: Material
+        PhongMaterial mat = new PhongMaterial(Color.LIGHTGRAY);
+        meshView.setMaterial(mat);
+
+        // Optional: Kantendarstellung
+        meshView.setDrawMode(DrawMode.FILL);
+
+        // 4. Mesh in die Szene einfügen
+        this.objectsGroup.getChildren().add(meshView);
+    }
+
 }
