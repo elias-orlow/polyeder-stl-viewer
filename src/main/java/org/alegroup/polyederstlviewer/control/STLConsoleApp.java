@@ -50,13 +50,7 @@ public class STLConsoleApp
                 Triangle t = sorted.get(i);
                 System.out.printf("%2d: area=%.6f\n", i + 1, t.area());
             }
-        }
-        catch (STLFormatException e)
-        {
-            System.err.println("STL format error: " + e.getMessage());
-            System.exit(3);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             System.err.println("Unexpected error: " + e.getMessage());
             e.printStackTrace(System.err);

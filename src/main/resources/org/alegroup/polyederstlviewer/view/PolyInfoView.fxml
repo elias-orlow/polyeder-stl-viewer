@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.alegroup.polyederstlviewer.view.mainwindow.PolyInfoController"
+            prefHeight="400.0" prefWidth="600.0"
+            maxWidth="300">
+
+    <VBox spacing="8" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0">
+        <Label text="Your Polyhedron:" style="-fx-font-weight: bold;"/>
+
+        <Label fx:id="triangleCountLabel" text="Triangles: -" />
+        <Label fx:id="surfaceAreaLabel" text="Surface Area: -" />
+        <Label fx:id="volumeLabel" text="Volume: -" />
+    </VBox>
+
+</AnchorPane>
