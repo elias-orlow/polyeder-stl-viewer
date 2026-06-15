@@ -230,6 +230,10 @@ public class SceneModel {
 
         // 3. MeshView erzeugen
         MeshView meshView = new MeshView(mesh);
+        // Scale
+        meshView.setScaleX(10);
+        meshView.setScaleY(10);
+        meshView.setScaleZ(10);
 
         // Optional: Material
         PhongMaterial mat = new PhongMaterial(Color.LIGHTGRAY);

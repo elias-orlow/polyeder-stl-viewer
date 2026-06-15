@@ -257,7 +257,7 @@ public class Polyhedron extends Mesh
      * @precondition Polyhedron contains at least one triangle
      * @postcondition A valid TriangleMesh is created with points, faces and dummy texture coordinates
      */
-    public TriangleMesh toTriangleMesh ()
+    public TriangleMesh toTriangleMesh()
     {
         if (getTriangles().isEmpty())
         {
@@ -266,30 +266,37 @@ public class Polyhedron extends Mesh
 
         TriangleMesh mesh = new TriangleMesh();
 
-        // JavaFX requires at least one texture coordinate
         mesh.getTexCoords().addAll(GeneralConstants.FIRST_INDEX, GeneralConstants.FIRST_INDEX);
 
-        // Collect all unique vertices
-        Map<Vertex, Integer> vertexIndexMap = new LinkedHashMap<>();
         List<Float> pointList = new ArrayList<>();
+        List<Integer> faceList = new ArrayList<>();
+
+        int vertexIndex = GeneralConstants.FIRST_INDEX;
 
         for (Triangle t : getTriangles())
         {
-            List<Vertex> vertices = List.of(t.getA(), t.getB(), t.getC());
+            pointList.add(t.getA().getX());
+            pointList.add(t.getA().getY());
+            pointList.add(t.getA().getZ());
 
-            for (Vertex v : vertices)
-            {
-                if (!vertexIndexMap.containsKey(v))
-                {
-                    vertexIndexMap.put(v, vertexIndexMap.size());
-                    pointList.add(v.getX());
-                    pointList.add(v.getY());
-                    pointList.add(v.getZ());
-                }
-            }
+            pointList.add(t.getB().getX());
+            pointList.add(t.getB().getY());
+            pointList.add(t.getB().getZ());
+
+            pointList.add(t.getC().getX());
+            pointList.add(t.getC().getY());
+            pointList.add(t.getC().getZ());
+
+            faceList.add(vertexIndex);
+            faceList.add(GeneralConstants.FIRST_INDEX);
+            faceList.add(vertexIndex + 1);
+            faceList.add(GeneralConstants.FIRST_INDEX);
+            faceList.add(vertexIndex + 2);
+            faceList.add(GeneralConstants.FIRST_INDEX);
+
+            vertexIndex += 3;
         }
 
-        // Convert points to float[]
         float[] points = new float[pointList.size()];
         for (int i = GeneralConstants.FIRST_INDEX; i < pointList.size(); i++)
         {
@@ -297,25 +304,6 @@ public class Polyhedron extends Mesh
         }
         mesh.getPoints().addAll(points);
 
-        // Build faces (triangle indices)
-        List<Integer> faceList = new ArrayList<>();
-
-        for (Triangle t : getTriangles())
-        {
-            int a = vertexIndexMap.get(t.getA());
-            int b = vertexIndexMap.get(t.getB());
-            int c = vertexIndexMap.get(t.getC());
-
-            // JavaFX requires vertexIndex/texCoordIndex pairs
-            faceList.add(a);
-            faceList.add(GeneralConstants.FIRST_INDEX);
-            faceList.add(b);
-            faceList.add(GeneralConstants.FIRST_INDEX);
-            faceList.add(c);
-            faceList.add(GeneralConstants.FIRST_INDEX);
-        }
-
-        // Convert faces to int[]
         int[] faces = new int[faceList.size()];
         for (int i = GeneralConstants.FIRST_INDEX; i < faceList.size(); i++)
         {
