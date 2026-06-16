@@ -4,13 +4,9 @@ import org.alegroup.polyederstlviewer.constants.ErrorMessages;
 import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Edge;
+import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents a triangle mesh consisting of connected triangles.
@@ -107,16 +103,30 @@ public class Mesh
 
     /**
      * Checks whether all triangles in the given list are connected.
-     * The method performs a breadth-first search starting with the first triangle.
-     * Two triangles are considered connected if they share at least one edge.
+     * The method first creates a map from undirected edges to their triangles.
+     * Then it performs a breadth-first search using this map to find neighboring triangles efficiently.
      *
      * @param triangles the list of triangles to check
      * @return true if all triangles are connected, otherwise false
      * @precondition triangles is not null, not empty and contains no null triangles.
      * @postcondition The connectivity validation result is returned.
      */
-    private boolean isConnected (List<Triangle> triangles)
+    private boolean isConnected(List<Triangle> triangles)
     {
+        Map<EdgeKey, List<Triangle>> edgeToTriangles = new HashMap<>();
+
+        for (Triangle triangle : triangles)
+        {
+            for (Edge edge : triangle.getEdges())
+            {
+                EdgeKey edgeKey = new EdgeKey(edge);
+
+                edgeToTriangles
+                        .computeIfAbsent(edgeKey, key -> new ArrayList<>())
+                        .add(triangle);
+            }
+        }
+
         Set<Triangle> visitedTriangles = new HashSet<>();
         Queue<Triangle> queue = new ArrayDeque<>();
 
@@ -129,67 +139,22 @@ public class Mesh
         {
             Triangle currentTriangle = queue.poll();
 
-            for (Triangle otherTriangle : triangles)
+            for (Edge edge : currentTriangle.getEdges())
             {
-                if (!visitedTriangles.contains(otherTriangle)
-                        && shareEdge(currentTriangle, otherTriangle))
+                EdgeKey edgeKey = new EdgeKey(edge);
+                List<Triangle> neighbourTriangles = edgeToTriangles.get(edgeKey);
+
+                for (Triangle neighbourTriangle : neighbourTriangles)
                 {
-                    visitedTriangles.add(otherTriangle);
-                    queue.add(otherTriangle);
+                    if (visitedTriangles.add(neighbourTriangle))
+                    {
+                        queue.add(neighbourTriangle);
+                    }
                 }
             }
         }
 
         return visitedTriangles.size() == triangles.size();
-    }
-
-    /**
-     * Checks whether two triangles share at least one edge.
-     *
-     * @param firstTriangle  the first triangle to compare
-     * @param secondTriangle the second triangle to compare
-     * @return true if both triangles share an edge, otherwise false
-     * @precondition firstTriangle and secondTriangle are not null.
-     * @postcondition The edge sharing result is returned.
-     */
-    private boolean shareEdge (Triangle firstTriangle, Triangle secondTriangle)
-    {
-        for (Edge firstEdge : firstTriangle.getEdges())
-        {
-            for (Edge secondEdge : secondTriangle.getEdges())
-            {
-                if (isSameUndirectedEdge(firstEdge, secondEdge))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks whether two edges are equal without considering their direction.
-     * This means that two edges are equal if they have the same start and end vertices,
-     * or if the start and end vertices are swapped.
-     *
-     * @param firstEdge  the first edge to compare
-     * @param secondEdge the second edge to compare
-     * @return true if both edges represent the same undirected edge, otherwise false
-     * @precondition firstEdge and secondEdge are not null.
-     * @postcondition The undirected edge comparison result is returned.
-     */
-    private boolean isSameUndirectedEdge (Edge firstEdge, Edge secondEdge)
-    {
-        boolean sameDirection =
-                firstEdge.getStart().equals(secondEdge.getStart())
-                        && firstEdge.getEnd().equals(secondEdge.getEnd());
-
-        boolean oppositeDirection =
-                firstEdge.getStart().equals(secondEdge.getEnd())
-                        && firstEdge.getEnd().equals(secondEdge.getStart());
-
-        return sameDirection || oppositeDirection;
     }
 
     /**
@@ -214,5 +179,78 @@ public class Mesh
     public int getTriangleCount ()
     {
         return triangles.size();
+    }
+
+    /**
+     * Represents an undirected edge key.
+     * The direction of the edge is ignored for equality.
+     *
+     * @precondition The edge is not null.
+     * @postcondition An edge key can be used in hash-based collections.
+     */
+    private static class EdgeKey
+    {
+        private final Vertex start;
+        private final Vertex end;
+
+        /**
+         * Creates an edge key from the given edge.
+         *
+         * @param edge the edge used to create the key
+         * @precondition edge is not null.
+         * @postcondition A new EdgeKey object is created.
+         */
+        public EdgeKey(Edge edge)
+        {
+            this.start = edge.getStart();
+            this.end = edge.getEnd();
+        }
+
+        /**
+         * Compares this edge key with another object.
+         * Two edge keys are equal if they represent the same edge, independent of direction.
+         *
+         * @param object the object to compare with this edge key
+         * @return true if both objects represent the same undirected edge, otherwise false
+         * @precondition object may be null or any object.
+         * @postcondition The equality result is returned.
+         */
+        @Override
+        public boolean equals(Object object)
+        {
+            if (this == object)
+            {
+                return true;
+            }
+
+            if (!(object instanceof EdgeKey other))
+            {
+                return false;
+            }
+
+            boolean sameDirection =
+                    this.start.equals(other.start)
+                            && this.end.equals(other.end);
+
+            boolean oppositeDirection =
+                    this.start.equals(other.end)
+                            && this.end.equals(other.start);
+
+            return sameDirection || oppositeDirection;
+        }
+
+        /**
+         * Calculates the hash code of this edge key.
+         * The hash code is independent of the edge direction.
+         *
+         * @return the hash code of this edge key
+         * @precondition None.
+         * @postcondition A hash code consistent with equals is returned.
+         */
+        @Override
+        public int hashCode()
+        {
+            return start.hashCode() + end.hashCode();
+        }
     }
 }
