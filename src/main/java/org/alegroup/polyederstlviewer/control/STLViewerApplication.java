@@ -3,6 +3,7 @@ package org.alegroup.polyederstlviewer.control;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -19,6 +20,7 @@ public class STLViewerApplication extends Application
         double screenY = Screen.getPrimary().getBounds().getMaxY() - 150;
         Scene scene = new Scene(fxmlLoader.load(), screenX, screenY);
         stage.setTitle("STL-File Viewer!");
+        stage.getIcons().add(new Image(STLViewerApplication.class.getResource("/org/alegroup/polyederstlviewer/icons/icon.png").toString()));
         stage.setScene(scene);
         stage.show();
     }

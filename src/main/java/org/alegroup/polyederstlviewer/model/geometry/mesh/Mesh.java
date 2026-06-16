@@ -111,7 +111,7 @@ public class Mesh
      * @precondition triangles is not null, not empty and contains no null triangles.
      * @postcondition The connectivity validation result is returned.
      */
-    private boolean isConnected(List<Triangle> triangles)
+    private boolean isConnected (List<Triangle> triangles)
     {
         Map<EdgeKey, List<Triangle>> edgeToTriangles = new HashMap<>();
 
@@ -200,7 +200,7 @@ public class Mesh
          * @precondition edge is not null.
          * @postcondition A new EdgeKey object is created.
          */
-        public EdgeKey(Edge edge)
+        public EdgeKey (Edge edge)
         {
             this.start = edge.getStart();
             this.end = edge.getEnd();
@@ -216,7 +216,7 @@ public class Mesh
          * @postcondition The equality result is returned.
          */
         @Override
-        public boolean equals(Object object)
+        public boolean equals (Object object)
         {
             if (this == object)
             {
@@ -248,7 +248,7 @@ public class Mesh
          * @postcondition A hash code consistent with equals is returned.
          */
         @Override
-        public int hashCode()
+        public int hashCode ()
         {
             return start.hashCode() + end.hashCode();
         }

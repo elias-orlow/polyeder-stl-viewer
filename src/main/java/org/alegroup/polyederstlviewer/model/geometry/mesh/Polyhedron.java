@@ -257,7 +257,7 @@ public class Polyhedron extends Mesh
      * @precondition Polyhedron contains at least one triangle
      * @postcondition A valid TriangleMesh is created with points, faces and dummy texture coordinates
      */
-    public TriangleMesh toTriangleMesh()
+    public TriangleMesh toTriangleMesh ()
     {
         if (getTriangles().isEmpty())
         {
