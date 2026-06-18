@@ -4,9 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckMenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
+import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
 import org.alegroup.polyederstlviewer.util.STLParser;
 
 import java.io.File;
@@ -21,6 +23,9 @@ public class ToolbarController {
         this.mainWindowController = controller;
     }
 
+    // ---------------------------
+    // TERMINAL MENU
+    // ---------------------------
 
     public void openConsoleWindow(ActionEvent actionEvent) {
 
@@ -42,6 +47,10 @@ public class ToolbarController {
         }
     }
 
+    // ---------------------------
+    // FILE MENU
+    // ---------------------------
+
     @FXML
     private void onOpenClicked() {
         FileChooser chooser = new FileChooser();
@@ -55,5 +64,76 @@ public class ToolbarController {
             Polyhedron poly = STLParser.parse(file);
             mainWindowController.setPolyhedron(poly);
         }
+    }
+
+    @FXML
+    private void onCloseFile() {
+        SceneModel.getInstance().clearScene();
+        mainWindowController.clearPolyInfo();
+    }
+
+    @FXML
+    private void onExportScreenshot() {
+        SceneModel.getInstance().exportScreenshot();
+    }
+
+    @FXML
+    private void onExit() {
+        System.exit(0);
+    }
+
+    // ---------------------------
+    // EDIT MENU
+    // ---------------------------
+
+    @FXML
+    private void onUndo() {
+        // optional
+    }
+
+    @FXML
+    private void onRedo() {
+        // optional
+    }
+
+    @FXML
+    private void onResetView() {
+        SceneModel.getInstance().resetCamera();
+    }
+
+    @FXML
+    private void onResetTransformations() {
+        SceneModel.getInstance().resetObjectTransform();
+    }
+
+    // ---------------------------
+    // VIEW MENU
+    // ---------------------------
+
+    @FXML
+    private void onToggleGrid(javafx.event.ActionEvent e) {
+        CheckMenuItem item = (CheckMenuItem) e.getSource();
+        SceneModel.getInstance().setGridVisible(item.isSelected());
+    }
+
+    @FXML
+    private void onToggleAxes(javafx.event.ActionEvent e) {
+        CheckMenuItem item = (CheckMenuItem) e.getSource();
+        SceneModel.getInstance().setAxesVisible(item.isSelected());
+    }
+
+    @FXML
+    private void onSolidMode() {
+        SceneModel.getInstance().setRenderModeSolid();
+    }
+
+    @FXML
+    private void onShadedMode() {
+        SceneModel.getInstance().setRenderModeShaded();
+    }
+
+    @FXML
+    private void onTogglePolyInfo() {
+        mainWindowController.togglePolyInfoVisibility();
     }
 }

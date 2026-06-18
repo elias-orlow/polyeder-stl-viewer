@@ -35,5 +35,11 @@ public class MainWindowController {
         SceneModel.getInstance().renderPolyhedron(poly);
     }
 
+    public void clearPolyInfo() {
+        polyInfoViewController.clear();
+    }
 
+    public void togglePolyInfoVisibility() {
+        polyInfoViewController.toggleVisibility();
+    }
 }

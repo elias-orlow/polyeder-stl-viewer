@@ -30,6 +30,10 @@ public class SceneModel {
     private double lastMouseX;
     private double lastMouseY;
 
+    private Group gridGroup;
+    private Group axesGroup;
+    private MeshView currentMeshView;
+
     private SubScene makeNewSubScene(){
 
         // creates a new basic scene
@@ -144,6 +148,9 @@ public class SceneModel {
 
     private void renderGrid(Group group, PerspectiveCamera camera) {
 
+        gridGroup = new Group();
+        axesGroup = new Group();
+
         final int SIZE = 250, MINOR = 5, MAJOR = 50;
         final double THICKNESS = 0.0006;
 
@@ -222,28 +229,57 @@ public class SceneModel {
 
     public void renderPolyhedron(Polyhedron poly) {
 
-        // 1. Gruppe leeren
-        this.objectsGroup.getChildren().clear();
+        objectsGroup.getChildren().clear();
 
-        // 2. Polyhedron → TriangleMesh
         TriangleMesh mesh = poly.toTriangleMesh();
-
-        // 3. MeshView erzeugen
         MeshView meshView = new MeshView(mesh);
-        // Scale
-        meshView.setScaleX(10);
-        meshView.setScaleY(10);
-        meshView.setScaleZ(10);
 
-        // Optional: Material
         PhongMaterial mat = new PhongMaterial(Color.LIGHTGRAY);
+        mat.setSpecularColor(Color.WHITE);
+        mat.setSpecularPower(32);
         meshView.setMaterial(mat);
 
-        // Optional: Kantendarstellung
-        meshView.setDrawMode(DrawMode.FILL);
+        currentMeshView = meshView;
 
-        // 4. Mesh in die Szene einfügen
-        this.objectsGroup.getChildren().add(meshView);
+        objectsGroup.getChildren().add(meshView);
     }
+
+
+    public void clearScene() {
+        objectsGroup.getChildren().clear();
+    }
+
+    public void resetCamera() {
+        // Kamera zurücksetzen
+    }
+
+    public void resetObjectTransform() {
+        objectsGroup.setTranslateX(0);
+        objectsGroup.setTranslateY(0);
+        objectsGroup.setTranslateZ(0);
+        objectsGroup.setRotate(0);
+    }
+
+    public void setGridVisible(boolean visible) {
+        gridGroup.setVisible(visible);
+    }
+
+    public void setAxesVisible(boolean visible) {
+        axesGroup.setVisible(visible);
+    }
+
+    public void setRenderModeSolid() {
+        currentMeshView.setDrawMode(DrawMode.FILL);
+    }
+
+    public void setRenderModeShaded() {
+        currentMeshView.setDrawMode(DrawMode.FILL);
+        // Material anpassen
+    }
+
+    public void exportScreenshot() {
+        // SubScene snapshot
+    }
+
 
 }

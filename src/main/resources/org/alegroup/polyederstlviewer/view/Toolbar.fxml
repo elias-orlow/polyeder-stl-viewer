@@ -10,16 +10,23 @@
          xmlns:fx="http://javafx.com/fxml"
          fx:controller="org.alegroup.polyederstlviewer.view.mainwindow.ToolbarController">
     <Menu text="File">
-        <MenuItem text="Open File" onAction="#onOpenClicked"/>
-        <MenuItem text="Moin"/>
+        <MenuItem text="Open STL" onAction="#onOpenClicked"/>
+        <MenuItem text="Close File" onAction="#onCloseFile"/>
+        <MenuItem text="Export Screenshot" onAction="#onExportScreenshot"/>
+        <MenuItem text="Exit" onAction="#onExit"/>
     </Menu>
     <Menu text="Edit">
-        <MenuItem text="Moin"/>
-        <MenuItem text="Moin"/>
+        <MenuItem text="Undo" onAction="#onUndo"/>
+        <MenuItem text="Redo" onAction="#onRedo"/>
+        <MenuItem text="Reset View" onAction="#onResetView"/>
+        <MenuItem text="Reset Transformations" onAction="#onResetTransformations"/>
     </Menu>
     <Menu text="View">
-        <MenuItem text="Moin"/>
-        <MenuItem text="Moin"/>
+        <CheckMenuItem text="Show Grid" selected="true" onAction="#onToggleGrid"/>
+        <CheckMenuItem text="Show Axes" selected="true" onAction="#onToggleAxes"/>
+        <MenuItem text="Solid Mode" onAction="#onSolidMode"/>
+        <MenuItem text="Shaded Mode" onAction="#onShadedMode"/>
+        <MenuItem text="Show/Hide Polyhedron-Info" onAction="#onTogglePolyInfo"/>
     </Menu>
     <Menu text="Terminal">
         <MenuItem text="Open new Terminal" onAction="#openConsoleWindow"/>
