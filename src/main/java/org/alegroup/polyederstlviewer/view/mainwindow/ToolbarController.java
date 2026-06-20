@@ -88,12 +88,12 @@ public class ToolbarController {
 
     @FXML
     private void onUndo() {
-        // optional
+        SceneModel.getInstance().undo();
     }
 
     @FXML
     private void onRedo() {
-        // optional
+        SceneModel.getInstance().redo();
     }
 
     @FXML

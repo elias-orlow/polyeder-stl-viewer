@@ -28,10 +28,7 @@ public class MainWindowController {
 
     public void setPolyhedron(Polyhedron poly) {
 
-        // Sidebar aktualisieren
         polyInfoViewController.update(poly);
-
-        // Viewer aktualisieren
         SceneModel.getInstance().renderPolyhedron(poly);
     }
 
