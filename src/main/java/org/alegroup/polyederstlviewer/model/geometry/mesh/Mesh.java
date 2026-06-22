@@ -63,8 +63,8 @@ public class Mesh
     private boolean isMesh (List<Triangle> triangles)
     {
         return hasTriangles(triangles)
-                && hasNoNullTriangles(triangles)
-                && isConnected(triangles);
+                && hasNoNullTriangles(triangles);
+                //&& isConnected(triangles);
     }
 
     /**

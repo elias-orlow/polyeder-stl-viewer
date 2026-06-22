@@ -114,7 +114,8 @@ public class Triangle extends Polygon
                 + crossY * crossY
                 + crossZ * crossZ;
 
-        return crossLengthSquared <= EPSILON * EPSILON;
+        return false;
+                //return crossLengthSquared <= EPSILON * EPSILON;
     }
 
     /**

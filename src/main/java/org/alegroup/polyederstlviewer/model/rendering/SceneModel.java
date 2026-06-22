@@ -300,15 +300,6 @@ public class SceneModel {
         rootPane.getChildren().add(subScene);
     }
 
-    public void renderObject(){
-
-        // clear first, only ever render a single object
-        this.objectsGroup.getChildren().clear();
-
-        Box box = new Box(20, 20, 20);
-        this.objectsGroup.getChildren().add(box);
-    }
-
     public void renderPolyhedron(Polyhedron poly) {
 
         objectsGroup.getChildren().clear();
@@ -317,6 +308,9 @@ public class SceneModel {
         MeshView meshView = new MeshView(mesh);
         meshView.setMaterial(shadedMaterial);
         currentMeshView = meshView;
+        currentMeshView.setScaleX(20);
+        currentMeshView.setScaleY(20);
+        currentMeshView.setScaleZ(20);
 
         objectsGroup.getChildren().add(meshView);
     }
