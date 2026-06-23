@@ -45,6 +45,7 @@ public class ConsoleWindowController {
         // client commands
         commandWriter.writeCommand(new CommandBlueprint("client connect", "client connect", ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.CLIENT.context()));
         commandWriter.writeCommand(new CommandBlueprint("data send", "data send", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint("translate", "object translate", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
         commandWriter.writeCommand(new CommandBlueprint("stop", "client stop", ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.MAIN.context()));
 
         // read file

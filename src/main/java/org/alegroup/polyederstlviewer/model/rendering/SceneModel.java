@@ -12,6 +12,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
@@ -464,5 +465,20 @@ public class SceneModel {
     public void setSubScene (SubScene subScene)
     {
         this.subScene = subScene;
+    }
+
+    public void translateObject(TranslateObjectJSON translateObject){
+
+        if(this.objectsGroup.getChildren().isEmpty() || translateObject == null){
+            return;
+        }
+
+        if(translateObject.getTranslateX() == 0 && translateObject.getTranslateY() == 0 && translateObject.getTranslateZ() == 0){
+            resetObjectTransform();
+        }else{
+            this.objectsGroup.setTranslateX(this.objectsGroup.getTranslateX() + translateObject.getTranslateX());
+            this.objectsGroup.setTranslateY(this.objectsGroup.getTranslateY() + translateObject.getTranslateY());
+            this.objectsGroup.setTranslateZ(this.objectsGroup.getTranslateZ() + translateObject.getTranslateZ());
+        }
     }
 }

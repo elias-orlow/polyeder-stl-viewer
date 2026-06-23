@@ -1,7 +1,11 @@
 package org.alegroup.polyederstlviewer.model.server;
 
+import com.google.gson.Gson;
 import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
+import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
+import org.alegroup.polyederstlviewer.model.console.CommandFile;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
+import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -99,9 +103,32 @@ public class STLServer implements Runnable{
             String line;
             while ((line = inputFromClient.readLine()) != null){
                 if(!line.isEmpty()){
-                    this.console.makeOutputToSpecifiedContext("Client sent '" + line + "'", this.consoleContext);
 
+                    // first first to chars are just identifiers: "ro" = rotate, "tr" = translate, "se" = send
+                    String identifier = line.substring(0, 2);
+                    line = line.substring(2, line.length());
+
+                    switch (identifier){
+                        case "ro": break;
+                        case "tr":  Gson gson = new Gson();
+                                    TranslateObjectJSON data;
+                                    data = gson.fromJson(line, TranslateObjectJSON.class);
+                                    SceneModel.getInstance().translateObject(data);
+                        case "se":  this.console.makeOutputToSpecifiedContext("Client sent '" + line + "'", this.consoleContext);
+                                    break;
+                        default:    this.console.makeOutputToSpecifiedContext("A Packet with an invalid identifier reached the server and was ignored!", this.consoleContext);
+                    }
+
+                    /*
                     // Should react to clients commands here idk how yet
+                    Gson gson = new Gson();
+                    TranslateObjectJSON data;
+                    data = gson.fromJson(line, TranslateObjectJSON.class);
+
+                    if(data == null){
+                        data = new CommandFile();
+                    }
+                    */
                 }
             }
 

@@ -24,4 +24,5 @@ module org.alegroup.polyederstlviewer {
     exports org.alegroup.polyederstlviewer.util;
     opens org.alegroup.polyederstlviewer.util to javafx.fxml;
     exports org.alegroup.polyederstlviewer.control.commands;
+    opens org.alegroup.polyederstlviewer.model.client to com.google.gson;
 }

@@ -16,7 +16,7 @@ public class ClientDataSendCommand implements CommandExecuter{
             String context = console.getCurrentContext();
             STLClient client = ActiveClientContainer.getInstance().getClient(context);
 
-            client.inputCommand(args[0]);
+            client.inputCommand("se" + args[0]);
             console.makeOutputToCurrentContext("Sent data to server!");
             return true;
         }
