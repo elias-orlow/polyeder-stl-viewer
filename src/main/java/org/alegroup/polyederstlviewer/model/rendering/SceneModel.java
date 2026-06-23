@@ -1,7 +1,6 @@
 package org.alegroup.polyederstlviewer.model.rendering;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.image.WritableImage;
@@ -16,6 +15,9 @@ import javafx.scene.transform.Rotate;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
+import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
+import org.alegroup.polyederstlviewer.view.mainwindow.PolyInfoController;
+
 import javax.imageio.ImageIO;
 import java.io.File;
 
@@ -49,6 +51,8 @@ public class SceneModel {
 
     private PhongMaterial shadedMaterial;
     private PhongMaterial solidMaterial;
+
+    public ObjectProperty<Polyhedron> poly = new SimpleObjectProperty<>();
 
     private SubScene makeNewSubScene(){
 
@@ -155,6 +159,7 @@ public class SceneModel {
     }
 
     public SceneModel(){
+
         this.objectsGroup = new Group();
 
         solidMaterial = new PhongMaterial();
@@ -303,6 +308,7 @@ public class SceneModel {
     public void renderPolyhedron(Polyhedron poly) {
 
         objectsGroup.getChildren().clear();
+        this.poly.set(poly);
 
         TriangleMesh mesh = poly.toTriangleMesh();
         MeshView meshView = new MeshView(mesh);

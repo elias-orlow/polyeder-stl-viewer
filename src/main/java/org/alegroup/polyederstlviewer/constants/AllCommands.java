@@ -9,6 +9,7 @@ public enum AllCommands {
     CLEAR("clear", new ClearCommand()),
     COLOR("color", new ColorCommand()),
     NEW_COMMAND("new command", new NewCommandCommand()),
+    READ_FILE("read file", new ReadFileCommand()),
 
     // Server
     SERVER_START("server start", new ServerStartCommand()),

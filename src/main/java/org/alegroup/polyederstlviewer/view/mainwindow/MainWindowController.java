@@ -28,7 +28,7 @@ public class MainWindowController {
 
     public void setPolyhedron(Polyhedron poly) {
 
-        polyInfoViewController.update(poly);
+        //polyInfoViewController.update(poly);
         SceneModel.getInstance().renderPolyhedron(poly);
     }
 
