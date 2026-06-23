@@ -21,7 +21,8 @@ public enum AllCommands {
     CLIENT_CONNECT("client connect", new ClientConnectCommand()),
     CLIENT_DATA_SEND("data send", new ClientDataSendCommand()),
     CLIENT_STOP("client stop", new ClientStopCommand()),
-    CLIENT_TRANSLATE("object translate", new ClientTranslateObjectCommand());
+    CLIENT_TRANSLATE("object translate", new ClientTranslateObjectCommand()),
+    CLIENT_ROTATE("object rotate", new ClientRotateObjectCommand());
 
 
     private final String methodName;

@@ -2,6 +2,7 @@ package org.alegroup.polyederstlviewer.model.server;
 
 import com.google.gson.Gson;
 import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
+import org.alegroup.polyederstlviewer.model.client.RotateObjectJSON;
 import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
 import org.alegroup.polyederstlviewer.model.console.CommandFile;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
@@ -109,13 +110,21 @@ public class STLServer implements Runnable{
                     line = line.substring(2, line.length());
 
                     switch (identifier){
-                        case "ro": break;
-                        case "tr":  Gson gson = new Gson();
-                                    TranslateObjectJSON data;
-                                    data = gson.fromJson(line, TranslateObjectJSON.class);
-                                    SceneModel.getInstance().translateObject(data);
+                        case "ro":  Gson gson1 = new Gson();
+                                    RotateObjectJSON rotateData;
+                                    rotateData = gson1.fromJson(line, RotateObjectJSON.class);
+                                    SceneModel.getInstance().rotateObject(rotateData);
+                                    break;
+
+                        case "tr":  Gson gson2 = new Gson();
+                                    TranslateObjectJSON translateData;
+                                    translateData = gson2.fromJson(line, TranslateObjectJSON.class);
+                                    SceneModel.getInstance().translateObject(translateData);
+                                    break;
+
                         case "se":  this.console.makeOutputToSpecifiedContext("Client sent '" + line + "'", this.consoleContext);
                                     break;
+
                         default:    this.console.makeOutputToSpecifiedContext("A Packet with an invalid identifier reached the server and was ignored!", this.consoleContext);
                     }
 

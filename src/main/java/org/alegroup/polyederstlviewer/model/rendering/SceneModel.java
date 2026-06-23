@@ -12,6 +12,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import org.alegroup.polyederstlviewer.model.client.RotateObjectJSON;
 import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import javafx.embed.swing.SwingFXUtils;
@@ -33,6 +34,10 @@ public class SceneModel {
     private static SceneModel INSTANCE;
 
     private Group objectsGroup;
+    private Rotate rotateX;
+    private Rotate rotateY;
+    private Rotate rotateZ;
+
     private PerspectiveCamera camera;
 
     private double lastMouseX;
@@ -162,6 +167,10 @@ public class SceneModel {
     public SceneModel(){
 
         this.objectsGroup = new Group();
+        this.rotateX = new Rotate(0, Rotate.X_AXIS);
+        this.rotateY = new Rotate(0, Rotate.Y_AXIS);
+        this.rotateZ = new Rotate(0, Rotate.Z_AXIS);
+        this.objectsGroup.getTransforms().addAll(rotateX, rotateY, rotateZ);
 
         solidMaterial = new PhongMaterial();
         solidMaterial.setDiffuseColor(Color.LIGHTGRAY);
@@ -338,7 +347,6 @@ public class SceneModel {
         objectsGroup.setTranslateX(0);
         objectsGroup.setTranslateY(0);
         objectsGroup.setTranslateZ(0);
-        objectsGroup.setRotate(0);
 
         // Kamera-Pivot zurücksetzen
         cameraPivot.setTranslateX(0);
@@ -479,6 +487,24 @@ public class SceneModel {
             this.objectsGroup.setTranslateX(this.objectsGroup.getTranslateX() + translateObject.getTranslateX());
             this.objectsGroup.setTranslateY(this.objectsGroup.getTranslateY() + translateObject.getTranslateY());
             this.objectsGroup.setTranslateZ(this.objectsGroup.getTranslateZ() + translateObject.getTranslateZ());
+        }
+    }
+
+    public void rotateObject(RotateObjectJSON rotateObject){
+
+        if(this.objectsGroup.getChildren().isEmpty() || rotateObject == null){
+            return;
+        }
+
+        if(rotateObject.getRotateX() == 0 && rotateObject.getRotateY() == 0 && rotateObject.getRotateZ() == 0){
+            this.rotateX.setAngle(0);
+            this.rotateY.setAngle(0);
+            this.rotateZ.setAngle(0);
+        }else{
+
+            this.rotateX.setAngle(rotateX.getAngle() + rotateObject.getRotateX());
+            this.rotateY.setAngle(rotateY.getAngle() + rotateObject.getRotateY());
+            this.rotateZ.setAngle(rotateZ.getAngle() + rotateObject.getRotateZ());
         }
     }
 }
