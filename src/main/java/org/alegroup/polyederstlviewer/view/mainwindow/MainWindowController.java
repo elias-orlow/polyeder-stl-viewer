@@ -6,6 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 
 public class MainWindowController {
 
@@ -24,6 +25,11 @@ public class MainWindowController {
 
         //mainWindow.setScaleX(100);
         toolbarController.setMainWindowController(this);
+    }
+
+    public void setParseResult(STLParseResult result)
+    {
+        SceneModel.getInstance().renderParseResult(result);
     }
 
     public void setPolyhedron(Polyhedron poly) {

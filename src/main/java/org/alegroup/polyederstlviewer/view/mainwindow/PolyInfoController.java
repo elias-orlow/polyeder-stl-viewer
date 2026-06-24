@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 
 public class PolyInfoController {
 
@@ -13,16 +14,26 @@ public class PolyInfoController {
     @FXML private Label surfaceAreaLabel;
     @FXML private Label volumeLabel;
 
-    public void initialize(){
-
-        SceneModel.getInstance().poly.addListener((observable, oldValue, newValue) -> {
+    public void initialize()
+    {
+        SceneModel.getInstance().parseResult.addListener((observable, oldValue, newValue) ->
+        {
             update(newValue);
         });
     }
 
-    private void update(Polyhedron poly) {
+    private void update(STLParseResult result)
+    {
+        if (result == null)
+        {
+            clear();
+            return;
+        }
+
+        Polyhedron poly = result.getPolyhedron();
+
         triangleCountLabel.setText("Triangles: " + poly.triangleCount());
-        surfaceAreaLabel.setText("Surface Area: " + poly.surfaceArea());
+        surfaceAreaLabel.setText("Surface Area: " + result.getSurfaceArea());
         volumeLabel.setText("Volume: " + poly.volume());
     }
 
