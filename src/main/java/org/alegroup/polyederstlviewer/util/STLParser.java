@@ -1,6 +1,9 @@
 package org.alegroup.polyederstlviewer.util;
 
 import org.alegroup.polyederstlviewer.constants.ErrorMessages;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.AreaCalculator;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.AreaResult;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Edge;
@@ -34,7 +37,7 @@ public class STLParser
      * @throws IOException if reading fails
      * @throws STLFormatException if the file is malformed
      */
-    public static Polyhedron parse(File file)
+    public static STLParseResult parse(File file)
     {
         if (file == null)
         {
@@ -95,10 +98,11 @@ public class STLParser
      * @throws IOException if reading fails
      * @throws STLFormatException if the file is malformed
      */
-    private static Polyhedron parseAscii(File file)
+    private static STLParseResult parseAscii(File file)
             throws IOException, STLFormatException
     {
         List<Triangle> triangleList = new ArrayList<>();
+        AreaCalculator areaCalculator = new AreaCalculator();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file)))
         {
@@ -153,14 +157,17 @@ public class STLParser
                     edges.add(new Edge(currentVertices[1], currentVertices[2]));
                     edges.add(new Edge(currentVertices[2], currentVertices[0]));
 
-                    triangleList.add(new Triangle(edges, normal));
+                    Triangle triangle = new Triangle(edges, normal);
+
+                    triangleList.add(triangle);
+                    areaCalculator.addTriangle(triangle);
 
                     vertexIndex = 0;
                 }
             }
         }
-
-        return new Polyhedron(triangleList);
+        AreaResult areaResult = areaCalculator.finish();
+        return new STLParseResult(new Polyhedron(triangleList), areaResult);
     }
 
     /**
@@ -174,10 +181,12 @@ public class STLParser
      * @throws IOException if reading fails
      * @throws STLFormatException if the file is malformed
      */
-    private static Polyhedron parseBinary(File file)
+    private static STLParseResult parseBinary(File file)
             throws IOException, STLFormatException
     {
         byte[] all = java.nio.file.Files.readAllBytes(file.toPath());
+        AreaCalculator areaCalculator = new AreaCalculator();
+
         if (all.length < 84)
         {
             throw new STLFormatException("Binary STL too short");
@@ -229,9 +238,13 @@ public class STLParser
             edgeList.add(new Edge(b, c));
             edgeList.add(new Edge(c, a));
 
-            triangleList.add(new Triangle(edgeList, normal));
+            Triangle triangle = new Triangle(edgeList, normal);
+
+            triangleList.add(triangle);
+            areaCalculator.addTriangle(triangle);
         }
+        AreaResult areaResult = areaCalculator.finish();
         poly = new Polyhedron(triangleList);
-        return poly;
+        return new STLParseResult(poly, areaResult);
     }
 }

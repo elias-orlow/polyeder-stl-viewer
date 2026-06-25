@@ -3,8 +3,10 @@ package org.alegroup.polyederstlviewer.view.mainwindow;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
+import org.alegroup.polyederstlviewer.util.STLParser;
 
 public class PolyInfoController {
 
@@ -20,10 +22,10 @@ public class PolyInfoController {
         });
     }
 
-    private void update(Polyhedron poly) {
-        triangleCountLabel.setText("Triangles: " + poly.triangleCount());
-        surfaceAreaLabel.setText("Surface Area: " + poly.surfaceArea());
-        volumeLabel.setText("Volume: " + poly.volume());
+    private void update(STLParseResult poly) {
+        triangleCountLabel.setText("Triangles: " + poly.getPolyhedron().triangleCount());
+        surfaceAreaLabel.setText("Surface Area: " + poly.getAreaResult().getSurfaceArea());
+        volumeLabel.setText("Volume: " + poly.getPolyhedron().volume());
     }
 
     public void clear() {

@@ -1,5 +1,6 @@
 package org.alegroup.polyederstlviewer.control;
 
+import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 import org.alegroup.polyederstlviewer.util.STLFormatException;
@@ -37,10 +38,11 @@ public class STLConsoleApp
         try
         {
             System.out.println("Parsing STL file: " + f.getAbsolutePath());
-            Polyhedron poly = STLParser.parse(f);
+            STLParseResult result = STLParser.parse(f);
+            Polyhedron poly = result.getPolyhedron();
 
             System.out.println("Triangles: " + poly.triangleCount());
-            System.out.printf("Surface area: %.6f\n", poly.surfaceArea());
+            System.out.printf("Surface area: %.6f\n", result.getAreaResult().getSurfaceArea());
             System.out.printf("Volume: %.6f\n", poly.volume());
 
             List<Triangle> sorted = poly.trianglesSortedByAreaDesc();

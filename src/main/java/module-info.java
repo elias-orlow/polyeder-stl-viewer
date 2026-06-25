@@ -12,7 +12,6 @@ module org.alegroup.polyederstlviewer {
     requires javafx.base;
     requires javafx.swing;
 
-
     exports org.alegroup.polyederstlviewer;
     exports org.alegroup.polyederstlviewer.control;
     exports org.alegroup.polyederstlviewer.control.commandExecutables;

@@ -71,7 +71,7 @@ public class TestRunner
             }
 
             System.out.println("Temporary test STL written to: " + tmp.getAbsolutePath());
-            Polyhedron poly = STLParser.parse(tmp);
+            Polyhedron poly = STLParser.parse(tmp).getPolyhedron();
             System.out.println("Triangles: " + poly.triangleCount());
             System.out.printf("Surface area: %.6f\n", poly.surfaceArea());
             System.out.printf("Volume: %.6f\n", poly.volume());
@@ -152,7 +152,7 @@ public class TestRunner
             System.out.println("Binary STL test file written to: " + tmp.getAbsolutePath());
 
             // 4) Datei einlesen
-            Polyhedron poly = STLParser.parse(tmp);
+            Polyhedron poly = STLParser.parse(tmp).getPolyhedron();
 
             // 5) Ergebnisse ausgeben
             System.out.println("=== BINARY STL PARSE RESULT ===");

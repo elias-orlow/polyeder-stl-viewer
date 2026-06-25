@@ -14,6 +14,7 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import org.alegroup.polyederstlviewer.model.client.RotateObjectJSON;
 import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
@@ -58,7 +59,7 @@ public class SceneModel {
     private PhongMaterial shadedMaterial;
     private PhongMaterial solidMaterial;
 
-    public ObjectProperty<Polyhedron> poly = new SimpleObjectProperty<>();
+    public ObjectProperty<STLParseResult> poly = new SimpleObjectProperty<>();
 
     private SubScene makeNewSubScene(){
 
@@ -315,12 +316,12 @@ public class SceneModel {
         rootPane.getChildren().add(subScene);
     }
 
-    public void renderPolyhedron(Polyhedron poly) {
+    public void renderPolyhedron(STLParseResult poly) {
 
         objectsGroup.getChildren().clear();
         this.poly.set(poly);
 
-        TriangleMesh mesh = poly.toTriangleMesh();
+        TriangleMesh mesh = poly.getPolyhedron().toTriangleMesh();
         MeshView meshView = new MeshView(mesh);
         meshView.setMaterial(shadedMaterial);
         currentMeshView = meshView;

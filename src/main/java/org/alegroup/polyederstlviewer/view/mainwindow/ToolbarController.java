@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
 import org.alegroup.polyederstlviewer.util.STLParser;
@@ -61,7 +62,7 @@ public class ToolbarController {
         File file = chooser.showOpenDialog(null);
 
         if (file != null) {
-            Polyhedron poly = STLParser.parse(file);
+            STLParseResult poly = STLParser.parse(file);
             mainWindowController.setPolyhedron(poly);
         }
     }
