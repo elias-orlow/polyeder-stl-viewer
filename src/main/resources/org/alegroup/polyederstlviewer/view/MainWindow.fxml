@@ -30,9 +30,6 @@
                  -fx-background-radius: 6;"
           maxWidth="300">
 
-            <Button text="Home"/>
-            <Button text="Projects"/>
-            <Button text="Settings"/>
             <fx:include fx:id="polyInfoView" source="PolyInfoView.fxml"/>
         </VBox>
     </right>

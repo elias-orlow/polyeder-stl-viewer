@@ -15,6 +15,7 @@
         <Label fx:id="triangleCountLabel" text="Triangles: -" />
         <Label fx:id="surfaceAreaLabel" text="Surface Area: -" />
         <Label fx:id="volumeLabel" text="Volume: -" />
+        <Button text="Change Color" onAction="#onChangeColor"/>
     </VBox>
 
 </AnchorPane>

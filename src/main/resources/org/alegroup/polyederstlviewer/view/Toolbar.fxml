@@ -26,7 +26,7 @@
         <CheckMenuItem text="Show Axes" selected="true" onAction="#onToggleAxes"/>
         <MenuItem text="Solid Mode" onAction="#onSolidMode"/>
         <MenuItem text="Shaded Mode" onAction="#onShadedMode"/>
-        <MenuItem text="Show/Hide Polyhedron-Info" onAction="#onTogglePolyInfo"/>
+<!--        <MenuItem text="Show/Hide Polyhedron-Info" onAction="#onTogglePolyInfo"/>-->
     </Menu>
     <Menu text="Terminal">
         <MenuItem text="Open new Terminal" onAction="#openConsoleWindow"/>

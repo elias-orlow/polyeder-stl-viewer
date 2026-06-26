@@ -133,8 +133,8 @@ public class ToolbarController {
         SceneModel.getInstance().setRenderModeShaded();
     }
 
-    @FXML
-    private void onTogglePolyInfo() {
-        mainWindowController.togglePolyInfoVisibility();
-    }
+//    @FXML
+//    private void onTogglePolyInfo() {
+//        mainWindowController.togglePolyInfoVisibility();
+//    }
 }

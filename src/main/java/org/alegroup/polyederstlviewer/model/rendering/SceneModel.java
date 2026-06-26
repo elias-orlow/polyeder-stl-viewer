@@ -508,4 +508,19 @@ public class SceneModel {
             this.rotateZ.setAngle(rotateZ.getAngle() + rotateObject.getRotateZ());
         }
     }
+
+    public void zoomBy(double delta) {
+        double newZ = camera.getTranslateZ() + delta * 100;
+        camera.setTranslateZ(Math.min(-10, newZ));
+    }
+
+    public void setPolyColor(Color color) {
+        if (currentMeshView == null) return;
+
+        shadedMaterial.setDiffuseColor(color);
+        solidMaterial.setDiffuseColor(color);
+
+        currentMeshView.setMaterial(shadedMaterial);
+    }
+
 }

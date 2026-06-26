@@ -16,8 +16,7 @@ public class MainWindowController {
     private PolyInfoController polyInfoViewController;
     @FXML
     private ToolbarController toolbarController;
-
-
+    @FXML
     public Slider zoomSlider;
     public AnchorPane renderingView;
 
@@ -25,6 +24,10 @@ public class MainWindowController {
 
         //mainWindow.setScaleX(100);
         toolbarController.setMainWindowController(this);
+        zoomSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            double dy = newVal.doubleValue() - oldVal.doubleValue();
+            SceneModel.getInstance().zoomBy(dy);
+        });
     }
 
     public void setPolyhedron(STLParseResult poly) {
@@ -37,7 +40,7 @@ public class MainWindowController {
         polyInfoViewController.clear();
     }
 
-    public void togglePolyInfoVisibility() {
-        polyInfoViewController.toggleVisibility();
-    }
+//    public void togglePolyInfoVisibility() {
+//        polyInfoViewController.toggleVisibility();
+//    }
 }
