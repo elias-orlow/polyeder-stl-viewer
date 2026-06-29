@@ -1,62 +1,78 @@
 package org.alegroup.polyederstlviewer.control;
 
+import org.alegroup.polyederstlviewer.constants.ConsoleConstants;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
-import org.alegroup.polyederstlviewer.util.STLFormatException;
 import org.alegroup.polyederstlviewer.util.STLParser;
 
 import java.io.File;
 import java.util.List;
 
 /**
- * Console application entry point for reading an STL file and printing analysis.
+ * Console-based entry point for parsing and analyzing an STL file.
  *
- * Usage:
- *   java -jar polyviewer.jar path/to/model.stl
- *
- * @precondition args[0] is path to an existing STL file.
- * @postcondition Program prints triangle count, surface area, volume and top triangles.
+ * @precondition args.length > 0 AND args[0] refers to an existing STL file.
+ * @postcondition Analysis results are printed to the console.
  */
 public class STLConsoleApp
 {
-    public static void main(String[] args)
+
+    /**
+     * Main entry point for the console STL viewer.
+     *
+     * @param args command-line arguments
+     * @precondition args.length > 0 AND args[0] refers to an existing file
+     * @postcondition STL file is parsed and analysis results are printed
+     */
+    public static void main (String[] args)
     {
-        if (args.length == 0)
+
+        if (args.length == ConsoleConstants.ARG_COUNT_ZERO)
         {
-            System.err.println("Usage: java -jar polyviewer.jar <path-to-stl-file>");
-            System.exit(1);
+            System.err.println(ConsoleConstants.USAGE_MESSAGE);
+            System.exit(ConsoleConstants.EXIT_CODE_USAGE_ERROR);
         }
 
-        File f = new File(args[0]);
-        if (!f.exists() || !f.isFile())
+        File file = new File(args[ConsoleConstants.FIRST_INDEX]);
+
+        if (!file.exists() || !file.isFile())
         {
-            System.err.println("File not found: " + args[0]);
-            System.exit(2);
+            System.err.println(ConsoleConstants.FILE_NOT_FOUND_PREFIX + args[ConsoleConstants.FIRST_INDEX]);
+            System.exit(ConsoleConstants.EXIT_CODE_FILE_NOT_FOUND);
         }
 
         try
         {
-            System.out.println("Parsing STL file: " + f.getAbsolutePath());
-            STLParseResult result = STLParser.parse(f);
-            Polyhedron poly = result.getPolyhedron();
+            System.out.println(ConsoleConstants.PARSING_PREFIX + file.getAbsolutePath());
 
-            System.out.println("Triangles: " + poly.triangleCount());
-            System.out.printf("Surface area: %.6f\n", result.getAreaResult().getSurfaceArea());
-            System.out.printf("Volume: %.6f\n", poly.volume());
+            STLParseResult result = STLParser.parse(file);
+            Polyhedron polyhedron = result.getPolyhedron();
 
-            List<Triangle> sorted = poly.trianglesSortedByAreaDesc();
-            System.out.println("Top 10 largest triangles by area:");
-            for (int i = 0; i < Math.min(10, sorted.size()); i++)
+            System.out.println(ConsoleConstants.TRIANGLE_COUNT_PREFIX + polyhedron.triangleCount());
+            System.out.printf(ConsoleConstants.SURFACE_AREA_FORMAT, result.getAreaResult().getSurfaceArea());
+            System.out.printf(ConsoleConstants.VOLUME_FORMAT, polyhedron.volume());
+
+            List<Triangle> sorted = polyhedron.trianglesSortedByAreaDesc();
+
+            System.out.println(ConsoleConstants.TOP_TRIANGLES_HEADER);
+
+            for (int i = ConsoleConstants.FIRST_INDEX;
+                 i < Math.min(ConsoleConstants.TOP_TRIANGLES_LIMIT, sorted.size());
+                 i++)
             {
+
                 Triangle t = sorted.get(i);
-                System.out.printf("%2d: area=%.6f\n", i + 1, t.area());
+                System.out.printf(ConsoleConstants.TOP_TRIANGLE_ENTRY_FORMAT,
+                        i + ConsoleConstants.INDEX_OFFSET,
+                        t.area());
             }
+
         } catch (Exception e)
         {
-            System.err.println("Unexpected error: " + e.getMessage());
+            System.err.println(ConsoleConstants.UNEXPECTED_ERROR_PREFIX + e.getMessage());
             e.printStackTrace(System.err);
-            System.exit(4);
+            System.exit(ConsoleConstants.EXIT_CODE_UNEXPECTED_ERROR);
         }
     }
 }

@@ -10,23 +10,28 @@ import java.util.*;
 
 /**
  * Represents a triangle mesh consisting of connected triangles.
- * A mesh is valid if it contains at least one triangle, contains no null triangles
- * and all triangles are connected through shared edges.
+ * A mesh is valid if it contains at least one triangle, contains no null triangles,
+ * and (optionally) forms a connected structure through shared edges.
  *
- * @precondition The triangle list is not null, contains no null values and forms a connected mesh.
- * @postcondition A mesh object can be created if all validation rules are fulfilled.
+ * @precondition Triangle list must be non-null, non-empty, contain no null entries,
+ * and satisfy mesh validity rules.
+ * @postcondition A Mesh instance is created if all validation rules are fulfilled.
  */
 public class Mesh
 {
+
+    /**
+     * Immutable list of triangles forming this mesh.
+     */
     private final List<Triangle> triangles;
 
     /**
      * Creates a mesh from a list of triangles.
      *
-     * @param triangles the list of triangles used to create the mesh
-     * @throws IllegalArgumentException if the given triangles do not form a connected triangle mesh
-     * @precondition triangles is not null, not empty, contains no null triangles and is connected.
-     * @postcondition A new Mesh object with the given triangles is created.
+     * @param triangles the list of triangles forming the mesh
+     * @throws IllegalArgumentException if the triangles do not form a valid mesh
+     * @precondition triangles != null AND triangles not empty AND triangles contain no null values
+     * @postcondition A new Mesh instance is created
      */
     public Mesh (List<Triangle> triangles)
     {
@@ -41,9 +46,9 @@ public class Mesh
     /**
      * Creates a mesh from an array of triangles.
      *
-     * @param triangles the array of triangles used to create the mesh
-     * @precondition triangles is not null, not empty, contains no null triangles and is connected.
-     * @postcondition A new Mesh object with the given triangles is created.
+     * @param triangles the array of triangles forming the mesh
+     * @precondition triangles != null AND triangles not empty AND triangles contain no null values
+     * @postcondition A new Mesh instance is created
      */
     public Mesh (Triangle[] triangles)
     {
@@ -51,29 +56,29 @@ public class Mesh
     }
 
     /**
-     * Checks whether the given triangle list forms a valid mesh.
-     * A valid mesh must contain triangles, must not contain null triangles
-     * and must be connected.
+     * Validates whether the given triangle list forms a valid mesh.
+     * A valid mesh must contain triangles and must not contain null entries.
+     * Connectivity checking is currently disabled.
      *
-     * @param triangles the list of triangles to check
+     * @param triangles the list of triangles to validate
      * @return true if the triangles form a valid mesh, otherwise false
-     * @precondition triangles may be null.
-     * @postcondition The mesh validation result is returned.
+     * @precondition triangles may be null
+     * @postcondition A boolean indicating mesh validity is returned
      */
     private boolean isMesh (List<Triangle> triangles)
     {
         return hasTriangles(triangles)
                 && hasNoNullTriangles(triangles);
-                //&& isConnected(triangles);
+        // && isConnected(triangles);
     }
 
     /**
-     * Checks whether the given triangle list exists and contains at least one triangle.
+     * Checks whether the triangle list exists and contains at least one triangle.
      *
      * @param triangles the list of triangles to check
-     * @return true if the list is not null and not empty, otherwise false
-     * @precondition triangles may be null.
-     * @postcondition The result of the triangle existence check is returned.
+     * @return true if the list is non-null and non-empty, otherwise false
+     * @precondition triangles may be null
+     * @postcondition A boolean indicating triangle existence is returned
      */
     private boolean hasTriangles (List<Triangle> triangles)
     {
@@ -81,12 +86,12 @@ public class Mesh
     }
 
     /**
-     * Checks whether the given triangle list contains no null values.
+     * Checks whether the triangle list contains no null entries.
      *
      * @param triangles the list of triangles to check
-     * @return true if all triangles are not null, otherwise false
-     * @precondition triangles is not null.
-     * @postcondition The null validation result is returned.
+     * @return true if all triangles are non-null, otherwise false
+     * @precondition triangles != null
+     * @postcondition A boolean indicating null-check validity is returned
      */
     private boolean hasNoNullTriangles (List<Triangle> triangles)
     {
@@ -97,72 +102,74 @@ public class Mesh
                 return false;
             }
         }
-
         return true;
     }
 
     /**
-     * Checks whether all triangles in the given list are connected.
-     * The method first creates a map from undirected edges to their triangles.
-     * Then it performs a breadth-first search using this map to find neighboring triangles efficiently.
+     * Checks whether all triangles in the list are connected through shared edges.
+     * Connectivity is determined using a breadth-first search over shared edges.
      *
      * @param triangles the list of triangles to check
      * @return true if all triangles are connected, otherwise false
-     * @precondition triangles is not null, not empty and contains no null triangles.
-     * @postcondition The connectivity validation result is returned.
+     * @precondition triangles != null AND triangles not empty AND triangles contain no null values
+     * @postcondition A boolean indicating connectivity is returned
      */
     private boolean isConnected (List<Triangle> triangles)
     {
+
         Map<EdgeKey, List<Triangle>> edgeToTriangles = new HashMap<>();
 
         for (Triangle triangle : triangles)
         {
             for (Edge edge : triangle.getEdges())
             {
-                EdgeKey edgeKey = new EdgeKey(edge);
+
+                EdgeKey key = new EdgeKey(edge);
 
                 edgeToTriangles
-                        .computeIfAbsent(edgeKey, key -> new ArrayList<>())
+                        .computeIfAbsent(key, k -> new ArrayList<>())
                         .add(triangle);
             }
         }
 
-        Set<Triangle> visitedTriangles = new HashSet<>();
+        Set<Triangle> visited = new HashSet<>();
         Queue<Triangle> queue = new ArrayDeque<>();
 
-        Triangle startTriangle = triangles.get(GeneralConstants.FIRST_INDEX);
+        Triangle start = triangles.get(GeneralConstants.FIRST_INDEX);
 
-        visitedTriangles.add(startTriangle);
-        queue.add(startTriangle);
+        visited.add(start);
+        queue.add(start);
 
         while (!queue.isEmpty())
         {
-            Triangle currentTriangle = queue.poll();
 
-            for (Edge edge : currentTriangle.getEdges())
+            Triangle current = queue.poll();
+
+            for (Edge edge : current.getEdges())
             {
-                EdgeKey edgeKey = new EdgeKey(edge);
-                List<Triangle> neighbourTriangles = edgeToTriangles.get(edgeKey);
 
-                for (Triangle neighbourTriangle : neighbourTriangles)
+                EdgeKey key = new EdgeKey(edge);
+                List<Triangle> neighbours = edgeToTriangles.get(key);
+
+                for (Triangle neighbour : neighbours)
                 {
-                    if (visitedTriangles.add(neighbourTriangle))
+                    if (visited.add(neighbour))
                     {
-                        queue.add(neighbourTriangle);
+                        queue.add(neighbour);
                     }
                 }
             }
         }
 
-        return visitedTriangles.size() == triangles.size();
+        return visited.size() == triangles.size();
     }
 
     /**
      * Returns the triangles of this mesh.
      *
-     * @return the triangles of this mesh
-     * @precondition None.
-     * @postcondition The triangle list of this mesh is returned.
+     * @return an immutable list of triangles
+     * @precondition none
+     * @postcondition A non-null list is returned
      */
     public List<Triangle> getTriangles ()
     {
@@ -173,8 +180,8 @@ public class Mesh
      * Returns the number of triangles in this mesh.
      *
      * @return the number of triangles
-     * @precondition None.
-     * @postcondition The triangle count of this mesh is returned.
+     * @precondition none
+     * @postcondition integer >= 0
      */
     public int getTriangleCount ()
     {
@@ -182,23 +189,24 @@ public class Mesh
     }
 
     /**
-     * Represents an undirected edge key.
+     * Represents an undirected edge key for connectivity checking.
      * The direction of the edge is ignored for equality.
      *
-     * @precondition The edge is not null.
-     * @postcondition An edge key can be used in hash-based collections.
+     * @precondition edge != null
+     * @postcondition EdgeKey can be used in hash-based collections
      */
     private static class EdgeKey
     {
+
         private final Vertex start;
         private final Vertex end;
 
         /**
-         * Creates an edge key from the given edge.
+         * Creates an undirected edge key from the given edge.
          *
          * @param edge the edge used to create the key
-         * @precondition edge is not null.
-         * @postcondition A new EdgeKey object is created.
+         * @precondition edge != null
+         * @postcondition A new EdgeKey instance is created
          */
         public EdgeKey (Edge edge)
         {
@@ -207,45 +215,38 @@ public class Mesh
         }
 
         /**
-         * Compares this edge key with another object.
-         * Two edge keys are equal if they represent the same edge, independent of direction.
+         * Determines whether this edge key is equal to another object.
+         * Two keys are equal if they represent the same undirected edge.
          *
-         * @param object the object to compare with this edge key
-         * @return true if both objects represent the same undirected edge, otherwise false
-         * @precondition object may be null or any object.
-         * @postcondition The equality result is returned.
+         * @param obj the object to compare
+         * @return true if equal, otherwise false
+         * @precondition obj may be null
+         * @postcondition A boolean indicating equality is returned
          */
         @Override
-        public boolean equals (Object object)
+        public boolean equals (Object obj)
         {
-            if (this == object)
-            {
-                return true;
-            }
 
-            if (!(object instanceof EdgeKey other))
-            {
-                return false;
-            }
+            if (this == obj) return true;
+            if (!(obj instanceof EdgeKey other)) return false;
 
             boolean sameDirection =
-                    this.start.equals(other.start)
-                            && this.end.equals(other.end);
+                    this.start.equals(other.start) &&
+                            this.end.equals(other.end);
 
             boolean oppositeDirection =
-                    this.start.equals(other.end)
-                            && this.end.equals(other.start);
+                    this.start.equals(other.end) &&
+                            this.end.equals(other.start);
 
             return sameDirection || oppositeDirection;
         }
 
         /**
-         * Calculates the hash code of this edge key.
-         * The hash code is independent of the edge direction.
+         * Computes a hash code independent of edge direction.
          *
-         * @return the hash code of this edge key
-         * @precondition None.
-         * @postcondition A hash code consistent with equals is returned.
+         * @return the hash code
+         * @precondition none
+         * @postcondition A hash code consistent with equals() is returned
          */
         @Override
         public int hashCode ()

@@ -4,38 +4,36 @@ import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.constants.ModelConstants;
 
 /**
- * 3D vector with common vector operations.
- *
- * @precondition None.
- * @postcondition Instance provides vector arithmetic operations.
+ * Represents a 3D vector with common vector operations such as subtraction,
+ * dot product, cross product, scaling, and magnitude calculation.
+ * Instances of this class are immutable.
  */
 public class Vector3D
 {
 
+    /**
+     * X-component of the vector.
+     */
     private final float x;
-    private final float y;
-    private final float z;
-
-    public float getX ()
-    {
-        return x;
-    }
-
-    public float getY ()
-    {
-        return y;
-    }
-
-    public float getZ ()
-    {
-        return z;
-    }
 
     /**
-     * Create a vector with components.
+     * Y-component of the vector.
+     */
+    private final float y;
+
+    /**
+     * Z-component of the vector.
+     */
+    private final float z;
+
+    /**
+     * Creates a new vector with the given components.
      *
-     * @precondition Components are finite numbers.
-     * @postcondition Vector instance created.
+     * @param x the x-component
+     * @param y the y-component
+     * @param z the z-component
+     * @precondition x, y, z must be finite floating-point values
+     * @postcondition A new immutable Vector3D instance is created
      */
     public Vector3D (float x, float y, float z)
     {
@@ -45,21 +43,65 @@ public class Vector3D
     }
 
     /**
-     * Subtract another vector from this vector.
+     * Returns the x-component of this vector.
      *
-     * @precondition other != null.
-     * @postcondition Returns a new Vector3D representing this - other.
+     * @return the x-component
+     * @precondition none
+     * @postcondition A valid float value is returned
      */
-    public Vector3D subtract (Vector3D other)
+    public float getX ()
     {
-        return new Vector3D(this.x - other.x, this.y - other.y, this.z - other.z);
+        return x;
     }
 
     /**
-     * Cross product of this vector with other.
+     * Returns the y-component of this vector.
      *
-     * @precondition other != null.
-     * @postcondition Returns a new Vector3D representing this x other.
+     * @return the y-component
+     * @precondition none
+     * @postcondition A valid float value is returned
+     */
+    public float getY ()
+    {
+        return y;
+    }
+
+    /**
+     * Returns the z-component of this vector.
+     *
+     * @return the z-component
+     * @precondition none
+     * @postcondition A valid float value is returned
+     */
+    public float getZ ()
+    {
+        return z;
+    }
+
+    /**
+     * Subtracts another vector from this vector.
+     *
+     * @param other the vector to subtract
+     * @return a new Vector3D representing this - other
+     * @precondition other != null
+     * @postcondition A new vector instance is returned
+     */
+    public Vector3D subtract (Vector3D other)
+    {
+        return new Vector3D(
+                this.x - other.x,
+                this.y - other.y,
+                this.z - other.z
+        );
+    }
+
+    /**
+     * Computes the cross product of this vector with another.
+     *
+     * @param other the vector to cross with
+     * @return a new Vector3D representing this × other
+     * @precondition other != null
+     * @postcondition A new vector instance is returned
      */
     public Vector3D cross (Vector3D other)
     {
@@ -70,10 +112,12 @@ public class Vector3D
     }
 
     /**
-     * Dot product of this vector with other.
+     * Computes the dot product of this vector with another.
      *
-     * @precondition other != null.
-     * @postcondition Returns scalar dot product.
+     * @param other the vector to dot with
+     * @return the scalar dot product
+     * @precondition other != null
+     * @postcondition A valid float value is returned
      */
     public float dot (Vector3D other)
     {
@@ -81,35 +125,40 @@ public class Vector3D
     }
 
     /**
-     * Euclidean norm (magnitude).
+     * Computes the Euclidean magnitude (norm) of this vector.
      *
-     * @precondition None.
-     * @postcondition Returns non-negative magnitude.
+     * @return the non-negative magnitude of the vector
+     * @precondition none
+     * @postcondition A valid float value is returned
      */
     public float magnitude ()
     {
-//        // todo: debug statement entfernen
-//        System.out.println(x + " " + y + " " + z);
         return (float) Math.sqrt(x * x + y * y + z * z);
     }
 
     /**
-     * Scale vector by scalar.
+     * Scales this vector by a scalar value.
      *
-     * @precondition scalar is finite.
-     * @postcondition Returns new scaled vector.
+     * @param scalar the scalar multiplier
+     * @return a new scaled Vector3D
+     * @precondition scalar must be finite
+     * @postcondition A new vector instance is returned
      */
     public Vector3D scale (float scalar)
     {
-        return new Vector3D(x * scalar, y * scalar, z * scalar);
+        return new Vector3D(
+                x * scalar,
+                y * scalar,
+                z * scalar
+        );
     }
 
     /**
-     * Returns a textual representation of this vector.
+     * Returns a formatted string representation of this vector.
      *
-     * @return a formatted string containing the components of this vector
-     * @precondition None.
-     * @postcondition A string representation of this vector is returned.
+     * @return a string containing the components of this vector
+     * @precondition ModelConstants.VectorToStringText must be a valid format string
+     * @postcondition A non-null string is returned
      */
     @Override
     public String toString ()
@@ -118,14 +167,13 @@ public class Vector3D
     }
 
     /**
-     * Compares this vector with another object.
-     * Two vectors are equal if they are of the same class and have equal
-     * x-, y- and z-components.
+     * Determines whether this vector is equal to another object.
+     * Two vectors are equal if they have identical components.
      *
      * @param obj the object to compare with this vector
-     * @return true if the given object is equal to this vector, otherwise false
-     * @precondition obj may be null or any object.
-     * @postcondition The equality result is returned.
+     * @return true if the object is a Vector3D with identical components, otherwise false
+     * @precondition obj may be null or any object
+     * @postcondition A boolean indicating equality is returned
      */
     @Override
     public boolean equals (Object obj)
@@ -133,18 +181,19 @@ public class Vector3D
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
 
-        Vector3D vector3D = (Vector3D) obj;
-        return Float.compare(x, vector3D.x) == GeneralConstants.INT_ZERO
-                && Float.compare(y, vector3D.y) == GeneralConstants.INT_ZERO
-                && Float.compare(z, vector3D.z) == GeneralConstants.INT_ZERO;
+        Vector3D other = (Vector3D) obj;
+
+        return Float.compare(x, other.x) == GeneralConstants.INT_ZERO &&
+                Float.compare(y, other.y) == GeneralConstants.INT_ZERO &&
+                Float.compare(z, other.z) == GeneralConstants.INT_ZERO;
     }
 
     /**
-     * Calculates the hash code of this vector based on its components.
+     * Computes the hash code for this vector based on its components.
      *
      * @return the hash code of this vector
-     * @precondition None.
-     * @postcondition A hash code consistent with equals is returned.
+     * @precondition none
+     * @postcondition A hash code consistent with equals() is returned
      */
     @Override
     public int hashCode ()

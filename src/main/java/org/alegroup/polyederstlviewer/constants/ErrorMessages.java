@@ -15,4 +15,7 @@ public interface ErrorMessages
     String POLYHEDRON_NOT_CLOSED_MESSAGE = "A polyhedron must be a closed triangle mesh.";
     String NO_STL_FILE = "No STL file found.";
     String POLYHEDRON_EMPTY = "Cannot create a mesh from an empty polyhedron.";
+    String BINARY_STL_TOO_SHORT = "Binary STL too short";
+    String FACET_INCOMPLETE = "Facet ended without 3 vertices";
+
 }

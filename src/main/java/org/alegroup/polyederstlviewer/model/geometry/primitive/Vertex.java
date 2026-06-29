@@ -5,37 +5,36 @@ import org.alegroup.polyederstlviewer.constants.ModelConstants;
 import java.util.Objects;
 
 /**
- * Vertex wrapper for a 3D point.
- *
- * @precondition coordinates are finite numbers.
- * @postcondition Vertex instance created.
+ * Represents a 3D vertex defined by its x-, y-, and z-coordinates.
+ * Instances of this class are immutable and serve as fundamental
+ * geometric primitives within the mesh and polygon system.
  */
 public class Vertex
 {
-    private final float x;
-    private final float y;
-    private final float z;
-
-    public float getX ()
-    {
-        return x;
-    }
-
-    public float getY ()
-    {
-        return y;
-    }
-
-    public float getZ ()
-    {
-        return z;
-    }
 
     /**
-     * Create a vertex from coordinates.
+     * X-coordinate of the vertex.
+     */
+    private final float x;
+
+    /**
+     * Y-coordinate of the vertex.
+     */
+    private final float y;
+
+    /**
+     * Z-coordinate of the vertex.
+     */
+    private final float z;
+
+    /**
+     * Creates a new vertex with the given coordinates.
      *
-     * @precondition x, y, z are finite.
-     * @postcondition Vertex created with given coordinates.
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param z the z-coordinate
+     * @precondition x, y, z must be finite floating-point values
+     * @postcondition A new immutable Vertex instance is created
      */
     public Vertex (float x, float y, float z)
     {
@@ -45,14 +44,49 @@ public class Vertex
     }
 
     /**
-     * Compares this vertex with another object.
-     * Two vertices are equal if they are of the same class and have exactly
-     * the same x-, y- and z-coordinates.
+     * Returns the x-coordinate of this vertex.
+     *
+     * @return the x-coordinate
+     * @precondition none
+     * @postcondition A valid float value is returned
+     */
+    public float getX ()
+    {
+        return x;
+    }
+
+    /**
+     * Returns the y-coordinate of this vertex.
+     *
+     * @return the y-coordinate
+     * @precondition none
+     * @postcondition A valid float value is returned
+     */
+    public float getY ()
+    {
+        return y;
+    }
+
+    /**
+     * Returns the z-coordinate of this vertex.
+     *
+     * @return the z-coordinate
+     * @precondition none
+     * @postcondition A valid float value is returned
+     */
+    public float getZ ()
+    {
+        return z;
+    }
+
+    /**
+     * Determines whether this vertex is equal to another object.
+     * Two vertices are considered equal if they have identical coordinates.
      *
      * @param obj the object to compare with this vertex
-     * @return true if the given object is equal to this vertex, otherwise false
-     * @precondition obj may be null or any object.
-     * @postcondition The equality result is returned.
+     * @return true if the object is a Vertex with identical coordinates, otherwise false
+     * @precondition obj may be null or any object
+     * @postcondition A boolean indicating equality is returned
      */
     @Override
     public boolean equals (Object obj)
@@ -65,11 +99,11 @@ public class Vertex
     }
 
     /**
-     * Returns a textual representation of this vertex.
+     * Returns a formatted string representation of this vertex.
      *
-     * @return a formatted string containing the coordinates of this vertex
-     * @precondition ModelConstants.VertexToStingText is a valid format string.
-     * @postcondition A string representation of this vertex is returned.
+     * @return a string containing the coordinates of this vertex
+     * @precondition ModelConstants.VertexToStringText must be a valid format string
+     * @postcondition A non-null string is returned
      */
     @Override
     public String toString ()
@@ -78,16 +112,15 @@ public class Vertex
     }
 
     /**
-     * Calculates the hash code of this vertex based on its coordinates.
+     * Computes the hash code for this vertex based on its coordinates.
      *
      * @return the hash code of this vertex
-     * @precondition none.
-     * @postcondition A hash code consistent with equals is returned.
+     * @precondition none
+     * @postcondition A hash code consistent with equals() is returned
      */
     @Override
     public int hashCode ()
     {
-        return Objects.hash(getX(), getY(), getZ());
+        return Objects.hash(x, y, z);
     }
-
 }

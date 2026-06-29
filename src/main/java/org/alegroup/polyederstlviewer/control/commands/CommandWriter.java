@@ -1,65 +1,87 @@
 package org.alegroup.polyederstlviewer.control.commands;
 
 import com.google.gson.Gson;
+import org.alegroup.polyederstlviewer.constants.CommandWriterConstants;
 import org.alegroup.polyederstlviewer.model.console.CommandBlueprint;
 import org.alegroup.polyederstlviewer.model.console.CommandFile;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class CommandWriter {
+/**
+ * Writes command blueprints to a JSON file, ensuring no duplicates.
+ *
+ * @precondition CommandBlueprint must be non-null.
+ * @postcondition Command is written to JSON file unless already present.
+ */
+public class CommandWriter
+{
 
-    final String source = "src/main/java/org/alegroup/polyederstlviewer/constants/commands.json";
+    /**
+     * Path to the JSON command file.
+     */
+    private final String source = CommandWriterConstants.COMMAND_FILE_PATH;
 
-    public void writeCommand(CommandBlueprint command){
-
+    /**
+     * Writes a command blueprint to the JSON file.
+     *
+     * @param command the command blueprint to write
+     * @precondition command != null
+     * @postcondition Command is appended unless duplicate
+     */
+    public void writeCommand (CommandBlueprint command)
+    {
 
         Gson gson = new Gson();
         File file = new File(source);
         CommandFile data;
 
-        try {
-            if (file.exists()) {
+        try
+        {
+            if (file.exists())
+            {
+
                 FileReader reader = new FileReader(file);
                 data = gson.fromJson(reader, CommandFile.class);
                 reader.close();
 
-                if(data == null){
+                if (data == null || data.getCommands() == null)
+                {
                     data = new CommandFile();
                 }
 
-                // search for duplicates and remove
-
-
-                if (data.commands == null) {
-                    data.commands = new ArrayList<>();
-                }
-
-            } else {
+            }
+            else
+            {
                 data = new CommandFile();
             }
 
-
-            // check duplicates
-            boolean foundDuplicate = false;
-            for(CommandBlueprint existingCommand : data.commands){
-                if(existingCommand.equals(command)){
-                    foundDuplicate = true;
+            boolean duplicateFound = false;
+            for (CommandBlueprint existing : data.getCommands())
+            {
+                if (existing.equals(command))
+                {
+                    duplicateFound = true;
                     break;
                 }
             }
 
-            // only add if not a duplicate
-            if(!foundDuplicate){
-                data.commands.add(command);
+            if (!duplicateFound)
+            {
+                data.getCommands().add(command);
             }
 
             FileWriter writer = new FileWriter(file);
             gson.toJson(data, writer);
             writer.close();
-        } catch (IOException e) {
-            System.out.println("Something went wrong trying to create the file writer! " + e.toString());
-        }
 
+        } catch (IOException e)
+        {
+            System.out.println(
+                    CommandWriterConstants.ERROR_PREFIX + e.toString()
+            );
+        }
     }
 }

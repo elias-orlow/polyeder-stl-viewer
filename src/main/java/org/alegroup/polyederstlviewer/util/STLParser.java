@@ -1,14 +1,15 @@
 package org.alegroup.polyederstlviewer.util;
 
 import org.alegroup.polyederstlviewer.constants.ErrorMessages;
+import org.alegroup.polyederstlviewer.constants.STLParserConstants;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.AreaCalculator;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.AreaResult;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Edge;
-import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 import org.alegroup.polyederstlviewer.model.geometry.primitive.Vector3D;
+import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -19,43 +20,43 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 /**
- * Parser for STL files supporting ASCII and binary formats.
- *
- * @precondition File exists and is readable.
- * @postcondition Returns a Polyhedron built from triangles in the file.
+ * Utility class responsible for parsing STL files in both ASCII and binary formats.
+ * The parser extracts triangle geometry, computes surface area contributions,
+ * and constructs a {@link Polyhedron} instance containing all parsed triangles.
  */
 public class STLParser
 {
+
     /**
-     * Parse an STL file (ASCII or binary) and return a Polyhedron.
-     *
-     * @precondition file != null and file exists.
-     * @postcondition Returns Polyhedron or throws STLFormatException on error.
+     * Parses an STL file (ASCII or binary) and returns a {@link STLParseResult}
+     * containing the polyhedron and its computed area results.
      *
      * @param file the STL file to parse
-     * @return a Polyhedron parsed from the file
-     * @throws IOException if reading fails
-     * @throws STLFormatException if the file is malformed
+     * @return a result object containing the parsed polyhedron and area analysis
+     * @throws RuntimeException if the file cannot be parsed or read
+     * @precondition file != null AND file must exist and be readable
+     * @postcondition A valid {@link STLParseResult} is returned OR an exception is thrown
      */
-    public static STLParseResult parse(File file)
+    public static STLParseResult parse (File file)
     {
         if (file == null)
         {
-            throw new IllegalArgumentException("file must not be null");
+            throw new IllegalArgumentException(STLParserConstants.FILE_NULL);
         }
 
-        // Heuristic: read first 256 bytes as text and look for ASCII tokens
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file)))
         {
-            bis.mark(1024);
-            byte[] headerBytes = new byte[256];
+
+            bis.mark(STLParserConstants.MARK_LIMIT);
+            byte[] headerBytes = new byte[STLParserConstants.HEADER_READ_SIZE];
             int read = bis.read(headerBytes);
             bis.reset();
 
             String headerSnippet = "";
             if (read > 0)
             {
-                headerSnippet = new String(headerBytes, 0, read, "US-ASCII").toLowerCase(Locale.ROOT);
+                headerSnippet = new String(headerBytes, 0, read, STLParserConstants.ASCII_CHARSET)
+                        .toLowerCase(Locale.ROOT);
             }
 
             if (looksLikeAscii(headerSnippet))
@@ -66,21 +67,31 @@ public class STLParser
             {
                 return parseBinary(file);
             }
-        }
-        catch (STLFormatException | IOException e)
+
+        } catch (STLFormatException | IOException e)
         {
             throw new RuntimeException(ErrorMessages.NO_STL_FILE);
         }
     }
 
-    private static boolean looksLikeAscii(String snippet)
+    /**
+     * Determines whether the given text snippet suggests an ASCII STL file.
+     *
+     * @param snippet a text snippet from the beginning of the file
+     * @return true if the snippet resembles ASCII STL structure, false otherwise
+     * @precondition snippet != null
+     * @postcondition Boolean result indicates ASCII likelihood
+     */
+    private static boolean looksLikeAscii (String snippet)
     {
-        if (snippet.contains("facet") || snippet.contains("vertex") || snippet.contains("outer loop"))
+        if (snippet.contains(STLParserConstants.TOKEN_FACET)
+                || snippet.contains(STLParserConstants.TOKEN_VERTEX)
+                || snippet.contains(STLParserConstants.TOKEN_OUTER_LOOP))
         {
             return true;
         }
-        // If starts with "solid" and contains newline, likely ASCII
-        if (snippet.trim().startsWith("solid") && snippet.contains("\n"))
+        if (snippet.trim().startsWith(STLParserConstants.TOKEN_SOLID)
+                && snippet.contains(STLParserConstants.NEWLINE))
         {
             return true;
         }
@@ -88,31 +99,33 @@ public class STLParser
     }
 
     /**
-     * Parse ASCII STL.
-     *
-     * @precondition file is ASCII STL.
-     * @postcondition Returns Polyhedron.
+     * Parses an ASCII STL file and constructs a {@link STLParseResult}.
      *
      * @param file the ASCII STL file
-     * @return a Polyhedron parsed from the ASCII file
-     * @throws IOException if reading fails
+     * @return a result object containing the parsed polyhedron and area analysis
+     * @throws IOException        if reading fails
      * @throws STLFormatException if the file is malformed
+     * @precondition file != null AND file must contain valid ASCII STL syntax
+     * @postcondition All triangles are parsed and area contributions computed
      */
-    private static STLParseResult parseAscii(File file)
+    private static STLParseResult parseAscii (File file)
             throws IOException, STLFormatException
     {
+
         List<Triangle> triangleList = new ArrayList<>();
         AreaCalculator areaCalculator = new AreaCalculator();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file)))
         {
+
             String line;
             Vector3D normal = null;
-            Vertex[] currentVertices = new Vertex[3];
+            Vertex[] currentVertices = new Vertex[STLParserConstants.VERTEX_COUNT];
             int vertexIndex = 0;
 
             while ((line = br.readLine()) != null)
             {
+
                 line = line.trim();
                 if (line.isEmpty())
                 {
@@ -121,11 +134,11 @@ public class STLParser
 
                 String lower = line.toLowerCase(Locale.ROOT);
 
-                if (lower.startsWith("facet normal"))
+                if (lower.startsWith(STLParserConstants.TOKEN_FACET_NORMAL))
                 {
                     StringTokenizer st = new StringTokenizer(line);
-                    st.nextToken(); // skip "facet"
-                    st.nextToken(); // skip "normal"
+                    st.nextToken();
+                    st.nextToken();
 
                     float nx = Float.parseFloat(st.nextToken());
                     float ny = Float.parseFloat(st.nextToken());
@@ -133,10 +146,10 @@ public class STLParser
                     normal = new Vector3D(nx, ny, nz);
                 }
 
-                if (lower.startsWith("vertex"))
+                if (lower.startsWith(STLParserConstants.TOKEN_VERTEX))
                 {
                     StringTokenizer st = new StringTokenizer(line);
-                    st.nextToken(); // skip "vertex"
+                    st.nextToken();
 
                     float x = Float.parseFloat(st.nextToken());
                     float y = Float.parseFloat(st.nextToken());
@@ -145,11 +158,12 @@ public class STLParser
                     currentVertices[vertexIndex++] = new Vertex(x, y, z);
                 }
 
-                if (lower.startsWith("endfacet"))
+                if (lower.startsWith(STLParserConstants.TOKEN_ENDFACET))
                 {
-                    if (vertexIndex != 3)
+
+                    if (vertexIndex != STLParserConstants.VERTEX_COUNT)
                     {
-                        throw new STLFormatException("Facet ended without 3 vertices");
+                        throw new STLFormatException(STLParserConstants.ERROR_INCOMPLETE_FACET);
                     }
 
                     List<Edge> edges = new ArrayList<>();
@@ -166,45 +180,45 @@ public class STLParser
                 }
             }
         }
+
         AreaResult areaResult = areaCalculator.finish();
         return new STLParseResult(new Polyhedron(triangleList), areaResult);
     }
 
     /**
-     * Parse binary STL.
-     *
-     * @precondition file is binary STL.
-     * @postcondition Returns Polyhedron.
+     * Parses a binary STL file and constructs a {@link STLParseResult}.
      *
      * @param file the binary STL file
-     * @return a Polyhedron parsed from the binary file
-     * @throws IOException if reading fails
+     * @return a result object containing the parsed polyhedron and area analysis
+     * @throws IOException        if reading fails
      * @throws STLFormatException if the file is malformed
+     * @precondition file != null AND file must contain valid binary STL structure
+     * @postcondition All triangles are parsed and area contributions computed
      */
-    private static STLParseResult parseBinary(File file)
+    private static STLParseResult parseBinary (File file)
             throws IOException, STLFormatException
     {
+
         byte[] all = java.nio.file.Files.readAllBytes(file.toPath());
         AreaCalculator areaCalculator = new AreaCalculator();
 
-        if (all.length < 84)
+        if (all.length < STLParserConstants.MIN_BINARY_SIZE)
         {
-            throw new STLFormatException("Binary STL too short");
+            throw new STLFormatException(STLParserConstants.ERROR_BINARY_TOO_SHORT);
         }
 
-        // header 80 bytes ignored
         ByteBuffer bb = ByteBuffer.wrap(all);
         bb.order(ByteOrder.LITTLE_ENDIAN);
-        bb.position(80);
-        long unsignedCount = Integer.toUnsignedLong(bb.getInt());
-        long expectedSize = 80L + 4L + unsignedCount * 50L;
+        bb.position(STLParserConstants.BINARY_HEADER_SIZE);
 
-        Polyhedron poly = null;
+        long unsignedCount = Integer.toUnsignedLong(bb.getInt());
+
         List<Triangle> triangleList = new ArrayList<>();
 
         for (long i = 0; i < unsignedCount; i++)
         {
-            if (bb.remaining() < 50)
+
+            if (bb.remaining() < STLParserConstants.BINARY_TRIANGLE_SIZE)
             {
                 break;
             }
@@ -243,8 +257,10 @@ public class STLParser
             triangleList.add(triangle);
             areaCalculator.addTriangle(triangle);
         }
+
         AreaResult areaResult = areaCalculator.finish();
-        poly = new Polyhedron(triangleList);
+        Polyhedron poly = new Polyhedron(triangleList);
+
         return new STLParseResult(poly, areaResult);
     }
 }

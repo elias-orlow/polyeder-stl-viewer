@@ -5,25 +5,31 @@ import org.alegroup.polyederstlviewer.constants.ErrorMessages;
 import java.util.Objects;
 
 /**
- * Represents an edge between two vertices.
- * An edge has a start vertex and an end vertex.
- *
- * @precondition start and end are not null.
- * @postcondition An edge can be created between two vertices.
+ * Represents an immutable edge defined by a start and an end vertex.
+ * Edges are fundamental geometric primitives used in polygonal chains
+ * and mesh structures.
  */
 public class Edge
 {
+
+    /**
+     * The start vertex of the edge.
+     */
     private final Vertex start;
+
+    /**
+     * The end vertex of the edge.
+     */
     private final Vertex end;
 
     /**
-     * Creates an edge with the given start and end vertices.
+     * Creates a new edge with the given start and end vertices.
      *
      * @param start the start vertex of the edge
      * @param end   the end vertex of the edge
      * @throws NullPointerException if start or end is null
-     * @precondition start and end are not null.
-     * @postcondition A new Edge object with the given start and end vertices is created.
+     * @precondition start != null AND end != null
+     * @postcondition A new immutable Edge instance is created
      */
     public Edge (Vertex start, Vertex end)
     {
@@ -35,8 +41,8 @@ public class Edge
      * Returns the start vertex of this edge.
      *
      * @return the start vertex
-     * @precondition None.
-     * @postcondition The start vertex of this edge is returned.
+     * @precondition none
+     * @postcondition A valid Vertex instance is returned
      */
     public Vertex getStart ()
     {
@@ -47,8 +53,8 @@ public class Edge
      * Returns the end vertex of this edge.
      *
      * @return the end vertex
-     * @precondition None.
-     * @postcondition The end vertex of this edge is returned.
+     * @precondition none
+     * @postcondition A valid Vertex instance is returned
      */
     public Vertex getEnd ()
     {
@@ -56,13 +62,13 @@ public class Edge
     }
 
     /**
-     * Compares this edge with another object.
-     * Two edges are equal if they have the same start vertex and the same end vertex.
+     * Determines whether this edge is equal to another object.
+     * Two edges are equal if both their start and end vertices are equal.
      *
      * @param obj the object to compare with this edge
-     * @return true if the given object is equal to this edge, otherwise false
-     * @precondition obj may be null or any object.
-     * @postcondition The equality result is returned.
+     * @return true if the object is an Edge with identical vertices, otherwise false
+     * @precondition obj may be null or any object
+     * @postcondition A boolean indicating equality is returned
      */
     @Override
     public boolean equals (Object obj)
@@ -75,15 +81,15 @@ public class Edge
     }
 
     /**
-     * Calculates the hash code of this edge based on its start and end vertices.
+     * Computes the hash code for this edge based on its start and end vertices.
      *
      * @return the hash code of this edge
-     * @precondition None.
-     * @postcondition A hash code consistent with equals is returned.
+     * @precondition none
+     * @postcondition A hash code consistent with equals() is returned
      */
     @Override
     public int hashCode ()
     {
-        return Objects.hash(getStart(), getEnd());
+        return Objects.hash(start, end);
     }
 }

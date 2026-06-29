@@ -522,5 +522,4 @@ public class SceneModel {
 
         currentMeshView.setMaterial(shadedMaterial);
     }
-
 }

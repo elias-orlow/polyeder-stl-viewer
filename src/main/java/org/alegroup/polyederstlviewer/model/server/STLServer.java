@@ -1,10 +1,9 @@
 package org.alegroup.polyederstlviewer.model.server;
 
 import com.google.gson.Gson;
-import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
+import org.alegroup.polyederstlviewer.constants.ServerConstants;
 import org.alegroup.polyederstlviewer.model.client.RotateObjectJSON;
 import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
-import org.alegroup.polyederstlviewer.model.console.CommandFile;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
 
@@ -15,147 +14,245 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-// just echoing for now
-public class STLServer implements Runnable{
+/**
+ * Server responsible for receiving JSON-based transformation commands from a client
+ * and applying them to the 3D scene. The server supports rotation, translation, and
+ * general message forwarding. It operates on a dedicated thread and maintains its own
+ * connection state.
+ */
+public class STLServer implements Runnable
+{
 
+    /**
+     * Port number on which the server listens for incoming client connections.
+     */
     private final int portNumber;
+
+    /**
+     * Console object used for outputting server-related messages.
+     */
     private final ConsoleObject console;
+
+    /**
+     * Context identifier used for routing console output.
+     */
     private final String consoleContext;
 
+    /**
+     * Indicates whether a client is currently connected.
+     */
     private boolean clientConnected = false;
 
+    /**
+     * Server socket instance used for accepting client connections.
+     */
     private volatile ServerSocket server;
+
+    /**
+     * The currently connected client socket.
+     */
     private volatile Socket connectedClient;
 
-    public STLServer(int portNumber, ConsoleObject console, String consoleContext){
+    /**
+     * Constructs a new STLServer instance.
+     *
+     * @param portNumber     the port on which the server should listen
+     * @param console        the console used for output messages
+     * @param consoleContext the context for console output routing
+     * @precondition console != null AND consoleContext != null
+     * @postcondition A new server instance is created with the given configuration
+     */
+    public STLServer (int portNumber, ConsoleObject console, String consoleContext)
+    {
         this.portNumber = portNumber;
         this.console = console;
         this.consoleContext = consoleContext;
     }
 
-    public boolean isClientConnected(){
+    /**
+     * Indicates whether a client is currently connected to the server.
+     *
+     * @return true if a client is connected, false otherwise
+     * @precondition none
+     * @postcondition Returns the current connection state
+     */
+    public boolean isClientConnected ()
+    {
         return this.clientConnected;
     }
 
-
+    /**
+     * Main server loop. Continuously attempts to open a server socket, waits for client
+     * connections, and delegates incoming data to {@link #serveClient(Socket)}.
+     *
+     * @precondition none
+     * @postcondition Server listens for connections until interrupted or stopped
+     */
     @Override
-    public void run(){
+    public void run ()
+    {
 
-        while (true){
+        while (true)
+        {
 
-            this.console.makeOutputToSpecifiedContext("Trying to open server on port: " + this.portNumber, this.consoleContext);
+            console.makeOutputToSpecifiedContext(
+                    ServerConstants.MSG_OPENING_SERVER + portNumber,
+                    consoleContext
+            );
 
+            try
+            {
 
-            try {
+                server = new ServerSocket(portNumber);
 
-                server = new ServerSocket(this.portNumber);
+                while (!Thread.currentThread().isInterrupted())
+                {
 
-                while (!Thread.currentThread().isInterrupted()){
+                    console.makeOutputToSpecifiedContext(
+                            ServerConstants.MSG_WAITING_FOR_CLIENT + portNumber + ")",
+                            consoleContext
+                    );
 
-                    this.console.makeOutputToSpecifiedContext("Waiting for client to connect... (Port: " + this.portNumber + ")", this.consoleContext);
-                    this.connectedClient = server.accept();
+                    connectedClient = server.accept();
 
-                    this.console.makeOutputToSpecifiedContext("Client connected on port: " + this.portNumber, this.consoleContext);
+                    console.makeOutputToSpecifiedContext(
+                            ServerConstants.MSG_CLIENT_CONNECTED + portNumber,
+                            consoleContext
+                    );
 
-                    // blocking until exception or client disconnect
-                    serveClient(this.connectedClient);
+                    serveClient(connectedClient);
                 }
 
-            } catch(IOException e){
-                // a real Exception has been thrown. If server socket is closed, then this was intentional by calling stop()
-                if(!server.isClosed()){
-                    this.console.makeOutputToSpecifiedContext("Error while opening server socket on port: " + this.portNumber, this.consoleContext);
-                    System.out.println("Error while opening server socket on port: " + this.portNumber + ", e: " + e.toString());
+            } catch (IOException e)
+            {
+
+                if (!server.isClosed())
+                {
+                    console.makeOutputToSpecifiedContext(
+                            ServerConstants.MSG_SERVER_SOCKET_ERROR + portNumber,
+                            consoleContext
+                    );
                 }
                 return;
             }
-
         }
     }
 
-    public void stop() {
-        try {
-            if (server != null && !server.isClosed()) {
+    /**
+     * Stops the server and closes all associated sockets.
+     *
+     * @precondition none
+     * @postcondition Server socket and client connection are closed
+     */
+    public void stop ()
+    {
+        try
+        {
+            if (server != null && !server.isClosed())
+            {
 
-                if (this.connectedClient != null && !this.connectedClient.isClosed()) {
-                    PrintWriter sendToClient = new PrintWriter(this.connectedClient.getOutputStream(), true);
-                    sendToClient.println("SERVER_CLOSE");
+                if (connectedClient != null && !connectedClient.isClosed())
+                {
+                    PrintWriter sendToClient =
+                            new PrintWriter(connectedClient.getOutputStream(), true);
+                    sendToClient.println(ServerConstants.MSG_SERVER_CLOSE);
                     sendToClient.close();
-                    this.connectedClient.close(); // Client gets Exception
+                    connectedClient.close();
                 }
 
-                this.console.makeOutputToSpecifiedContext("Server stopped!", this.consoleContext);
-                ActiveServerContainer.getInstance().removeServer(this.consoleContext);
-                System.out.println("Server closed!!");
+                console.makeOutputToSpecifiedContext(
+                        ServerConstants.MSG_SERVER_STOPPED,
+                        consoleContext
+                );
+
+                ActiveServerContainer.getInstance().removeServer(consoleContext);
                 server.close();
             }
-        } catch (IOException e) {
-            // ignore?
+        } catch (IOException e)
+        {
+            // intentionally ignored
         }
     }
 
+    /**
+     * Handles communication with a connected client. Reads incoming messages,
+     * interprets identifiers, and applies transformations to the 3D scene.
+     *
+     * @param client the connected client socket
+     * @precondition client != null AND client is connected
+     * @postcondition Incoming commands are processed until the client disconnects
+     */
+    private void serveClient (Socket client)
+    {
 
-    private void serveClient(Socket client){
-
-        try{
-            BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            PrintWriter sendToClient = new PrintWriter(client.getOutputStream(), true);
+        try
+        {
+            BufferedReader inputFromClient =
+                    new BufferedReader(new InputStreamReader(client.getInputStream()));
+            PrintWriter sendToClient =
+                    new PrintWriter(client.getOutputStream(), true);
 
             String line;
-            while ((line = inputFromClient.readLine()) != null){
-                if(!line.isEmpty()){
+            while ((line = inputFromClient.readLine()) != null)
+            {
 
-                    // first first to chars are just identifiers: "ro" = rotate, "tr" = translate, "se" = send
+                if (!line.isEmpty())
+                {
+
                     String identifier = line.substring(0, 2);
-                    line = line.substring(2, line.length());
+                    line = line.substring(2);
 
-                    switch (identifier){
-                        case "ro":  Gson gson1 = new Gson();
-                                    RotateObjectJSON rotateData;
-                                    rotateData = gson1.fromJson(line, RotateObjectJSON.class);
-                                    SceneModel.getInstance().rotateObject(rotateData);
-                                    break;
+                    switch (identifier)
+                    {
 
-                        case "tr":  Gson gson2 = new Gson();
-                                    TranslateObjectJSON translateData;
-                                    translateData = gson2.fromJson(line, TranslateObjectJSON.class);
-                                    SceneModel.getInstance().translateObject(translateData);
-                                    break;
+                        case ServerConstants.ID_ROTATE:
+                            Gson gsonRotate = new Gson();
+                            RotateObjectJSON rotateData =
+                                    gsonRotate.fromJson(line, RotateObjectJSON.class);
+                            SceneModel.getInstance().rotateObject(rotateData);
+                            break;
 
-                        case "se":  this.console.makeOutputToSpecifiedContext("Client sent '" + line + "'", this.consoleContext);
-                                    break;
+                        case ServerConstants.ID_TRANSLATE:
+                            Gson gsonTranslate = new Gson();
+                            TranslateObjectJSON translateData =
+                                    gsonTranslate.fromJson(line, TranslateObjectJSON.class);
+                            SceneModel.getInstance().translateObject(translateData);
+                            break;
 
-                        default:    this.console.makeOutputToSpecifiedContext("A Packet with an invalid identifier reached the server and was ignored!", this.consoleContext);
+                        case ServerConstants.ID_SEND:
+                            console.makeOutputToSpecifiedContext(
+                                    ServerConstants.MSG_CLIENT_SENT + line + "'",
+                                    consoleContext
+                            );
+                            break;
+
+                        default:
+                            console.makeOutputToSpecifiedContext(
+                                    ServerConstants.MSG_INVALID_PACKET,
+                                    consoleContext
+                            );
                     }
-
-                    /*
-                    // Should react to clients commands here idk how yet
-                    Gson gson = new Gson();
-                    TranslateObjectJSON data;
-                    data = gson.fromJson(line, TranslateObjectJSON.class);
-
-                    if(data == null){
-                        data = new CommandFile();
-                    }
-                    */
                 }
             }
 
+            console.makeOutputToSpecifiedContext(
+                    ServerConstants.MSG_CLIENT_DISCONNECTED,
+                    consoleContext
+            );
 
-            // client disconnected when line == null
-            this.console.makeOutputToSpecifiedContext("Client disconnected! Closing streams...", this.consoleContext);
-
-            // close
             inputFromClient.close();
             sendToClient.close();
             client.close();
 
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
 
-            // if client is not closed, then the Exception did not happen intentionally
-            if(!this.connectedClient.isClosed()){
-                this.console.makeOutputToSpecifiedContext("Something went wrong serving the client on port: " + this.portNumber, this.consoleContext);
-                System.out.println("Something went wrong serving the client on port: " + this.portNumber + ", e: " + e.toString());
+            if (!connectedClient.isClosed())
+            {
+                console.makeOutputToSpecifiedContext(
+                        ServerConstants.MSG_CLIENT_SERVE_ERROR + portNumber,
+                        consoleContext
+                );
             }
         }
     }

@@ -3,32 +3,29 @@ package org.alegroup.polyederstlviewer.model.geometry.primitive;
 import org.alegroup.polyederstlviewer.constants.ErrorMessages;
 import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 /**
- * Represents a polygonal chain consisting of connected edges.
- * Each edge must end at the start vertex of the next edge.
- *
- * @precondition The edges are not null and contain valid Edge objects.
- * @postcondition A polygonal chain can be created if all edges are connected.
+ * Represents a polygonal chain consisting of sequentially connected edges.
+ * A valid polygonal chain requires that the end vertex of each edge equals
+ * the start vertex of the next edge. Instances of this class are immutable.
  */
 public class PolygonalChain
 {
+
+    /**
+     * Immutable list of edges forming the polygonal chain.
+     */
     private final List<Edge> edges;
 
     /**
      * Creates a polygonal chain from a list of edges.
      *
-     * @param edges the list of edges used to create the polygonal chain
-     * @throws IllegalArgumentException if the given edges do not form a polygonal chain
+     * @param edges the list of edges used to construct the polygonal chain
+     * @throws IllegalArgumentException if the edges do not form a valid polygonal chain
      * @throws NullPointerException     if edges is null
-     * @precondition edges is not null and all edges are connected in order.
-     * @postcondition A new PolygonalChain object is created.
+     * @precondition edges != null AND edges must form a valid polygonal chain
+     * @postcondition A new immutable PolygonalChain instance is created
      */
     public PolygonalChain (List<Edge> edges)
     {
@@ -45,11 +42,11 @@ public class PolygonalChain
     /**
      * Creates a polygonal chain from an array of edges.
      *
-     * @param edges the array of edges used to create the polygonal chain
-     * @throws IllegalArgumentException if the given edges do not form a polygonal chain
+     * @param edges the array of edges used to construct the polygonal chain
+     * @throws IllegalArgumentException if the edges do not form a valid polygonal chain
      * @throws NullPointerException     if edges is null
-     * @precondition edges is not null and all edges are connected in order.
-     * @postcondition A new PolygonalChain object is created.
+     * @precondition edges != null AND edges must form a valid polygonal chain
+     * @postcondition A new immutable PolygonalChain instance is created
      */
     public PolygonalChain (Edge[] edges)
     {
@@ -66,14 +63,13 @@ public class PolygonalChain
     }
 
     /**
-     * Checks whether the given list of edges forms a valid polygonal chain.
-     * A valid polygonal chain requires that the end vertex of each edge equals
-     * the start vertex of the following edge.
+     * Validates whether the given list of edges forms a polygonal chain.
+     * A valid chain requires that each edge's end vertex matches the next edge's start vertex.
      *
-     * @param edges the list of edges to check
-     * @return true if the edges form a polygonal chain, otherwise false
-     * @precondition edges is not null and contains valid Edge objects.
-     * @postcondition The validation result is returned.
+     * @param edges the list of edges to validate
+     * @return true if the edges form a valid polygonal chain, otherwise false
+     * @precondition edges != null AND edges contain valid Edge objects
+     * @postcondition A boolean indicating chain validity is returned
      */
     private boolean isPolygonalChain (List<Edge> edges)
     {
@@ -81,21 +77,24 @@ public class PolygonalChain
              i < edges.size() - GeneralConstants.NEXT_INDEX_OFFSET;
              i++)
         {
-            if (!edges.get(i).getEnd().equals(edges.get(i + GeneralConstants.NEXT_INDEX_OFFSET).getStart()))
+
+            Edge current = edges.get(i);
+            Edge next = edges.get(i + GeneralConstants.NEXT_INDEX_OFFSET);
+
+            if (!current.getEnd().equals(next.getStart()))
             {
                 return false;
             }
         }
-
         return true;
     }
 
     /**
-     * Returns the edges of this polygonal chain.
+     * Returns an unmodifiable list of edges forming this polygonal chain.
      *
-     * @return an unmodifiable list of edges of this polygonal chain
-     * @precondition None.
-     * @postcondition The edges of this polygonal chain are returned.
+     * @return an unmodifiable list of edges
+     * @precondition none
+     * @postcondition A safe, immutable view of the edges is returned
      */
     public List<Edge> getEdges ()
     {

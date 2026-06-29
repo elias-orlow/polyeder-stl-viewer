@@ -1,119 +1,186 @@
 package org.alegroup.polyederstlviewer.model.console;
 
-
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
 
 import java.util.HashMap;
 
-// supposed to write text and read text from and to the console
-public class ConsoleObject {
+/**
+ * Represents a console abstraction that manages input and output text
+ * across multiple logical contexts. Each context maintains its own
+ * text buffer, allowing different subsystems to operate independently
+ * within the same console window.
+ *
+ * @precondition consoleOutput != null AND consoleInput != null
+ * @postcondition A ConsoleObject instance is created with an initialized context buffer
+ */
+public class ConsoleObject
+{
 
+    /**
+     * The text area used for console output.
+     */
     private final TextArea consoleOutput;
+
+    /**
+     * The text field used for console input.
+     */
     private final TextField consoleInput;
 
-    // make global singleton? This way individual console windows share the same context
-    private HashMap<String, String> contextBasedBuffer;
+    /**
+     * Stores console text per context.
+     */
+    private final HashMap<String, String> contextBasedBuffer;
+
+    /**
+     * The currently active console context.
+     */
     private String currentContext;
 
-    // get random generated id to get console
-    public ConsoleObject(TextArea consoleOutput, TextField consoleInput){
-
+    /**
+     * Creates a new ConsoleObject with the given output and input controls.
+     *
+     * @param consoleOutput the TextArea used for console output
+     * @param consoleInput  the TextField used for console input
+     * @precondition consoleOutput != null AND consoleInput != null
+     * @postcondition ConsoleObject is initialized with MAIN context
+     */
+    public ConsoleObject (TextArea consoleOutput, TextField consoleInput)
+    {
         this.consoleOutput = consoleOutput;
         this.consoleInput = consoleInput;
 
-        // default to main
         this.currentContext = ConsoleBufferContext.MAIN.context();
-        this.contextBasedBuffer = new HashMap<String, String>();
+        this.contextBasedBuffer = new HashMap<>();
     }
 
-    // a non-client sided output to the console. e.g. could be an error etc
-    // returns the current context if wanted, also loads the current context
-    // Since commands can only be executed from their respective contexts within ConsoleWindowController we expect to have this has the currentContext
-    public void makeOutputToCurrentContext(String outputText){
+    /**
+     * Writes non-user output to the current context and reloads it.
+     *
+     * @param outputText the text to append
+     * @precondition outputText != null
+     * @postcondition Text is appended to the current context buffer and displayed
+     */
+    public void makeOutputToCurrentContext (String outputText)
+    {
 
         String append = ">> " + outputText + "\n";
+        String old = contextBasedBuffer.getOrDefault(currentContext, "");
 
-        // retrieve old value, empty if null
-        String old = (this.contextBasedBuffer.get(this.currentContext) == null) ? "" : this.contextBasedBuffer.get(this.currentContext);
-        this.contextBasedBuffer.put(this.currentContext, old + append);
-
-        loadContext(this.currentContext);
-
+        contextBasedBuffer.put(currentContext, old + append);
+        loadContext(currentContext);
     }
 
-    // does not load the context (if not current one) but lets you still write to the selected context
-    public void makeOutputToSpecifiedContext(String outputText, String toContext){
+    /**
+     * Writes output to a specified context without switching to it,
+     * unless the specified context is the current one.
+     *
+     * @param outputText the text to append
+     * @param toContext  the target context
+     * @precondition outputText != null AND toContext != null
+     * @postcondition Text is appended to the specified context buffer
+     */
+    public void makeOutputToSpecifiedContext (String outputText, String toContext)
+    {
+
         String append = ">> " + outputText + "\n";
+        String old = contextBasedBuffer.getOrDefault(toContext, "");
 
-        // retrieve old value, empty if null
-        String old = (this.contextBasedBuffer.get(toContext) == null) ? "" : this.contextBasedBuffer.get(toContext);
-        this.contextBasedBuffer.put(toContext, old + append);
+        contextBasedBuffer.put(toContext, old + append);
 
-        // if current context is the specified one then load it to show the effects
-        if(toContext.equals(this.currentContext)){
-            loadContext(this.currentContext);
+        if (toContext.equals(currentContext))
+        {
+            loadContext(currentContext);
         }
     }
 
-    // This would be the text the user input into the console, always uses the current context and loads it
-    public void writeUserInputToConsole(String userInput){
+    /**
+     * Writes user input to the current context and reloads it.
+     *
+     * @param userInput the user input text
+     * @precondition userInput != null
+     * @postcondition User input is appended to the current context buffer and displayed
+     */
+    public void writeUserInputToConsole (String userInput)
+    {
 
         String append = "<< " + userInput + "\n";
+        String old = contextBasedBuffer.getOrDefault(currentContext, "");
 
-        // retrieve old value, empty if null
-        String old = (this.contextBasedBuffer.get(this.currentContext) == null) ? "" : this.contextBasedBuffer.get(this.currentContext);
-        this.contextBasedBuffer.put(this.currentContext, old + append);
-
-        loadContext(this.currentContext);
+        contextBasedBuffer.put(currentContext, old + append);
+        loadContext(currentContext);
     }
 
     /**
-     * Uses the current context and reloads it
+     * Clears the current context buffer and reloads it.
+     *
+     * @precondition none
+     * @postcondition Current context buffer becomes empty
      */
-    public void clearConsole(){
-
-        this.contextBasedBuffer.put(this.currentContext, "");
-        loadContext(this.currentContext);
+    public void clearConsole ()
+    {
+        contextBasedBuffer.put(currentContext, "");
+        loadContext(currentContext);
     }
 
     /**
-     * Returns the String the user send into the console. The Buffer is not flushed. The input can only be retrieved with the right context.
-     * Objects that are only working within a single context should never retrieve user input outside their own context scope (could result in objects reacting to input not meant for them)
-     * @param context
-     * @return
+     * Retrieves user input from the console input field,
+     * but only if the caller provides the correct context.
+     *
+     * @param context the context requesting the input
+     * @return the user input if context matches, otherwise an empty string
+     * @precondition context != null
+     * @postcondition Returns input only if context matches currentContext
      */
-    public String getUserInput(String context){
+    public String getUserInput (String context)
+    {
 
         String userInput = consoleInput.getText();
 
-        if(this.currentContext.equals(context)){
+        if (currentContext.equals(context))
+        {
             return userInput;
-        }else{
-            return "";
         }
+        return "";
     }
 
     /**
-     * load the specified context to the console Output Field
-     * @param context
+     * Loads the specified context into the console output field.
+     *
+     * @param context the context to load
+     * @precondition context != null
+     * @postcondition Console output displays the buffer of the specified context
      */
-    public void loadContext(String context){
+    public void loadContext (String context)
+    {
 
-        String loadedText = (this.contextBasedBuffer.get(context) == null) ? "" : this.contextBasedBuffer.get(context);
-        this.consoleOutput.setText(loadedText);
-        this.currentContext = context;
+        String loadedText = contextBasedBuffer.getOrDefault(context, "");
+        consoleOutput.setText(loadedText);
+        currentContext = context;
     }
 
-    /* getter */
-    public TextArea getOutputArea(){
-        return this.consoleOutput;
+    /**
+     * Returns the console output area.
+     */
+    public TextArea getOutputArea ()
+    {
+        return consoleOutput;
     }
-    public TextField getInputField(){
-        return this.consoleInput;
+
+    /**
+     * Returns the console input field.
+     */
+    public TextField getInputField ()
+    {
+        return consoleInput;
     }
-    public String getCurrentContext(){
-        return this.currentContext;
+
+    /**
+     * Returns the currently active context.
+     */
+    public String getCurrentContext ()
+    {
+        return currentContext;
     }
 }

@@ -1,24 +1,35 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
+import org.alegroup.polyederstlviewer.constants.CommandConstants;
 import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
 import org.alegroup.polyederstlviewer.model.client.STLClient;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
-public class ClientDataSendCommand implements CommandExecuter{
+/**
+ * Sends arbitrary data to the active STL client.
+ *
+ * @precondition console != null AND args != null
+ * @postcondition Data is sent to the client if valid
+ */
+public class ClientDataSendCommand implements CommandExecuter
+{
+
     @Override
-    public boolean execute(ConsoleObject console, String[] args) {
+    public boolean execute (ConsoleObject console, String[] args)
+    {
 
-        if(args.length != 1){
-            console.makeOutputToCurrentContext("Invalid arguments: 'data send --DATA'");
+        if (args.length != 1)
+        {
+            console.makeOutputToCurrentContext(CommandConstants.CLIENT_DATA_INVALID_ARGUMENTS);
             return false;
-        }else{
-
-            String context = console.getCurrentContext();
-            STLClient client = ActiveClientContainer.getInstance().getClient(context);
-
-            client.inputCommand("se" + args[0]);
-            console.makeOutputToCurrentContext("Sent data to server!");
-            return true;
         }
+
+        String context = console.getCurrentContext();
+        STLClient client = ActiveClientContainer.getInstance().getClient(context);
+
+        client.inputCommand(CommandConstants.CLIENT_DATA_PREFIX + args[0]);
+        console.makeOutputToCurrentContext(CommandConstants.CLIENT_DATA_SENT);
+
+        return true;
     }
 }

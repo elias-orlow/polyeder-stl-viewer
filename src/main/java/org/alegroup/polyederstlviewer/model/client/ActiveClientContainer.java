@@ -2,57 +2,100 @@ package org.alegroup.polyederstlviewer.model.client;
 
 import java.util.HashMap;
 
-/* SINGLETON */
-public class ActiveClientContainer {
+/**
+ * Singleton container that manages active STLClient instances.
+ * Each client is associated with a specific console context.
+ *
+ * @precondition Context keys must be unique and non-null.
+ * @postcondition ActiveClientContainer provides global access to active clients.
+ */
+public class ActiveClientContainer
+{
 
+    /**
+     * Singleton instance.
+     */
     private static ActiveClientContainer INSTANCE;
 
-    private HashMap<String, STLClient> activeClients;
+    /**
+     * Map of context identifiers to active STLClient instances.
+     */
+    private final HashMap<String, STLClient> activeClients;
 
-    private ActiveClientContainer(){
-        this.activeClients = new HashMap<String, STLClient>();
+    /**
+     * Private constructor for singleton initialization.
+     *
+     * @precondition none
+     * @postcondition Internal client map is initialized
+     */
+    private ActiveClientContainer ()
+    {
+        this.activeClients = new HashMap<>();
     }
 
-    public static ActiveClientContainer getInstance(){
-        if(INSTANCE == null) {
+    /**
+     * Returns the singleton instance of the ActiveClientContainer.
+     *
+     * @return the global ActiveClientContainer instance
+     * @precondition none
+     * @postcondition A non-null singleton instance is returned
+     */
+    public static ActiveClientContainer getInstance ()
+    {
+        if (INSTANCE == null)
+        {
             INSTANCE = new ActiveClientContainer();
         }
-
         return INSTANCE;
     }
 
     /**
+     * Retrieves the client associated with the given context.
      *
-     * @param context
-     * @return null if no client found for this context
+     * @param context the context identifier
+     * @return the STLClient associated with the context, or null if none exists
+     * @precondition context != null
+     * @postcondition Returns client or null without modifying internal state
      */
-    public STLClient getClient(String context){
-
-        STLClient client;
-        if((client = this.activeClients.get(context)) != null){
-            return client;
-        }else{
-            return null;
-        }
+    public STLClient getClient (String context)
+    {
+        return activeClients.getOrDefault(context, null);
     }
 
-    public boolean addClient(STLClient client, String context){
-
-        if(this.activeClients.get(context) == null){
-            this.activeClients.put(context, client);
+    /**
+     * Adds a client to the container under the given context.
+     *
+     * @param client  the client to add
+     * @param context the context identifier
+     * @return true if the client was added, false if a client already exists for the context
+     * @precondition client != null AND context != null
+     * @postcondition Client is added only if context was unused
+     */
+    public boolean addClient (STLClient client, String context)
+    {
+        if (activeClients.get(context) == null)
+        {
+            activeClients.put(context, client);
             return true;
-        }else{
-            return false;
         }
+        return false;
     }
 
-    public boolean removeClient(String context){
-
-        if(this.activeClients.get(context) == null){
+    /**
+     * Removes the client associated with the given context.
+     *
+     * @param context the context identifier
+     * @return true if a client was removed, false if no client existed for the context
+     * @precondition context != null
+     * @postcondition Client is removed if present
+     */
+    public boolean removeClient (String context)
+    {
+        if (activeClients.get(context) == null)
+        {
             return false;
-        }else{
-            this.activeClients.remove(context);
-            return true;
         }
+        activeClients.remove(context);
+        return true;
     }
 }

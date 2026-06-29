@@ -1,15 +1,22 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
-import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
+import org.alegroup.polyederstlviewer.constants.CommandConstants;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
-public class ServerReturnCommand implements CommandExecuter{
+/**
+ * Returns the console to the MAIN context.
+ *
+ * @precondition console != null
+ * @postcondition Console context is switched to MAIN
+ */
+public class ServerReturnCommand implements CommandExecuter
+{
+
     @Override
-    public boolean execute(ConsoleObject console, String[] args) {
+    public boolean execute (ConsoleObject console, String[] args)
+    {
 
-        String context = ConsoleBufferContext.MAIN.context();
-        console.loadContext(context);
-
+        console.loadContext(CommandConstants.MAIN_CONTEXT);
         return true;
     }
 }

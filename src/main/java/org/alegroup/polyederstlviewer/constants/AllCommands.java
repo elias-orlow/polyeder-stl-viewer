@@ -3,7 +3,16 @@ package org.alegroup.polyederstlviewer.constants;
 import org.alegroup.polyederstlviewer.control.commandExecutables.*;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
-public enum AllCommands {
+/**
+ * Central registry of all available console commands.
+ * <p>
+ * Each enum entry maps a textual command identifier to its corresponding
+ * CommandExecuter implementation. This provides a unified lookup mechanism
+ * for command execution and ensures that all commands are centrally defined,
+ * discoverable, and consistently referenced throughout the application.
+ */
+public enum AllCommands
+{
 
     // Basic
     CLEAR("clear", new ClearCommand()),
@@ -24,25 +33,27 @@ public enum AllCommands {
     CLIENT_TRANSLATE("object translate", new ClientTranslateObjectCommand()),
     CLIENT_ROTATE("object rotate", new ClientRotateObjectCommand());
 
-
     private final String methodName;
     private final CommandExecuter command;
-    AllCommands(String methodName, CommandExecuter command){
+
+    AllCommands (String methodName, CommandExecuter command)
+    {
         this.methodName = methodName;
         this.command = command;
     }
 
-    public boolean execute(ConsoleObject console, String[] args){
+    public boolean execute (ConsoleObject console, String[] args)
+    {
         // command execution is always seen as a "success" when respective method is 'null'
-        if(this.command == null){
+        if (this.command == null)
+        {
             return true;
         }
-
         return this.command.execute(console, args);
     }
 
-    /* getter */
-    public String getMethodName() {
+    public String getMethodName ()
+    {
         return methodName;
     }
 }

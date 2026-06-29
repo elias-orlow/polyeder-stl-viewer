@@ -1,39 +1,57 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import com.google.gson.Gson;
+import org.alegroup.polyederstlviewer.constants.CommandConstants;
 import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
 import org.alegroup.polyederstlviewer.model.client.STLClient;
 import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
-public class ClientTranslateObjectCommand implements CommandExecuter{
+/**
+ * Sends a translation command (X,Y,Z) to the active STL client.
+ *
+ * @precondition console != null AND args != null
+ * @postcondition Translation data is sent to the client if valid
+ */
+public class ClientTranslateObjectCommand implements CommandExecuter
+{
+
     @Override
-    public boolean execute(ConsoleObject console, String[] args) {
+    public boolean execute (ConsoleObject console, String[] args)
+    {
 
-        if(args.length != 3){
-            console.makeOutputToCurrentContext("Invalid arguments provided. translate --X --Y --Z");
+        if (args.length != 3)
+        {
+            console.makeOutputToCurrentContext(CommandConstants.CLIENT_TRANSLATE_INVALID_ARGUMENTS);
             return false;
-        }else{
+        }
 
-            try {
-                TranslateObjectJSON translateObject = new TranslateObjectJSON(Float.parseFloat(args[0]), Float.parseFloat(args[1]), Float.parseFloat(args[2]));
-                String context = console.getCurrentContext();
-                STLClient client = ActiveClientContainer.getInstance().getClient(context);
+        try
+        {
+            TranslateObjectJSON translateObject =
+                    new TranslateObjectJSON(
+                            Float.parseFloat(args[0]),
+                            Float.parseFloat(args[1]),
+                            Float.parseFloat(args[2])
+                    );
 
-                Gson gson = new Gson();
-                String data = "tr" + gson.toJson(translateObject);
+            String context = console.getCurrentContext();
+            STLClient client = ActiveClientContainer.getInstance().getClient(context);
 
-                client.inputCommand(data);
+            Gson gson = new Gson();
+            String data = CommandConstants.CLIENT_TRANSLATE_PREFIX + gson.toJson(translateObject);
 
-                console.makeOutputToCurrentContext("Sent translate data to server!");
-                return true;
+            client.inputCommand(data);
 
-            }catch (Exception e){
-                console.makeOutputToCurrentContext("Arguments provided must be of type float. translate --X --Y --Z");
-                System.out.println(e.toString());
-                System.out.println(e.getStackTrace().toString());
-                return false;
-            }
+            console.makeOutputToCurrentContext(CommandConstants.CLIENT_TRANSLATE_SENT);
+            return true;
+
+        } catch (Exception e)
+        {
+            console.makeOutputToCurrentContext(CommandConstants.CLIENT_TRANSLATE_FLOAT_ERROR);
+            System.out.println(e.toString());
+            System.out.println(e.getStackTrace().toString());
+            return false;
         }
     }
 }

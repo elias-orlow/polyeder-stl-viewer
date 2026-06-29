@@ -1,5 +1,6 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
+import org.alegroup.polyederstlviewer.constants.CommandConstants;
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 import org.alegroup.polyederstlviewer.model.server.ActiveServerContainer;
@@ -7,47 +8,78 @@ import org.alegroup.polyederstlviewer.model.server.STLServer;
 
 import java.util.HashMap;
 
-public class ServerStartCommand implements CommandExecuter{
+/**
+ * Starts a new STL server instance on the given port.
+ *
+ * @precondition console != null AND args != null
+ * @postcondition Server is started if port is valid and no server exists for the context
+ */
+public class ServerStartCommand implements CommandExecuter
+{
 
-    // global singleton static container containing all running server threads?
-    private HashMap<Integer, Thread> threads;
+    /**
+     * Tracks running server threads.
+     */
+    private final HashMap<Integer, Thread> threads;
 
-    public ServerStartCommand(){
-        this.threads = new HashMap<Integer, Thread>();
+    /**
+     * Creates a new ServerStartCommand instance.
+     *
+     * @precondition none
+     * @postcondition Thread map initialized
+     */
+    public ServerStartCommand ()
+    {
+        this.threads = new HashMap<>();
     }
 
+    /**
+     * Executes the server start command.
+     *
+     * @param console the console object
+     * @param args    command arguments (must contain exactly one port number)
+     * @return true if server started successfully, false otherwise
+     * @precondition console != null AND args != null
+     * @postcondition Server is started or error message is printed
+     */
     @Override
-    public boolean execute(ConsoleObject console, String[] args) {
+    public boolean execute (ConsoleObject console, String[] args)
+    {
 
-        if(args.length != 1){
-            console.makeOutputToCurrentContext("Invalid arguments. Must only provide a valid port number");
+        if (args.length != 1)
+        {
+            console.makeOutputToCurrentContext(CommandConstants.INVALID_ARGUMENTS);
             return false;
-        }else{
+        }
 
-            int portNumber;
-            try {
-                portNumber = Integer.parseInt(args[0]);
-                // context is simply a combination of the server context standard plus the port number
-                String context = ConsoleBufferContext.SERVER.context() + "-" + args[0];
-                console.loadContext(context);
+        try
+        {
+            int portNumber = Integer.parseInt(args[0]);
 
-                if(ActiveServerContainer.getInstance().getServer(context) == null){
-                    STLServer stlServer = new STLServer(portNumber, console, context);
-                    Thread serverThread = new Thread(stlServer);
-                    serverThread.start();
+            String context =
+                    ConsoleBufferContext.SERVER.context()
+                            + CommandConstants.CONTEXT_SEPARATOR
+                            + args[0];
 
-                    ActiveServerContainer.getInstance().addServer(stlServer, context);
-                }else {
-                    // exists, only load context?
-                    //console.makeOutputToCurrentContext("Server exists already");
-                }
+            console.loadContext(context);
 
-                return true;
+            if (ActiveServerContainer.getInstance().getServer(context) == null)
+            {
 
-            }catch (NumberFormatException e){
-                console.makeOutputToCurrentContext("Invalid arguments. Must only provide a valid port number");
-                return false;
+                STLServer stlServer = new STLServer(portNumber, console, context);
+                Thread serverThread = new Thread(stlServer);
+                serverThread.start();
+
+                ActiveServerContainer.getInstance().addServer(stlServer, context);
+
             }
+
+            return true;
+
+        } catch (NumberFormatException e)
+        {
+            console.makeOutputToCurrentContext(CommandConstants.INVALID_ARGUMENTS);
+            return false;
         }
     }
 }

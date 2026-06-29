@@ -12,28 +12,35 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a triangle as a special polygon with exactly three edges.
- * A triangle has a normal vector and must not be degenerated.
+ * Represents a triangle defined by exactly three connected edges and a normal vector.
+ * A triangle must be non-degenerate and its edges must form a closed polygon.
  *
- * @precondition The edges are not null, connected, closed and define a non-degenerate triangle.
- * @postcondition A triangle object can be created if all validation rules are fulfilled.
+ * @precondition Edges must be non-null, connected, closed, and define a non-degenerate triangle.
+ * @postcondition A valid Triangle instance is created if all validation rules are fulfilled.
  */
 public class Triangle extends Polygon
 {
+
+    /**
+     * Threshold used to detect degenerate triangles.
+     */
     private static final float EPSILON = ModelConstants.TRIANGLE_EPSILON;
 
+    /**
+     * The normal vector of the triangle.
+     */
     private final Vector3D normalVector;
 
     /**
      * Creates a triangle from a list of edges and a normal vector.
      *
-     * @param edges        the list of edges used to create the triangle
+     * @param edges        the list of edges defining the triangle
      * @param normalVector the normal vector of the triangle
-     * @throws IllegalArgumentException if the edges do not form a valid triangle
+     * @throws IllegalArgumentException if edges do not form a valid triangle
      * @throws IllegalArgumentException if the triangle is degenerated
      * @throws IllegalArgumentException if the normal vector is null
-     * @precondition edges is not null, contains exactly three connected edges and is not degenerated.
-     * @postcondition A new Triangle object with the given edges and normal vector is created.
+     * @precondition edges != null AND edges contain exactly three connected edges
+     * @postcondition A new Triangle instance is created
      */
     public Triangle (List<Edge> edges, Vector3D normalVector)
     {
@@ -60,10 +67,10 @@ public class Triangle extends Polygon
     /**
      * Creates a triangle from an array of edges and a normal vector.
      *
-     * @param edges        the array of edges used to create the triangle
+     * @param edges        the array of edges defining the triangle
      * @param normalVector the normal vector of the triangle
-     * @precondition edges is not null, contains exactly three connected edges and is not degenerated.
-     * @postcondition A new Triangle object with the given edges and normal vector is created.
+     * @precondition edges != null AND edges contain exactly three connected edges
+     * @postcondition A new Triangle instance is created
      */
     public Triangle (Edge[] edges, Vector3D normalVector)
     {
@@ -71,12 +78,12 @@ public class Triangle extends Polygon
     }
 
     /**
-     * Checks whether the given edge list contains exactly three edges.
+     * Checks whether the given list contains exactly three edges.
      *
      * @param edges the list of edges to check
-     * @return true if the edge list is not null and contains exactly three edges, otherwise false
-     * @precondition edges may be null.
-     * @postcondition The triangle edge count validation result is returned.
+     * @return true if edges contain exactly three elements, otherwise false
+     * @precondition edges may be null
+     * @postcondition A boolean indicating triangle edge count validity is returned
      */
     private boolean isTriangle (List<Edge> edges)
     {
@@ -85,15 +92,16 @@ public class Triangle extends Polygon
 
     /**
      * Checks whether the triangle is degenerated.
-     * A triangle is degenerated if its three vertices are collinear or if the calculated area is almost zero.
+     * A triangle is degenerated if its vertices are collinear or its area is nearly zero.
      *
      * @param edges the edges of the triangle
      * @return true if the triangle is degenerated, otherwise false
-     * @precondition edges is not null and contains exactly three connected edges.
-     * @postcondition The degeneration validation result is returned.
+     * @precondition edges != null AND edges contain exactly three connected edges
+     * @postcondition A boolean indicating degeneration is returned
      */
     private boolean isDegenerated (List<Edge> edges)
     {
+
         Vertex a = edges.get(GeneralConstants.FIRST_INDEX).getStart();
         Vertex b = edges.get(GeneralConstants.FIRST_INDEX).getEnd();
         Vertex c = edges.get(GeneralConstants.SECOND_INDEX).getEnd();
@@ -110,58 +118,45 @@ public class Triangle extends Polygon
         float crossY = abZ * acX - abX * acZ;
         float crossZ = abX * acY - abY * acX;
 
-        float crossLengthSquared = crossX * crossX
-                + crossY * crossY
-                + crossZ * crossZ;
+        float crossLengthSquared =
+                crossX * crossX +
+                        crossY * crossY +
+                        crossZ * crossZ;
 
-        return false;
-                //return crossLengthSquared <= EPSILON * EPSILON;
+        return crossLengthSquared <= EPSILON * EPSILON;
     }
 
     /**
-     * Compute the area of the triangle.
+     * Computes the area of the triangle.
      *
-     * @return the area of the triangle
-     * @precondition Vertices define a non-degenerate triangle (area >= 0).
-     * @postcondition Returns non-negative area.
+     * @return the non-negative area of the triangle
+     * @precondition Triangle must be non-degenerate
+     * @postcondition A valid area value is returned
      */
     public float area ()
     {
-        Vector3D a = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getB().getX(), getB().getY(), getB().getZ()));
-        Vector3D b = new Vector3D(getA().getX(), getA().getY(), getA().getZ()).subtract(new Vector3D(getC().getX(), getC().getY(), getC().getZ()));
+        Vector3D a = new Vector3D(getA().getX(), getA().getY(), getA().getZ())
+                .subtract(new Vector3D(getB().getX(), getB().getY(), getB().getZ()));
+
+        Vector3D b = new Vector3D(getA().getX(), getA().getY(), getA().getZ())
+                .subtract(new Vector3D(getC().getX(), getC().getY(), getC().getZ()));
+
         Vector3D cross = a.cross(b);
+
         return ModelConstants.TRIANGLE_AREA_FACTOR * cross.magnitude();
     }
 
-//    /**
-//     * Signed volume contribution of the tetrahedron formed by triangle and origin.
-//     * Formula: (1/6) * (v0 dot (v1 x v2))
-//     *
-//     * @precondition Vertices are in absolute coordinates.
-//     * @postcondition Returns signed volume contribution (can be negative).
-//     */
-//    public float signedVolumeContribution()
-//    {
-//        Vector3D A = new Vector3D(getA().getX(), getA().getY(), getA().getZ());
-//        Vector3D B = new Vector3D(getB().getX(), getB().getY(), getB().getZ());
-//        Vector3D C = new Vector3D(getC().getX(), getC().getY(), getC().getZ());
-//
-//        Vector3D b = B.subtract(A);
-//        Vector3D c = C.subtract(A);
-//
-//        return b.cross(c).dot(A) / 6.0f;
-//    }
-
     /**
-     * Signed volume contribution using the STL normal to determine orientation.
+     * Computes the signed volume contribution of this triangle using a reference vertex.
      *
-     * @param reference the reference vertex used for the volume calculation
-     * @return the signed volume contribution of this triangle
-     * @precondition Vertices and normal are in absolute coordinates.
-     * @postcondition Returns signed volume contribution (translation invariant).
+     * @param reference the reference vertex
+     * @return the signed volume contribution
+     * @precondition reference != null AND vertices are in absolute coordinates
+     * @postcondition A signed volume value is returned
      */
     public float signedVolumeContribution (Vertex reference)
     {
+
         Vector3D A = new Vector3D(getA().getX(), getA().getY(), getA().getZ());
         Vector3D B = new Vector3D(getB().getX(), getB().getY(), getB().getZ());
         Vector3D C = new Vector3D(getC().getX(), getC().getY(), getC().getZ());
@@ -169,11 +164,10 @@ public class Triangle extends Polygon
         Vector3D referenceVertex = new Vector3D(reference.getX(), reference.getY(), reference.getZ());
 
         Vector3D a = referenceVertex.subtract(A);
-
         Vector3D b = B.subtract(A);
         Vector3D c = C.subtract(A);
 
-        float unsignedVolume = a.dot(b.cross(c)) / ModelConstants.SIGNED_VOLUME_DIVISOR; // das macht halt gar kein Sinn ?!
+        float unsignedVolume = a.dot(b.cross(c)) / ModelConstants.SIGNED_VOLUME_DIVISOR;
         float orientation = getNormalVector().dot(b.cross(c));
 
         return (orientation >= GeneralConstants.ZERO_FLOAT ? unsignedVolume : -unsignedVolume);
@@ -182,35 +176,31 @@ public class Triangle extends Polygon
     /**
      * Checks whether the given reference vertex is part of this triangle.
      *
-     * @param reference the reference vertex to search for
-     * @return true if the reference vertex is part of this triangle, otherwise false
-     * @precondition reference may be null.
-     * @postcondition The result of the reference check is returned.
+     * @param reference the vertex to check
+     * @return true if the vertex is part of the triangle, otherwise false
+     * @precondition reference may be null
+     * @postcondition A boolean indicating membership is returned
      */
     public boolean hasReference (Vertex reference)
     {
-        boolean hasReference = false;
-        List<Edge> edges = getEdges();
+
         List<Vertex> vertices = new ArrayList<>();
 
-        for (Edge e : edges)
+        for (Edge e : getEdges())
         {
             vertices.add(e.getStart());
             vertices.add(e.getEnd());
         }
 
-        if (vertices.contains(reference))
-        {
-            return true;
-        } else return false;
+        return vertices.contains(reference);
     }
 
     /**
-     * Returns a textual representation of this triangle.
+     * Returns a formatted string representation of this triangle.
      *
-     * @return a formatted string containing the vertices, normal vector and area of this triangle
-     * @precondition None.
-     * @postcondition A string representation of this triangle is returned.
+     * @return a string containing vertices, normal vector, and area
+     * @precondition none
+     * @postcondition A non-null string is returned
      */
     @Override
     public String toString ()
@@ -226,11 +216,7 @@ public class Triangle extends Polygon
     }
 
     /**
-     * Returns the first vertex of this triangle.
-     *
-     * @return the first vertex of this triangle
-     * @precondition The triangle contains valid edges.
-     * @postcondition The first vertex of this triangle is returned.
+     * Returns the first vertex of the triangle.
      */
     public Vertex getA ()
     {
@@ -238,11 +224,7 @@ public class Triangle extends Polygon
     }
 
     /**
-     * Returns the second vertex of this triangle.
-     *
-     * @return the second vertex of this triangle
-     * @precondition The triangle contains valid edges.
-     * @postcondition The second vertex of this triangle is returned.
+     * Returns the second vertex of the triangle.
      */
     public Vertex getB ()
     {
@@ -250,11 +232,7 @@ public class Triangle extends Polygon
     }
 
     /**
-     * Returns the third vertex of this triangle.
-     *
-     * @return the third vertex of this triangle
-     * @precondition The triangle contains valid edges.
-     * @postcondition The third vertex of this triangle is returned.
+     * Returns the third vertex of the triangle.
      */
     public Vertex getC ()
     {
@@ -262,11 +240,7 @@ public class Triangle extends Polygon
     }
 
     /**
-     * Returns the normal vector of this triangle.
-     *
-     * @return the normal vector of this triangle
-     * @precondition None.
-     * @postcondition The normal vector of this triangle is returned.
+     * Returns the normal vector of the triangle.
      */
     public Vector3D getNormalVector ()
     {

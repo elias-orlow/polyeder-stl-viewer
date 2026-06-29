@@ -11,21 +11,23 @@ import org.alegroup.polyederstlviewer.model.geometry.primitive.Vertex;
 import java.util.*;
 
 /**
- * Represents a polyhedron as a closed triangle mesh.
- * A polyhedron can calculate surface area, volume and provide triangle analysis methods.
+ * Represents a polyhedron defined by a closed triangle mesh.
+ * A polyhedron provides geometric analysis such as surface area,
+ * volume computation, and triangle sorting.
  *
- * @precondition Triangles form a closed mesh.
- * @postcondition A polyhedron instance is created and provides analysis methods.
+ * @precondition Triangles must form a closed mesh.
+ * @postcondition A valid Polyhedron instance is created and provides analysis methods.
  */
 public class Polyhedron extends Mesh
 {
+
     /**
      * Creates a polyhedron from a list of triangles.
      *
-     * @param triangles the list of triangles used to create the polyhedron
+     * @param triangles the list of triangles forming the polyhedron
      * @throws IllegalArgumentException if the triangle mesh is not closed
-     * @precondition triangles is not null, connected and forms a closed triangle mesh.
-     * @postcondition A new Polyhedron object is created.
+     * @precondition triangles != null AND triangles form a closed mesh
+     * @postcondition A new Polyhedron instance is created
      */
     public Polyhedron (List<Triangle> triangles)
     {
@@ -40,9 +42,9 @@ public class Polyhedron extends Mesh
     /**
      * Creates a polyhedron from an array of triangles.
      *
-     * @param triangles the array of triangles used to create the polyhedron
-     * @precondition triangles is not null, connected and forms a closed triangle mesh.
-     * @postcondition A new Polyhedron object is created.
+     * @param triangles the array of triangles forming the polyhedron
+     * @precondition triangles != null AND triangles form a closed mesh
+     * @postcondition A new Polyhedron instance is created
      */
     public Polyhedron (Triangle[] triangles)
     {
@@ -50,26 +52,28 @@ public class Polyhedron extends Mesh
     }
 
     /**
-     * Checks whether the given triangle mesh is closed.
+     * Checks whether the triangle mesh is closed.
      * A mesh is closed if every undirected edge is used exactly twice.
      *
-     * @param triangles the list of triangles to check
+     * @param triangles the list of triangles to validate
      * @return true if the mesh is closed, otherwise false
-     * @precondition triangles is not null and contains valid triangles.
-     * @postcondition The closure validation result is returned.
+     * @precondition triangles != null AND triangles contain valid edges
+     * @postcondition A boolean indicating closure is returned
      */
     private boolean isClosed (List<Triangle> triangles)
     {
+
         Map<EdgeKey, Integer> edgeCounter = new HashMap<>();
 
         for (Triangle triangle : triangles)
         {
             for (Edge edge : triangle.getEdges())
             {
-                EdgeKey edgeKey = new EdgeKey(edge);
 
-                int currentCount = edgeCounter.getOrDefault(edgeKey, GeneralConstants.INT_ZERO);
-                edgeCounter.put(edgeKey, currentCount + ModelConstants.EDGE_COUNTER_INCREMENT);
+                EdgeKey key = new EdgeKey(edge);
+                int currentCount = edgeCounter.getOrDefault(key, GeneralConstants.INT_ZERO);
+
+                edgeCounter.put(key, currentCount + ModelConstants.EDGE_COUNTER_INCREMENT);
             }
         }
 
@@ -85,11 +89,11 @@ public class Polyhedron extends Mesh
     }
 
     /**
-     * Return a new list of triangles sorted by area descending.
+     * Returns a new list of triangles sorted by area in descending order.
      *
-     * @return a new list of triangles sorted by area in descending order
-     * @precondition Triangles list may be empty.
-     * @postcondition Returns sorted list (largest first).
+     * @return a list sorted by triangle area (largest first)
+     * @precondition none
+     * @postcondition A new sorted list is returned
      */
     public List<Triangle> trianglesSortedByAreaDesc ()
     {
@@ -101,9 +105,9 @@ public class Polyhedron extends Mesh
     /**
      * Computes the total surface area of the polyhedron.
      *
-     * @return non-negative surface area
-     * @precondition Triangles represent the surface of the polyhedron
-     * @postcondition Returns sum of all triangle areas
+     * @return the non-negative surface area
+     * @precondition Triangles represent the full surface
+     * @postcondition A valid area value is returned
      */
     public float surfaceArea ()
     {
@@ -120,12 +124,13 @@ public class Polyhedron extends Mesh
     /**
      * Computes the volume of the polyhedron using signed tetrahedron contributions.
      *
-     * @return absolute volume of the polyhedron
-     * @precondition Mesh is closed and triangles are consistently oriented
-     * @postcondition Returns non-negative volume
+     * @return the absolute volume of the polyhedron
+     * @precondition Mesh is closed AND triangles are consistently oriented
+     * @postcondition A non-negative volume is returned
      */
     public float volume ()
     {
+
         float signedSum = GeneralConstants.ZERO_FLOAT;
         Vertex reference = getTriangles().getFirst().getA();
 
@@ -136,13 +141,14 @@ public class Polyhedron extends Mesh
                 signedSum += t.signedVolumeContribution(reference);
             }
         }
+
         return Math.abs(signedSum);
     }
 
     /**
      * Returns the number of triangles in the polyhedron.
      *
-     * @return number of triangles
+     * @return the number of triangles
      * @precondition none
      * @postcondition integer >= 0
      */
@@ -152,30 +158,24 @@ public class Polyhedron extends Mesh
     }
 
     /**
-     * Represents an undirected edge key for counting edge usages in a mesh.
+     * Represents an undirected edge key for counting edge usages.
      * The direction of the edge is ignored for equality.
      *
-     * @precondition The edge is not null.
-     * @postcondition An edge key can be used in maps and sets.
+     * @precondition edge != null
+     * @postcondition EdgeKey can be used in hash-based collections
      */
     private static class EdgeKey
     {
-        /**
-         * Start vertex of the edge.
-         */
-        private final Vertex start;
 
-        /**
-         * End vertex of the edge.
-         */
+        private final Vertex start;
         private final Vertex end;
 
         /**
-         * Creates an edge key from the given edge.
+         * Creates an undirected edge key from the given edge.
          *
          * @param edge the edge used to create the key
-         * @precondition edge is not null.
-         * @postcondition A new EdgeKey object is created from the edge vertices.
+         * @precondition edge != null
+         * @postcondition A new EdgeKey instance is created
          */
         public EdgeKey (Edge edge)
         {
@@ -184,58 +184,51 @@ public class Polyhedron extends Mesh
         }
 
         /**
-         * Returns a textual representation of this edge key.
+         * Returns a formatted string representation of this edge key.
          *
-         * @return a formatted string containing the end and start vertices
-         * @precondition None.
-         * @postcondition A string representation of this edge key is returned.
+         * @return a string containing the vertices
+         * @precondition none
+         * @postcondition A non-null string is returned
          */
         @Override
         public String toString ()
         {
-            return String.format(ModelConstants.EDGE_KEY_TO_STRING_FORMAT, this.end, this.start);
+            return String.format(ModelConstants.EDGE_KEY_TO_STRING_FORMAT, end, start);
         }
 
         /**
-         * Compares this edge key with another object.
-         * Two edge keys are equal if they represent the same undirected edge.
+         * Determines whether this edge key is equal to another object.
+         * Two keys are equal if they represent the same undirected edge.
          *
-         * @param object the object to compare with this edge key
-         * @return true if the object represents the same undirected edge, otherwise false
-         * @precondition object may be null or any object.
-         * @postcondition The equality result is returned.
+         * @param obj the object to compare
+         * @return true if equal, otherwise false
+         * @precondition obj may be null
+         * @postcondition A boolean indicating equality is returned
          */
         @Override
-        public boolean equals (Object object)
+        public boolean equals (Object obj)
         {
-            if (this == object)
-            {
-                return true;
-            }
 
-            if (!(object instanceof EdgeKey other))
-            {
-                return false;
-            }
+            if (this == obj) return true;
+            if (!(obj instanceof EdgeKey other)) return false;
 
             boolean sameDirection =
-                    this.start.equals(other.start)
-                            && this.end.equals(other.end);
+                    this.start.equals(other.start) &&
+                            this.end.equals(other.end);
 
             boolean oppositeDirection =
-                    this.start.equals(other.end)
-                            && this.end.equals(other.start);
+                    this.start.equals(other.end) &&
+                            this.end.equals(other.start);
 
             return sameDirection || oppositeDirection;
         }
 
         /**
-         * Calculates the hash code of this edge key.
-         * The hash code is independent of the edge direction.
+         * Computes a hash code independent of edge direction.
          *
-         * @return the hash code of this edge key
-         * @precondition None.
-         * @postcondition A hash code consistent with equals is returned.
+         * @return the hash code
+         * @precondition none
+         * @postcondition A hash code consistent with equals() is returned
          */
         @Override
         public int hashCode ()
@@ -245,20 +238,21 @@ public class Polyhedron extends Mesh
     }
 
     // -------------------------------------------------------------------------
-    //  JAVA FX SUPPORT FOR TASK 4
+    //  JAVA FX SUPPORT
     // -------------------------------------------------------------------------
 
     /**
-     * Converts the entire polyhedron into a JavaFX TriangleMesh.
+     * Converts the polyhedron into a JavaFX TriangleMesh.
      * Each triangle becomes one face in the mesh.
      *
-     * @return TriangleMesh representing the polyhedron
+     * @return a TriangleMesh representing the polyhedron
      * @throws IllegalStateException if the polyhedron contains no triangles
      * @precondition Polyhedron contains at least one triangle
-     * @postcondition A valid TriangleMesh is created with points, faces and dummy texture coordinates
+     * @postcondition A valid TriangleMesh is returned
      */
     public TriangleMesh toTriangleMesh ()
     {
+
         if (getTriangles().isEmpty())
         {
             throw new IllegalStateException(ErrorMessages.POLYHEDRON_EMPTY);
@@ -266,7 +260,10 @@ public class Polyhedron extends Mesh
 
         TriangleMesh mesh = new TriangleMesh();
 
-        mesh.getTexCoords().addAll(GeneralConstants.FIRST_INDEX, GeneralConstants.FIRST_INDEX);
+        mesh.getTexCoords().addAll(
+                GeneralConstants.FIRST_INDEX,
+                GeneralConstants.FIRST_INDEX
+        );
 
         List<Float> pointList = new ArrayList<>();
         List<Integer> faceList = new ArrayList<>();
@@ -275,6 +272,7 @@ public class Polyhedron extends Mesh
 
         for (Triangle t : getTriangles())
         {
+
             pointList.add(t.getA().getX());
             pointList.add(t.getA().getY());
             pointList.add(t.getA().getZ());
@@ -289,8 +287,10 @@ public class Polyhedron extends Mesh
 
             faceList.add(vertexIndex);
             faceList.add(GeneralConstants.FIRST_INDEX);
+
             faceList.add(vertexIndex + 1);
             faceList.add(GeneralConstants.FIRST_INDEX);
+
             faceList.add(vertexIndex + 2);
             faceList.add(GeneralConstants.FIRST_INDEX);
 
