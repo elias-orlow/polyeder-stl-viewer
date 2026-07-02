@@ -2,6 +2,7 @@ package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.CommandConstants;
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 import org.alegroup.polyederstlviewer.model.server.ActiveServerContainer;
 import org.alegroup.polyederstlviewer.model.server.STLServer;
@@ -46,7 +47,7 @@ public class ServerStartCommand implements CommandExecuter
     public boolean execute (ConsoleObject console, String[] args)
     {
 
-        if (args.length != 1)
+        if (args.length != GeneralConstants.INT_ONE)
         {
             console.makeOutputToCurrentContext(CommandConstants.INVALID_ARGUMENTS);
             return false;
@@ -54,12 +55,12 @@ public class ServerStartCommand implements CommandExecuter
 
         try
         {
-            int portNumber = Integer.parseInt(args[0]);
+            int portNumber = Integer.parseInt(args[GeneralConstants.FIRST_INDEX]);
 
             String context =
                     ConsoleBufferContext.SERVER.context()
                             + CommandConstants.CONTEXT_SEPARATOR
-                            + args[0];
+                            + args[GeneralConstants.FIRST_INDEX];
 
             console.loadContext(context);
 

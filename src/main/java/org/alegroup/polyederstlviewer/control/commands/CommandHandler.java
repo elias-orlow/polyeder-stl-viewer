@@ -3,6 +3,7 @@ package org.alegroup.polyederstlviewer.control.commands;
 import com.google.gson.Gson;
 import org.alegroup.polyederstlviewer.constants.AllCommands;
 import org.alegroup.polyederstlviewer.constants.CommandHandlerConstants;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.console.CommandBlueprint;
 import org.alegroup.polyederstlviewer.model.console.CommandFile;
 
@@ -91,10 +92,10 @@ public class CommandHandler
             return null;
         }
 
-        for (int i = 0; i < input.length; i++)
+        for (int i = GeneralConstants.INT_ZERO; i < input.length; i++)
         {
             String cleaned = input[i].strip();
-            cleaned = cleaned.replaceAll(CommandHandlerConstants.STRIP_PATTERN, "");
+            cleaned = cleaned.replaceAll(CommandHandlerConstants.STRIP_PATTERN, GeneralConstants.EMPTY_STRING);
             input[i] = cleaned;
         }
 

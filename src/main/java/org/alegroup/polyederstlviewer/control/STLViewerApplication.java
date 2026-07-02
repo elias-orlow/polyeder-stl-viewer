@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.alegroup.polyederstlviewer.constants.ApplicationConstants;
 
 import java.io.IOException;
 
@@ -33,20 +34,20 @@ public class STLViewerApplication extends Application
 
         FXMLLoader loader = new FXMLLoader(
                 STLViewerApplication.class.getResource(
-                        "/org/alegroup/polyederstlviewer/view/MainWindow.fxml"
+                        ApplicationConstants.MAIN_WINDOW_FXML_PATH
                 )
         );
 
-        double screenWidth = Screen.getPrimary().getBounds().getMaxX() - 150;
-        double screenHeight = Screen.getPrimary().getBounds().getMaxY() - 150;
+        double screenWidth = Screen.getPrimary().getBounds().getMaxX() - ApplicationConstants.SCREEN_SIZE_OFFSET;
+        double screenHeight = Screen.getPrimary().getBounds().getMaxY() - ApplicationConstants.SCREEN_SIZE_OFFSET;
 
         Scene scene = new Scene(loader.load(), screenWidth, screenHeight);
 
-        stage.setTitle("STL-File Viewer!");
+        stage.setTitle(ApplicationConstants.APPLICATION_TITLE);
         stage.getIcons().add(
                 new Image(
                         STLViewerApplication.class
-                                .getResource("/org/alegroup/polyederstlviewer/icons/icon.png")
+                                .getResource(ApplicationConstants.APPLICATION_ICON_PATH)
                                 .toString()
                 )
         );

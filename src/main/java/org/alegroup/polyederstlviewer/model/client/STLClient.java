@@ -1,5 +1,6 @@
 package org.alegroup.polyederstlviewer.model.client;
 
+import org.alegroup.polyederstlviewer.constants.STLClientConstants;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 import java.io.BufferedReader;
@@ -84,14 +85,20 @@ public class STLClient implements Runnable
         {
             client = new Socket(hostname, portNumber);
             console.makeOutputToSpecifiedContext(
-                    "Successfully connected socket to " + hostname + " on port: " + portNumber,
+                    STLClientConstants.SUCCESSFULLY_CONNECTED_MESSAGE.formatted(
+                            hostname,
+                            portNumber
+                    ),
                     consoleContext
             );
 
         } catch (IOException e)
         {
             console.makeOutputToSpecifiedContext(
-                    "Something went wrong opening a client socket to " + hostname + " on port: " + portNumber,
+                    STLClientConstants.SOCKET_OPENING_ERROR_MESSAGE.formatted(
+                            hostname,
+                            portNumber
+                    ),
                     consoleContext
             );
         }
@@ -111,7 +118,10 @@ public class STLClient implements Runnable
         {
             if (client != null && !client.isClosed())
             {
-                console.makeOutputToSpecifiedContext("Client stopped!", consoleContext);
+                console.makeOutputToSpecifiedContext(
+                        STLClientConstants.CLIENT_STOPPED_MESSAGE,
+                        consoleContext
+                );
                 ActiveClientContainer.getInstance().removeClient(consoleContext);
                 client.close();
             }
@@ -141,9 +151,15 @@ public class STLClient implements Runnable
                     new BufferedReader(new InputStreamReader(client.getInputStream()));
 
             PrintWriter toServer =
-                    new PrintWriter(client.getOutputStream(), true);
+                    new PrintWriter(
+                            client.getOutputStream(),
+                            STLClientConstants.AUTO_FLUSH_SERVER_WRITER
+                    );
 
-            console.makeOutputToSpecifiedContext("Please input your command!", consoleContext);
+            console.makeOutputToSpecifiedContext(
+                    STLClientConstants.INPUT_COMMAND_MESSAGE,
+                    consoleContext
+            );
 
             while (true)
             {
@@ -164,7 +180,10 @@ public class STLClient implements Runnable
 
         } catch (IOException | InterruptedException e)
         {
-            console.makeOutputToSpecifiedContext("Something went wrong with the client!", consoleContext);
+            console.makeOutputToSpecifiedContext(
+                    STLClientConstants.CLIENT_ERROR_MESSAGE,
+                    consoleContext
+            );
             stop();
         }
     }

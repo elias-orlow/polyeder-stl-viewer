@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.CommandConstants;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
 import org.alegroup.polyederstlviewer.model.console.CommandBlueprint;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
@@ -18,14 +19,15 @@ public class NewCommandCommand implements CommandExecuter
     public boolean execute (ConsoleObject console, String[] args)
     {
 
-        if (args.length != 4)
+        if (args.length != GeneralConstants.INT_FOUR)
         {
             console.makeOutputToCurrentContext(CommandConstants.NEWCOMMAND_INVALID_ARGUMENTS);
             return false;
         }
 
         CommandBlueprint newCommand =
-                new CommandBlueprint(args[0], args[1], args[2], args[3]);
+                new CommandBlueprint(args[GeneralConstants.FIRST_INDEX], args[GeneralConstants.SECOND_INDEX],
+                        args[GeneralConstants.THIRD_INDEX], args[GeneralConstants.FOURTH_INDEX]);
 
         CommandWriter commandWriter = new CommandWriter();
         commandWriter.writeCommand(newCommand);

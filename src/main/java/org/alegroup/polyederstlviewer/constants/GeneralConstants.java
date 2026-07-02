@@ -12,9 +12,20 @@ public interface GeneralConstants
     int INT_ZERO = 0;
     float ZERO_FLOAT = 0.0f;
 
+    int INT_ONE = 1;
+    int INT_TWO = 2;
+    int INT_THREE = 3;
+    int INT_FOUR = 4;
+
     int FIRST_INDEX = 0;
     int NEXT_INDEX_OFFSET = 1;
     int SECOND_INDEX = 1;
+    int THIRD_INDEX = 2;
+    int FOURTH_INDEX = 3;
 
     int HASH_MULTIPLIER = 31;
+
+    String QUOTATION = "\"";
+    String EMPTY_STRING = "";
+    String COLON = ": ";
 }

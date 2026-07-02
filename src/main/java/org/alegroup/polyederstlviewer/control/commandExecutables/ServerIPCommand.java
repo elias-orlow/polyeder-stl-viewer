@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.CommandConstants;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 
 import java.net.InetAddress;
@@ -39,7 +40,7 @@ public class ServerIPCommand implements CommandExecuter
 
                     String displayName = networkInterface.getDisplayName();
                     console.makeOutputToCurrentContext(
-                            CommandConstants.IP_HEADER_PREFIX + displayName + ": "
+                            CommandConstants.IP_HEADER_PREFIX + displayName + GeneralConstants.COLON
                     );
 
                     for (InetAddress inetAddress :

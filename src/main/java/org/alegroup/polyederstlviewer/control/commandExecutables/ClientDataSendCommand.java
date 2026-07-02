@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.CommandConstants;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
 import org.alegroup.polyederstlviewer.model.client.STLClient;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
@@ -18,7 +19,7 @@ public class ClientDataSendCommand implements CommandExecuter
     public boolean execute (ConsoleObject console, String[] args)
     {
 
-        if (args.length != 1)
+        if (args.length != GeneralConstants.INT_ONE)
         {
             console.makeOutputToCurrentContext(CommandConstants.CLIENT_DATA_INVALID_ARGUMENTS);
             return false;
@@ -27,7 +28,7 @@ public class ClientDataSendCommand implements CommandExecuter
         String context = console.getCurrentContext();
         STLClient client = ActiveClientContainer.getInstance().getClient(context);
 
-        client.inputCommand(CommandConstants.CLIENT_DATA_PREFIX + args[0]);
+        client.inputCommand(CommandConstants.CLIENT_DATA_PREFIX + args[GeneralConstants.FIRST_INDEX]);
         console.makeOutputToCurrentContext(CommandConstants.CLIENT_DATA_SENT);
 
         return true;

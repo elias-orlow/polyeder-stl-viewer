@@ -2,6 +2,7 @@ package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import com.google.gson.Gson;
 import org.alegroup.polyederstlviewer.constants.CommandConstants;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
 import org.alegroup.polyederstlviewer.model.client.RotateObjectJSON;
 import org.alegroup.polyederstlviewer.model.client.STLClient;
@@ -20,7 +21,7 @@ public class ClientRotateObjectCommand implements CommandExecuter
     public boolean execute (ConsoleObject console, String[] args)
     {
 
-        if (args.length != 3)
+        if (args.length != GeneralConstants.INT_THREE)
         {
             console.makeOutputToCurrentContext(CommandConstants.CLIENT_ROTATE_INVALID_ARGUMENTS);
             return false;
@@ -30,9 +31,9 @@ public class ClientRotateObjectCommand implements CommandExecuter
         {
             RotateObjectJSON rotateObject =
                     new RotateObjectJSON(
-                            Float.parseFloat(args[0]),
-                            Float.parseFloat(args[1]),
-                            Float.parseFloat(args[2])
+                            Float.parseFloat(args[GeneralConstants.FIRST_INDEX]),
+                            Float.parseFloat(args[GeneralConstants.SECOND_INDEX]),
+                            Float.parseFloat(args[GeneralConstants.THIRD_INDEX])
                     );
 
             String context = console.getCurrentContext();

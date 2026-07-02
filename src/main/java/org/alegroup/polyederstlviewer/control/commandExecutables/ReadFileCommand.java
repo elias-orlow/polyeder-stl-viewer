@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.CommandConstants;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
 import org.alegroup.polyederstlviewer.model.rendering.SceneModel;
@@ -22,14 +23,14 @@ public class ReadFileCommand implements CommandExecuter
     public boolean execute (ConsoleObject console, String[] args)
     {
 
-        if (args.length == 0)
+        if (args.length == GeneralConstants.INT_ZERO)
         {
             console.makeOutputToCurrentContext(CommandConstants.READFILE_INVALID_ARGUMENT);
             return false;
         }
 
-        args[0] = args[0].replace("\"", "");
-        File file = new File(args[0]);
+        args[GeneralConstants.FIRST_INDEX] = args[GeneralConstants.FIRST_INDEX].replace(GeneralConstants.QUOTATION, GeneralConstants.EMPTY_STRING);
+        File file = new File(args[GeneralConstants.FIRST_INDEX]);
 
         if (!file.isFile() || !file.exists())
         {

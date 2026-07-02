@@ -2,6 +2,7 @@ package org.alegroup.polyederstlviewer.control.commandExecutables;
 
 import org.alegroup.polyederstlviewer.constants.CommandConstants;
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.model.client.ActiveClientContainer;
 import org.alegroup.polyederstlviewer.model.client.STLClient;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
@@ -19,7 +20,7 @@ public class ClientConnectCommand implements CommandExecuter
     public boolean execute (ConsoleObject console, String[] args)
     {
 
-        if (args.length != 2)
+        if (args.length != GeneralConstants.INT_TWO)
         {
             console.makeOutputToCurrentContext(CommandConstants.CLIENT_CONNECT_INVALID_ARGUMENTS);
             return false;
@@ -30,8 +31,8 @@ public class ClientConnectCommand implements CommandExecuter
 
         try
         {
-            hostname = args[0];
-            portNumber = Integer.parseInt(args[1]);
+            hostname = args[GeneralConstants.INT_ZERO];
+            portNumber = Integer.parseInt(args[GeneralConstants.SECOND_INDEX]);
         } catch (NumberFormatException e)
         {
             console.makeOutputToCurrentContext(CommandConstants.CLIENT_CONNECT_INVALID_ARGUMENTS);

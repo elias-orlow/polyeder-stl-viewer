@@ -84,6 +84,12 @@ public interface CommandConstants
                     + "-fx-highlight-text-fill: white; -fx-focus-color: transparent; "
                     + "-fx-faint-focus-color: transparent; -fx-font-size: 14px; ";
 
+    String RED_COLOR_COMMAND = "red";
+    String BLUE_COLOR_COMMAND = "blue";
+    String GREEN_COLOR_COMMAND = "green";
+    String WHITE_COLOR_COMMAND = "white";
+    String PURPLE_COLOR_COMMAND = "purple";
+
     // --- ClientTranslateObjectCommand ---
     String CLIENT_TRANSLATE_INVALID_ARGUMENTS =
             "Invalid arguments provided. translate --X --Y --Z";
