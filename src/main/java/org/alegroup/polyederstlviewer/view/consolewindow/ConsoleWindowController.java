@@ -6,11 +6,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.alegroup.polyederstlviewer.constants.AllCommands;
-import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
 import org.alegroup.polyederstlviewer.control.commands.CommandHandler;
 import org.alegroup.polyederstlviewer.control.commands.CommandWriter;
 import org.alegroup.polyederstlviewer.model.console.CommandBlueprint;
 import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
+import static org.alegroup.polyederstlviewer.constants.ConsoleWindowControllerConstants.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +53,7 @@ public class ConsoleWindowController
     /**
      * Current active command context (MAIN, SERVER, CLIENT).
      */
-    private String currentBaseContext = "main";
+    private String currentBaseContext = DEFAULT_BASE_CONTEXT;
 
     /**
      * Initializes the console window by loading available commands, setting up
@@ -69,48 +69,49 @@ public class ConsoleWindowController
         CommandHandler commandHandler = new CommandHandler();
         ConsoleObject console = new ConsoleObject(consoleOutput, consoleInput);
 
-        commandWriter.writeCommand(new CommandBlueprint("clear", "clear",
-                ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_CLEAR, METHOD_CLEAR,
+                MAIN_CONTEXT, MAIN_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("color", "color",
-                ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_COLOR, METHOD_COLOR,
+                MAIN_CONTEXT, MAIN_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("new command", "new command",
-                ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_NEW_COMMAND, METHOD_NEW_COMMAND,
+                MAIN_CONTEXT, MAIN_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("server start", "server start",
-                ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.SERVER.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_SERVER_START, METHOD_SERVER_START,
+                MAIN_CONTEXT, SERVER_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("ip", "server ip",
-                ConsoleBufferContext.SERVER.context(), ConsoleBufferContext.SERVER.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_IP, METHOD_SERVER_IP,
+                SERVER_CONTEXT, SERVER_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("return", "server return",
-                ConsoleBufferContext.SERVER.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_RETURN, METHOD_SERVER_RETURN,
+                SERVER_CONTEXT, MAIN_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("stop", "server stop",
-                ConsoleBufferContext.SERVER.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_STOP, METHOD_SERVER_STOP,
+                SERVER_CONTEXT, MAIN_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("client connect", "client connect",
-                ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_CLIENT_CONNECT, METHOD_CLIENT_CONNECT,
+                MAIN_CONTEXT, CLIENT_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("data send", "data send",
-                ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_DATA_SEND, METHOD_DATA_SEND,
+                CLIENT_CONTEXT, CLIENT_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("translate", "object translate",
-                ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_TRANSLATE, METHOD_OBJECT_TRANSLATE,
+                CLIENT_CONTEXT, CLIENT_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("rotate", "object rotate",
-                ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.CLIENT.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_ROTATE, METHOD_OBJECT_ROTATE,
+                CLIENT_CONTEXT, CLIENT_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("stop", "client stop",
-                ConsoleBufferContext.CLIENT.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_STOP, METHOD_CLIENT_STOP,
+                CLIENT_CONTEXT, MAIN_CONTEXT));
 
-        commandWriter.writeCommand(new CommandBlueprint("read file", "read file",
-                ConsoleBufferContext.MAIN.context(), ConsoleBufferContext.MAIN.context()));
+        commandWriter.writeCommand(new CommandBlueprint(COMMAND_READ_FILE, METHOD_READ_FILE,
+                MAIN_CONTEXT, MAIN_CONTEXT));
 
         consoleInput.setOnAction(e -> {
             String userInput = consoleInput.getText();
-            console.writeUserInputToConsole("STATE: " + currentBaseContext + "| " + userInput);
+            console.writeUserInputToConsole(USER_INPUT_STATE_PREFIX + currentBaseContext
+                    + USER_INPUT_CONTEXT_SEPARATOR + userInput);
             reactToUserInput(userInput, console, commandHandler);
             consoleInput.clear();
         });
@@ -149,7 +150,7 @@ public class ConsoleWindowController
 
         if (possibleCommands.isEmpty() || input.isEmpty())
         {
-            this.ghostLabel.setText("");
+            this.ghostLabel.setText(EMPTY_TEXT);
             return;
         }
 
@@ -162,7 +163,7 @@ public class ConsoleWindowController
             }
             else
             {
-                this.ghostLabel.setText("");
+                this.ghostLabel.setText(EMPTY_TEXT);
             }
         }
     }
@@ -184,23 +185,23 @@ public class ConsoleWindowController
 
         if (cmd == null)
         {
-            console.makeOutputToCurrentContext("Invalid Command");
+            console.makeOutputToCurrentContext(INVALID_COMMAND_MESSAGE);
             return;
         }
 
-        int argSize = cmd.length - 1;
+        int argSize = cmd.length - ARGUMENT_COUNT_OFFSET;
         String[] args = new String[argSize];
-        if (argSize > 0)
+        if (argSize > NO_ARGUMENTS)
         {
-            args = Arrays.copyOfRange(cmd, 1, cmd.length);
+            args = Arrays.copyOfRange(cmd, FIRST_ARGUMENT_INDEX, cmd.length);
         }
 
         CommandBlueprint commandBlueprint =
-                commandHandler.validateCommand(cmd[0], this.currentBaseContext);
+                commandHandler.validateCommand(cmd[COMMAND_NAME_INDEX], this.currentBaseContext);
 
         if (commandBlueprint == null)
         {
-            console.makeOutputToCurrentContext("Invalid Command");
+            console.makeOutputToCurrentContext(INVALID_COMMAND_MESSAGE);
             return;
         }
 
@@ -211,7 +212,7 @@ public class ConsoleWindowController
             if (executable == null)
             {
                 console.makeOutputToCurrentContext(
-                        "no executable found for command: " + commandBlueprint.getCommand());
+                        NO_EXECUTABLE_FOUND_MESSAGE_PREFIX + commandBlueprint.getCommand());
                 return;
             }
 
@@ -223,16 +224,16 @@ public class ConsoleWindowController
             }
             else
             {
-                console.makeOutputToCurrentContext("Command did not execute correctly");
+                console.makeOutputToCurrentContext(COMMAND_EXECUTION_FAILED_MESSAGE);
             }
 
         }
         else
         {
             console.makeOutputToCurrentContext(
-                    "Invalid context for this command! Current context: "
+                    INVALID_CONTEXT_MESSAGE_PREFIX
                             + this.currentBaseContext
-                            + ", needed context: "
+                            + NEEDED_CONTEXT_MESSAGE_PART
                             + commandBlueprint.getNeededContext());
         }
     }

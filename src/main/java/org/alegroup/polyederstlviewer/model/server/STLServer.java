@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.model.server;
 
 import com.google.gson.Gson;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.constants.ServerConstants;
 import org.alegroup.polyederstlviewer.model.client.RotateObjectJSON;
 import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
@@ -109,7 +110,7 @@ public class STLServer implements Runnable
                 {
 
                     console.makeOutputToSpecifiedContext(
-                            ServerConstants.MSG_WAITING_FOR_CLIENT + portNumber + ")",
+                            ServerConstants.MSG_WAITING_FOR_CLIENT + portNumber + GeneralConstants.CLOSED_BRACKET,
                             consoleContext
                     );
 
@@ -199,8 +200,8 @@ public class STLServer implements Runnable
                 if (!line.isEmpty())
                 {
 
-                    String identifier = line.substring(0, 2);
-                    line = line.substring(2);
+                    String identifier = line.substring(GeneralConstants.INT_ZERO, GeneralConstants.INT_TWO);
+                    line = line.substring(GeneralConstants.INT_TWO);
 
                     switch (identifier)
                     {
@@ -221,7 +222,7 @@ public class STLServer implements Runnable
 
                         case ServerConstants.ID_SEND:
                             console.makeOutputToSpecifiedContext(
-                                    ServerConstants.MSG_CLIENT_SENT + line + "'",
+                                    ServerConstants.MSG_CLIENT_SENT + line + GeneralConstants.APOSTROPH,
                                     consoleContext
                             );
                             break;

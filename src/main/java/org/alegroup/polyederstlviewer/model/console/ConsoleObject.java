@@ -3,6 +3,8 @@ package org.alegroup.polyederstlviewer.model.console;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.alegroup.polyederstlviewer.constants.ConsoleBufferContext;
+import org.alegroup.polyederstlviewer.constants.ConsoleConstants;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 
 import java.util.HashMap;
 
@@ -65,8 +67,8 @@ public class ConsoleObject
     public void makeOutputToCurrentContext (String outputText)
     {
 
-        String append = ">> " + outputText + "\n";
-        String old = contextBasedBuffer.getOrDefault(currentContext, "");
+        String append = ConsoleConstants.SYSTEM_OUTPUT_PREFIX + outputText + GeneralConstants.LINE_SEPARATOR;
+        String old = contextBasedBuffer.getOrDefault(currentContext, GeneralConstants.EMPTY_STRING);
 
         contextBasedBuffer.put(currentContext, old + append);
         loadContext(currentContext);
@@ -84,8 +86,8 @@ public class ConsoleObject
     public void makeOutputToSpecifiedContext (String outputText, String toContext)
     {
 
-        String append = ">> " + outputText + "\n";
-        String old = contextBasedBuffer.getOrDefault(toContext, "");
+        String append = ConsoleConstants.SYSTEM_OUTPUT_PREFIX + outputText + GeneralConstants.LINE_SEPARATOR;
+        String old = contextBasedBuffer.getOrDefault(toContext, GeneralConstants.EMPTY_STRING);
 
         contextBasedBuffer.put(toContext, old + append);
 
@@ -105,8 +107,8 @@ public class ConsoleObject
     public void writeUserInputToConsole (String userInput)
     {
 
-        String append = "<< " + userInput + "\n";
-        String old = contextBasedBuffer.getOrDefault(currentContext, "");
+        String append = ConsoleConstants.SYSTEM_INPUT_PREFIX + userInput + GeneralConstants.LINE_SEPARATOR;
+        String old = contextBasedBuffer.getOrDefault(currentContext, GeneralConstants.EMPTY_STRING);
 
         contextBasedBuffer.put(currentContext, old + append);
         loadContext(currentContext);
@@ -120,7 +122,7 @@ public class ConsoleObject
      */
     public void clearConsole ()
     {
-        contextBasedBuffer.put(currentContext, "");
+        contextBasedBuffer.put(currentContext, GeneralConstants.EMPTY_STRING);
         loadContext(currentContext);
     }
 
@@ -142,7 +144,7 @@ public class ConsoleObject
         {
             return userInput;
         }
-        return "";
+        return GeneralConstants.EMPTY_STRING;
     }
 
     /**
@@ -155,7 +157,7 @@ public class ConsoleObject
     public void loadContext (String context)
     {
 
-        String loadedText = contextBasedBuffer.getOrDefault(context, "");
+        String loadedText = contextBasedBuffer.getOrDefault(context, GeneralConstants.EMPTY_STRING);
         consoleOutput.setText(loadedText);
         currentContext = context;
     }

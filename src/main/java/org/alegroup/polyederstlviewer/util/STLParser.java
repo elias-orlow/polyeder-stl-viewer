@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.util;
 
 import org.alegroup.polyederstlviewer.constants.ErrorMessages;
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
 import org.alegroup.polyederstlviewer.constants.STLParserConstants;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.AreaCalculator;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.AreaResult;
@@ -52,10 +53,10 @@ public class STLParser
             int read = bis.read(headerBytes);
             bis.reset();
 
-            String headerSnippet = "";
-            if (read > 0)
+            String headerSnippet = GeneralConstants.EMPTY_STRING;
+            if (read > GeneralConstants.INT_ZERO)
             {
-                headerSnippet = new String(headerBytes, 0, read, STLParserConstants.ASCII_CHARSET)
+                headerSnippet = new String(headerBytes, GeneralConstants.INT_ZERO, read, STLParserConstants.ASCII_CHARSET)
                         .toLowerCase(Locale.ROOT);
             }
 
@@ -121,7 +122,7 @@ public class STLParser
             String line;
             Vector3D normal = null;
             Vertex[] currentVertices = new Vertex[STLParserConstants.VERTEX_COUNT];
-            int vertexIndex = 0;
+            int vertexIndex = GeneralConstants.FIRST_INDEX;
 
             while ((line = br.readLine()) != null)
             {
@@ -167,16 +168,16 @@ public class STLParser
                     }
 
                     List<Edge> edges = new ArrayList<>();
-                    edges.add(new Edge(currentVertices[0], currentVertices[1]));
-                    edges.add(new Edge(currentVertices[1], currentVertices[2]));
-                    edges.add(new Edge(currentVertices[2], currentVertices[0]));
+                    edges.add(new Edge(currentVertices[GeneralConstants.FIRST_INDEX], currentVertices[GeneralConstants.SECOND_INDEX]));
+                    edges.add(new Edge(currentVertices[GeneralConstants.SECOND_INDEX], currentVertices[GeneralConstants.THIRD_INDEX]));
+                    edges.add(new Edge(currentVertices[GeneralConstants.THIRD_INDEX], currentVertices[GeneralConstants.FIRST_INDEX]));
 
                     Triangle triangle = new Triangle(edges, normal);
 
                     triangleList.add(triangle);
                     areaCalculator.addTriangle(triangle);
 
-                    vertexIndex = 0;
+                    vertexIndex = GeneralConstants.FIRST_INDEX;
                 }
             }
         }
@@ -215,7 +216,7 @@ public class STLParser
 
         List<Triangle> triangleList = new ArrayList<>();
 
-        for (long i = 0; i < unsignedCount; i++)
+        for (long i = GeneralConstants.INT_ZERO; i < unsignedCount; i++)
         {
 
             if (bb.remaining() < STLParserConstants.BINARY_TRIANGLE_SIZE)

@@ -288,13 +288,13 @@ public class Polyhedron extends Mesh
             faceList.add(vertexIndex);
             faceList.add(GeneralConstants.FIRST_INDEX);
 
-            faceList.add(vertexIndex + 1);
+            faceList.add(vertexIndex + GeneralConstants.INT_ONE);
             faceList.add(GeneralConstants.FIRST_INDEX);
 
-            faceList.add(vertexIndex + 2);
+            faceList.add(vertexIndex + GeneralConstants.INT_TWO);
             faceList.add(GeneralConstants.FIRST_INDEX);
 
-            vertexIndex += 3;
+            vertexIndex += GeneralConstants.INT_THREE;
         }
 
         float[] points = new float[pointList.size()];

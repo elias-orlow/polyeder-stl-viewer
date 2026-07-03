@@ -14,6 +14,9 @@ public interface ConsoleConstants
 
     public static final int TOP_TRIANGLES_LIMIT = 10;
 
+    String SYSTEM_OUTPUT_PREFIX = ">> ";
+    String SYSTEM_INPUT_PREFIX = "<< ";
+
     public static final String USAGE_MESSAGE =
             "Usage: java -jar polyviewer.jar <path-to-stl-file>";
 

@@ -32,4 +32,7 @@ public interface ModelConstants
     int EDGE_COUNTER_INCREMENT = 1;
 
     String EDGE_KEY_TO_STRING_FORMAT = "%s%s";
+
+    int DEFAULT_BATCH_SIZE = 1000;
+    String AREA_WORKER_THREAD_NAME_PREFIX = "area-worker-";
 }

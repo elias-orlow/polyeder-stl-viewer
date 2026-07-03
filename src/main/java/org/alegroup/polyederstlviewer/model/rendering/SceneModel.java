@@ -12,14 +12,13 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
+import org.alegroup.polyederstlviewer.constants.SceneModelConstants;
 import org.alegroup.polyederstlviewer.model.client.RotateObjectJSON;
 import org.alegroup.polyederstlviewer.model.client.TranslateObjectJSON;
 import org.alegroup.polyederstlviewer.model.geometry.analysis.STLParseResult;
-import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.stage.FileChooser;
-import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
-import org.alegroup.polyederstlviewer.view.mainwindow.PolyInfoController;
+
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -66,25 +65,25 @@ public class SceneModel {
         // creates a new basic scene
         // Group containing lights etc
         Group standardGroup = new Group();
-        camera = new PerspectiveCamera(true);
+        camera = new PerspectiveCamera(SceneModelConstants.CAMERA_FIXED_EYE_AT_ZERO);
 
 
         // Licht
-        AmbientLight ambientLight = new AmbientLight(Color.rgb(80, 80, 80));
+        AmbientLight ambientLight = new AmbientLight(Color.rgb(SceneModelConstants.AMBIENT_LIGHT_RGB_VALUE, SceneModelConstants.AMBIENT_LIGHT_RGB_VALUE, SceneModelConstants.AMBIENT_LIGHT_RGB_VALUE));
         PointLight pointLight = new PointLight(Color.WHITE);
-        pointLight.setTranslateX(300);
-        pointLight.setTranslateY(300);
-        pointLight.setTranslateZ(300);
+        pointLight.setTranslateX(SceneModelConstants.POINT_LIGHT_TRANSLATE_X);
+        pointLight.setTranslateY(SceneModelConstants.POINT_LIGHT_TRANSLATE_Y);
+        pointLight.setTranslateZ(SceneModelConstants.POINT_LIGHT_TRANSLATE_Z);
         standardGroup.getChildren().addAll(ambientLight, pointLight);
 
         // Rotation
         // Kamera-Rig
-        camera.setNearClip(0.1);
-        camera.setFarClip(10000);
-        camera.setTranslateZ(-500);  // Abstand vom Ursprung
+        camera.setNearClip(SceneModelConstants.CAMERA_NEAR_CLIP);
+        camera.setFarClip(SceneModelConstants.CAMERA_FAR_CLIP);
+        camera.setTranslateZ(SceneModelConstants.CAMERA_INITIAL_TRANSLATE_Z);  // Abstand vom Ursprung
 
-        orbitX = new Rotate(-20, Rotate.X_AXIS); // leichte Draufsicht als Start
-        orbitY = new Rotate(0,  Rotate.Y_AXIS);
+        orbitX = new Rotate(SceneModelConstants.ORBIT_X_INITIAL_ANGLE, Rotate.X_AXIS); // leichte Draufsicht als Start
+        orbitY = new Rotate(SceneModelConstants.ORBIT_Y_INITIAL_ANGLE,  Rotate.Y_AXIS);
 
         // Group containing the camera
         cameraPivot = new Group(camera);
@@ -92,11 +91,11 @@ public class SceneModel {
 
         Group sceneRoot = new Group(standardGroup, cameraPivot, this.objectsGroup);
 
-        subScene = new SubScene(sceneRoot, 100, 100, true, SceneAntialiasing.BALANCED);
+        subScene = new SubScene(sceneRoot, SceneModelConstants.SUBSCENE_INITIAL_WIDTH, SceneModelConstants.SUBSCENE_INITIAL_HEIGHT, SceneModelConstants.SUBSCENE_DEPTH_BUFFER_ENABLED, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
         // Diese zwei Zeilen fehlen!
-        subScene.setFill(Color.rgb(40, 40, 40));
+        subScene.setFill(Color.rgb(SceneModelConstants.SUBSCENE_BACKGROUND_RGB_VALUE, SceneModelConstants.SUBSCENE_BACKGROUND_RGB_VALUE, SceneModelConstants.SUBSCENE_BACKGROUND_RGB_VALUE));
 
         subScene.setOnMousePressed(e -> {
             saveState();
@@ -120,11 +119,11 @@ public class SceneModel {
                 double dx = e.getSceneX() - lastMouseX;
                 double dy = e.getSceneY() - lastMouseY;
 
-                orbitY.setAngle(orbitY.getAngle() + dx * 0.3);
+                orbitY.setAngle(orbitY.getAngle() + dx * SceneModelConstants.ORBIT_ROTATION_SPEED);
 
                 // Vertikale Rotation auf ±89° begrenzen → kein Überschlag
-                double newX = orbitX.getAngle() - dy * 0.3;
-                orbitX.setAngle(Math.max(-89, Math.min(89, newX)));
+                double newX = orbitX.getAngle() - dy * SceneModelConstants.ORBIT_ROTATION_SPEED;
+                orbitX.setAngle(Math.max(SceneModelConstants.ORBIT_X_MIN_ANGLE, Math.min(SceneModelConstants.ORBIT_X_MAX_ANGLE, newX)));
 
                 lastMouseX = e.getSceneX();
                 lastMouseY = e.getSceneY();
@@ -134,13 +133,13 @@ public class SceneModel {
                 double dx = e.getSceneX() - lastMouseX;
                 double dy = e.getSceneY() - lastMouseY;
 
-                double panSpeed = Math.abs(camera.getTranslateZ()) * 0.0005;
+                double panSpeed = Math.abs(camera.getTranslateZ()) * SceneModelConstants.PAN_SPEED_FACTOR;
 
                 // Kamera-eigene Achsen in Weltkoordinaten umrechnen
-                Point3D right = cameraPivot.localToParent(1, 0, 0)
-                        .subtract(cameraPivot.localToParent(0, 0, 0));
-                Point3D up    = cameraPivot.localToParent(0, 1, 0)
-                        .subtract(cameraPivot.localToParent(0, 0, 0));
+                Point3D right = cameraPivot.localToParent(SceneModelConstants.UNIT_COORDINATE, SceneModelConstants.ZERO_COORDINATE, SceneModelConstants.ZERO_COORDINATE)
+                        .subtract(cameraPivot.localToParent(SceneModelConstants.ZERO_COORDINATE, SceneModelConstants.ZERO_COORDINATE, SceneModelConstants.ZERO_COORDINATE));
+                Point3D up    = cameraPivot.localToParent(SceneModelConstants.ZERO_COORDINATE, SceneModelConstants.UNIT_COORDINATE, SceneModelConstants.ZERO_COORDINATE)
+                        .subtract(cameraPivot.localToParent(SceneModelConstants.ZERO_COORDINATE, SceneModelConstants.ZERO_COORDINATE, SceneModelConstants.ZERO_COORDINATE));
 
                 // Pivot entlang dieser Achsen verschieben
                 cameraPivot.setTranslateX(cameraPivot.getTranslateX() - dx * panSpeed * right.getX() - dy * panSpeed * up.getX());
@@ -155,8 +154,8 @@ public class SceneModel {
         // Zoom: Kamera vor/zurück entlang ihrer Z-Achse
         subScene.setOnScroll(e -> {
             saveState();
-            double newZ = camera.getTranslateZ() + e.getDeltaY() * 0.5;
-            camera.setTranslateZ(Math.min(-10, newZ)); // nie ins Objekt rein
+            double newZ = camera.getTranslateZ() + e.getDeltaY() * SceneModelConstants.SCROLL_ZOOM_FACTOR;
+            camera.setTranslateZ(Math.min(SceneModelConstants.CAMERA_MIN_TRANSLATE_Z, newZ)); // nie ins Objekt rein
         });
 
         // Grid
@@ -168,9 +167,9 @@ public class SceneModel {
     public SceneModel(){
 
         this.objectsGroup = new Group();
-        this.rotateX = new Rotate(0, Rotate.X_AXIS);
-        this.rotateY = new Rotate(0, Rotate.Y_AXIS);
-        this.rotateZ = new Rotate(0, Rotate.Z_AXIS);
+        this.rotateX = new Rotate(SceneModelConstants.NO_ROTATION_ANGLE, Rotate.X_AXIS);
+        this.rotateY = new Rotate(SceneModelConstants.NO_ROTATION_ANGLE, Rotate.Y_AXIS);
+        this.rotateZ = new Rotate(SceneModelConstants.NO_ROTATION_ANGLE, Rotate.Z_AXIS);
         this.objectsGroup.getTransforms().addAll(rotateX, rotateY, rotateZ);
 
         solidMaterial = new PhongMaterial();
@@ -180,7 +179,7 @@ public class SceneModel {
         shadedMaterial = new PhongMaterial();
         shadedMaterial.setDiffuseColor(Color.LIGHTGRAY);
         shadedMaterial.setSpecularColor(Color.WHITE);
-        shadedMaterial.setSpecularPower(128);
+        shadedMaterial.setSpecularPower(SceneModelConstants.SHADED_MATERIAL_SPECULAR_POWER);
     }
 
     public static SceneModel getInstance(){
@@ -202,24 +201,24 @@ public class SceneModel {
 
         gridGroup = new Group();
 
-        final int SIZE = 250;
-        final int MINOR = 5;
-        final int MAJOR = 50;
-        final double THICKNESS = 0.0006;
+        final int SIZE = SceneModelConstants.GRID_SIZE;
+        final int MINOR = SceneModelConstants.GRID_MINOR_STEP;
+        final int MAJOR = SceneModelConstants.GRID_MAJOR_STEP;
+        final double THICKNESS = SceneModelConstants.GRID_THICKNESS_FACTOR;
 
         List<Runnable> thicknessUpdaters = new ArrayList<>();
-        DoubleProperty t = new SimpleDoubleProperty(0.1);
+        DoubleProperty t = new SimpleDoubleProperty(SceneModelConstants.INITIAL_LINE_THICKNESS);
 
         for (int i = -SIZE; i <= SIZE; i += MINOR) {
 
-            boolean isMajor = (i % MAJOR == 0);
+            boolean isMajor = (i % MAJOR == SceneModelConstants.ORIGIN_INDEX);
 
-            if (i != 0) {
-                Box lx = new Box(1, 1, SIZE * 2.0);
+            if (i != SceneModelConstants.ORIGIN_INDEX) {
+                Box lx = new Box(SceneModelConstants.BOX_THIN_SIDE, SceneModelConstants.BOX_THIN_SIDE, SIZE * SceneModelConstants.FULL_LENGTH_MULTIPLIER);
                 lx.setTranslateX(i);
                 lx.setMaterial(isMajor
-                        ? flatColor(Color.rgb(110,110,110))
-                        : flatColor(Color.rgb(60,60,60)));
+                        ? flatColor(Color.rgb(SceneModelConstants.GRID_MAJOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MAJOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MAJOR_COLOR_RGB_VALUE))
+                        : flatColor(Color.rgb(SceneModelConstants.GRID_MINOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MINOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MINOR_COLOR_RGB_VALUE)));
                 thicknessUpdaters.add(() -> {
                     lx.setWidth(t.get());
                     lx.setHeight(t.get());
@@ -227,12 +226,12 @@ public class SceneModel {
                 gridGroup.getChildren().add(lx);
             }
 
-            if (i != 0) {
-                Box lz = new Box(SIZE * 2.0, 1, 1);
+            if (i != SceneModelConstants.ORIGIN_INDEX) {
+                Box lz = new Box(SIZE * SceneModelConstants.FULL_LENGTH_MULTIPLIER, SceneModelConstants.BOX_THIN_SIDE, SceneModelConstants.BOX_THIN_SIDE);
                 lz.setTranslateZ(i);
                 lz.setMaterial(isMajor
-                        ? flatColor(Color.rgb(110,110,110))
-                        : flatColor(Color.rgb(60,60,60)));
+                        ? flatColor(Color.rgb(SceneModelConstants.GRID_MAJOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MAJOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MAJOR_COLOR_RGB_VALUE))
+                        : flatColor(Color.rgb(SceneModelConstants.GRID_MINOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MINOR_COLOR_RGB_VALUE, SceneModelConstants.GRID_MINOR_COLOR_RGB_VALUE)));
                 thicknessUpdaters.add(() -> {
                     lz.setHeight(t.get());
                     lz.setDepth(t.get());
@@ -254,14 +253,14 @@ public class SceneModel {
 
         axesGroup = new Group();
 
-        final int SIZE = 250;
-        final double THICKNESS = 0.0006;
+        final int SIZE = SceneModelConstants.GRID_SIZE;
+        final double THICKNESS = SceneModelConstants.GRID_THICKNESS_FACTOR;
 
         List<Runnable> thicknessUpdaters = new ArrayList<>();
-        DoubleProperty t = new SimpleDoubleProperty(0.1);
+        DoubleProperty t = new SimpleDoubleProperty(SceneModelConstants.INITIAL_LINE_THICKNESS);
 
         // X-Achse (rot)
-        Box xAxis = new Box(SIZE * 2.0, 1, 1);
+        Box xAxis = new Box(SIZE * SceneModelConstants.FULL_LENGTH_MULTIPLIER, SceneModelConstants.BOX_THIN_SIDE, SceneModelConstants.BOX_THIN_SIDE);
         xAxis.setMaterial(flatColor(Color.RED));
         thicknessUpdaters.add(() -> {
             xAxis.setHeight(t.get());
@@ -270,7 +269,7 @@ public class SceneModel {
         axesGroup.getChildren().add(xAxis);
 
         // Z-Achse (blau)
-        Box zAxis = new Box(1, 1, SIZE * 2.0);
+        Box zAxis = new Box(SceneModelConstants.BOX_THIN_SIDE, SceneModelConstants.BOX_THIN_SIDE, SIZE * SceneModelConstants.FULL_LENGTH_MULTIPLIER);
         zAxis.setMaterial(flatColor(Color.DODGERBLUE));
         thicknessUpdaters.add(() -> {
             zAxis.setWidth(t.get());
@@ -279,7 +278,7 @@ public class SceneModel {
         axesGroup.getChildren().add(zAxis);
 
         // Y-Achse (grün)
-        Box yAxis = new Box(1, SIZE * 2.0, 1);
+        Box yAxis = new Box(SceneModelConstants.BOX_THIN_SIDE, SIZE * SceneModelConstants.FULL_LENGTH_MULTIPLIER, SceneModelConstants.BOX_THIN_SIDE);
         yAxis.setMaterial(flatColor(Color.LIMEGREEN));
         thicknessUpdaters.add(() -> {
             yAxis.setWidth(t.get());
@@ -298,8 +297,8 @@ public class SceneModel {
 
     // 1x1-Pixel Self-Illumination = kein Lichteinfluss
     private PhongMaterial flatColor(Color color) {
-        WritableImage img = new WritableImage(1, 1);
-        img.getPixelWriter().setColor(0, 0, color);
+        WritableImage img = new WritableImage(SceneModelConstants.FLAT_COLOR_IMAGE_WIDTH, SceneModelConstants.FLAT_COLOR_IMAGE_HEIGHT);
+        img.getPixelWriter().setColor(SceneModelConstants.FLAT_COLOR_PIXEL_X, SceneModelConstants.FLAT_COLOR_PIXEL_Y, color);
 
         PhongMaterial m = new PhongMaterial();
         m.setDiffuseColor(Color.BLACK);       // Kein diffuses Licht
@@ -325,9 +324,9 @@ public class SceneModel {
         MeshView meshView = new MeshView(mesh);
         meshView.setMaterial(shadedMaterial);
         currentMeshView = meshView;
-        currentMeshView.setScaleX(20);
-        currentMeshView.setScaleY(20);
-        currentMeshView.setScaleZ(20);
+        currentMeshView.setScaleX(SceneModelConstants.DEFAULT_MESH_SCALE);
+        currentMeshView.setScaleY(SceneModelConstants.DEFAULT_MESH_SCALE);
+        currentMeshView.setScaleZ(SceneModelConstants.DEFAULT_MESH_SCALE);
 
         objectsGroup.getChildren().add(meshView);
     }
@@ -345,21 +344,21 @@ public class SceneModel {
         saveState(); // Zustand vorher speichern
 
         // Objekt zurücksetzen
-        objectsGroup.setTranslateX(0);
-        objectsGroup.setTranslateY(0);
-        objectsGroup.setTranslateZ(0);
+        objectsGroup.setTranslateX(SceneModelConstants.RESET_TRANSLATE_VALUE);
+        objectsGroup.setTranslateY(SceneModelConstants.RESET_TRANSLATE_VALUE);
+        objectsGroup.setTranslateZ(SceneModelConstants.RESET_TRANSLATE_VALUE);
 
         // Kamera-Pivot zurücksetzen
-        cameraPivot.setTranslateX(0);
-        cameraPivot.setTranslateY(0);
-        cameraPivot.setTranslateZ(0);
+        cameraPivot.setTranslateX(SceneModelConstants.RESET_TRANSLATE_VALUE);
+        cameraPivot.setTranslateY(SceneModelConstants.RESET_TRANSLATE_VALUE);
+        cameraPivot.setTranslateZ(SceneModelConstants.RESET_TRANSLATE_VALUE);
 
         // Orbit-Rotation zurücksetzen
-        orbitX.setAngle(-20);
-        orbitY.setAngle(0);
+        orbitX.setAngle(SceneModelConstants.ORBIT_X_INITIAL_ANGLE);
+        orbitY.setAngle(SceneModelConstants.ORBIT_Y_INITIAL_ANGLE);
 
         // Kamera-Zoom zurücksetzen
-        camera.setTranslateZ(-500);
+        camera.setTranslateZ(SceneModelConstants.CAMERA_INITIAL_TRANSLATE_Z);
     }
 
 
@@ -387,24 +386,24 @@ public class SceneModel {
 
     public void exportScreenshot() {
         if (subScene == null) {
-            System.err.println("No SubScene available for screenshot.");
+            System.err.println(SceneModelConstants.NO_SUBSCENE_SCREENSHOT_MESSAGE);
             return;
         }
 
         WritableImage image = subScene.snapshot(new SnapshotParameters(),null);
 
         FileChooser chooser = new FileChooser();
-        chooser.setTitle("Export Screenshot");
+        chooser.setTitle(SceneModelConstants.SCREENSHOT_FILE_CHOOSER_TITLE);
         chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PNG Image", "*.png")
+                new FileChooser.ExtensionFilter(SceneModelConstants.PNG_IMAGE_DESCRIPTION, SceneModelConstants.PNG_EXTENSION_PATTERN)
         );
 
         File file = chooser.showSaveDialog(null);
 
         if (file != null) {
             try {
-                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-                System.out.println("Screenshot saved: " + file.getAbsolutePath());
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), SceneModelConstants.PNG_FORMAT_NAME, file);
+                System.out.println(SceneModelConstants.SCREENSHOT_SAVED_MESSAGE_PREFIX + file.getAbsolutePath());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -421,7 +420,7 @@ public class SceneModel {
         if (undoStack.isEmpty()) return;
 
         redoStack.add(captureCurrentState());
-        TransformationState prev = undoStack.remove(undoStack.size() - 1);
+        TransformationState prev = undoStack.remove(undoStack.size() - SceneModelConstants.LAST_STACK_INDEX_OFFSET);
         applyState(prev);
     }
 
@@ -430,7 +429,7 @@ public class SceneModel {
         if (redoStack.isEmpty()) return;
 
         undoStack.add(captureCurrentState());
-        TransformationState next = redoStack.remove(redoStack.size() - 1);
+        TransformationState next = redoStack.remove(redoStack.size() - SceneModelConstants.LAST_STACK_INDEX_OFFSET);
         applyState(next);
     }
 
@@ -482,7 +481,7 @@ public class SceneModel {
             return;
         }
 
-        if(translateObject.getTranslateX() == 0 && translateObject.getTranslateY() == 0 && translateObject.getTranslateZ() == 0){
+        if(translateObject.getTranslateX() == SceneModelConstants.RESET_TRANSLATE_VALUE && translateObject.getTranslateY() == SceneModelConstants.RESET_TRANSLATE_VALUE && translateObject.getTranslateZ() == SceneModelConstants.RESET_TRANSLATE_VALUE){
             resetObjectTransform();
         }else{
             this.objectsGroup.setTranslateX(this.objectsGroup.getTranslateX() + translateObject.getTranslateX());
@@ -497,10 +496,10 @@ public class SceneModel {
             return;
         }
 
-        if(rotateObject.getRotateX() == 0 && rotateObject.getRotateY() == 0 && rotateObject.getRotateZ() == 0){
-            this.rotateX.setAngle(0);
-            this.rotateY.setAngle(0);
-            this.rotateZ.setAngle(0);
+        if(rotateObject.getRotateX() == SceneModelConstants.NO_ROTATION_ANGLE && rotateObject.getRotateY() == SceneModelConstants.NO_ROTATION_ANGLE && rotateObject.getRotateZ() == SceneModelConstants.NO_ROTATION_ANGLE){
+            this.rotateX.setAngle(SceneModelConstants.NO_ROTATION_ANGLE);
+            this.rotateY.setAngle(SceneModelConstants.NO_ROTATION_ANGLE);
+            this.rotateZ.setAngle(SceneModelConstants.NO_ROTATION_ANGLE);
         }else{
 
             this.rotateX.setAngle(rotateX.getAngle() + rotateObject.getRotateX());
@@ -510,8 +509,8 @@ public class SceneModel {
     }
 
     public void zoomBy(double delta) {
-        double newZ = camera.getTranslateZ() + delta * 100;
-        camera.setTranslateZ(Math.min(-10, newZ));
+        double newZ = camera.getTranslateZ() + delta * SceneModelConstants.PROGRAMMATIC_ZOOM_FACTOR;
+        camera.setTranslateZ(Math.min(SceneModelConstants.CAMERA_MIN_TRANSLATE_Z, newZ));
     }
 
     public void setPolyColor(Color color) {
@@ -523,3 +522,4 @@ public class SceneModel {
         currentMeshView.setMaterial(shadedMaterial);
     }
 }
+

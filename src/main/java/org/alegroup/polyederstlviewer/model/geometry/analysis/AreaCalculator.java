@@ -1,5 +1,7 @@
 package org.alegroup.polyederstlviewer.model.geometry.analysis;
 
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
+import org.alegroup.polyederstlviewer.constants.ModelConstants;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class AreaCalculator
      */
     public AreaCalculator ()
     {
-        this(Runtime.getRuntime().availableProcessors(), 1000);
+        this(Runtime.getRuntime().availableProcessors(), ModelConstants.DEFAULT_BATCH_SIZE);
     }
 
     /**
@@ -88,13 +90,13 @@ public class AreaCalculator
 
         this.executorService = Executors.newFixedThreadPool(threadCount, runnable -> {
             Thread thread = new Thread(runnable);
-            thread.setName("area-worker-" + threadCounter.incrementAndGet());
+            thread.setName(ModelConstants.AREA_WORKER_THREAD_NAME_PREFIX + threadCounter.incrementAndGet());
             return thread;
         });
 
         this.futures = new ArrayList<>();
         this.currentBatch = new ArrayList<>(batchSize);
-        this.triangleCount = 0;
+        this.triangleCount = GeneralConstants.INT_ZERO;
         this.startTime = System.nanoTime();
     }
 
@@ -130,7 +132,7 @@ public class AreaCalculator
         currentBatch.clear();
 
         Future<Double> future = executorService.submit(() -> {
-            double localSum = 0.0;
+            double localSum = GeneralConstants.ZERO_DOUBLE;
 
             for (Triangle triangle : batch)
             {
@@ -159,7 +161,7 @@ public class AreaCalculator
             submitCurrentBatch();
         }
 
-        double totalArea = 0.0;
+        double totalArea = GeneralConstants.ZERO_DOUBLE;
 
         try
         {

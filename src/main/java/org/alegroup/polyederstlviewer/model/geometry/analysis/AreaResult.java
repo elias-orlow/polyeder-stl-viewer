@@ -1,5 +1,7 @@
 package org.alegroup.polyederstlviewer.model.geometry.analysis;
 
+import org.alegroup.polyederstlviewer.constants.GeneralConstants;
+
 /**
  * Represents the result of a surface area calculation, including
  * the computed area, the calculation duration, the number of processed
@@ -82,7 +84,7 @@ public class AreaResult
      */
     public long getDurationMillis ()
     {
-        return durationNanos / 1_000_000;
+        return durationNanos / GeneralConstants.NANOS_PER_MILLISECOND;
     }
 
     /**

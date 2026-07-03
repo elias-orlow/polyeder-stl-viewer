@@ -11,6 +11,7 @@ public interface GeneralConstants
 {
     int INT_ZERO = 0;
     float ZERO_FLOAT = 0.0f;
+    double ZERO_DOUBLE = 0.0;
 
     int INT_ONE = 1;
     int INT_TWO = 2;
@@ -24,8 +25,12 @@ public interface GeneralConstants
     int FOURTH_INDEX = 3;
 
     int HASH_MULTIPLIER = 31;
+    long NANOS_PER_MILLISECOND = 1_000_000L;
 
     String QUOTATION = "\"";
     String EMPTY_STRING = "";
     String COLON = ": ";
+    String LINE_SEPARATOR  = "\n";
+    String CLOSED_BRACKET = ")";
+    String APOSTROPH = "'";
 }
