@@ -14,7 +14,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class ClientDataSendCommand implements CommandExecuter
 {
-
+    /**
+     * Sends arbitrary data to the active STL client.
+     *
+     * @param console the console used to get the current context and output messages
+     * @param args    the command arguments containing the data to send
+     * @return {@code true} if the data is sent, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition Data is sent to the active client if arguments are valid
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

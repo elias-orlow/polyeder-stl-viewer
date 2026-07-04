@@ -14,7 +14,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class NewCommandCommand implements CommandExecuter
 {
-
+    /**
+     * Creates a new command blueprint and writes it to the command JSON file.
+     *
+     * @param console the console used for output messages
+     * @param args    the command arguments containing the command blueprint data
+     * @return {@code true} if the command is written, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition Command is written if arguments are valid
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

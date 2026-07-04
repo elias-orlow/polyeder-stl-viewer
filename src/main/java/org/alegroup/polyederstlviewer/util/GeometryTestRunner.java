@@ -1,5 +1,6 @@
 package org.alegroup.polyederstlviewer.util;
 
+import org.alegroup.polyederstlviewer.constants.TestRunnerConstants;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Mesh;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Polygon;
@@ -19,10 +20,8 @@ import java.util.List;
  */
 public class GeometryTestRunner
 {
-    private static final float EPSILON = 0.0001f;
-
-    private static int passedTests = 0;
-    private static int failedTests = 0;
+    private static int passedTests = TestRunnerConstants.INT_ZERO;
+    private static int failedTests = TestRunnerConstants.INT_ZERO;
 
     /**
      * Runs all manual model tests.
@@ -34,7 +33,7 @@ public class GeometryTestRunner
      */
     public static void main(String[] args)
     {
-        System.out.println("=== Geometry Model Tests ===");
+        System.out.println(TestRunnerConstants.GEOMETRY_TESTS_HEADER);
 
         testVertexEquality();
         testEdgeEquality();
@@ -62,22 +61,36 @@ public class GeometryTestRunner
      */
     private static void testVertexEquality()
     {
-        Vertex firstVertex = new Vertex(1.0f, 2.0f, 3.0f);
-        Vertex secondVertex = new Vertex(1.0f, 2.0f, 3.0f);
-        Vertex thirdVertex = new Vertex(3.0f, 2.0f, 1.0f);
+        Vertex firstVertex = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_TWO,
+                TestRunnerConstants.FLOAT_THREE
+        );
+
+        Vertex secondVertex = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_TWO,
+                TestRunnerConstants.FLOAT_THREE
+        );
+
+        Vertex thirdVertex = new Vertex(
+                TestRunnerConstants.FLOAT_THREE,
+                TestRunnerConstants.FLOAT_TWO,
+                TestRunnerConstants.FLOAT_ONE
+        );
 
         assertTrue(
-                "Vertices with equal coordinates are equal",
+                TestRunnerConstants.TEST_VERTICES_EQUAL,
                 firstVertex.equals(secondVertex)
         );
 
         assertTrue(
-                "Equal vertices have equal hash codes",
+                TestRunnerConstants.TEST_VERTICES_HASH_EQUAL,
                 firstVertex.hashCode() == secondVertex.hashCode()
         );
 
         assertFalse(
-                "Vertices with different coordinates are not equal",
+                TestRunnerConstants.TEST_VERTICES_DIFFERENT,
                 firstVertex.equals(thirdVertex)
         );
     }
@@ -90,20 +103,42 @@ public class GeometryTestRunner
      */
     private static void testEdgeEquality()
     {
-        Vertex a = new Vertex(0.0f, 0.0f, 0.0f);
-        Vertex b = new Vertex(1.0f, 0.0f, 0.0f);
+        Vertex a = new Vertex(
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex b = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
 
         Edge firstEdge = new Edge(a, b);
-        Edge secondEdge = new Edge(new Vertex(0.0f, 0.0f, 0.0f), new Vertex(1.0f, 0.0f, 0.0f));
+
+        Edge secondEdge = new Edge(
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO
+                ),
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO
+                )
+        );
+
         Edge oppositeEdge = new Edge(b, a);
 
         assertTrue(
-                "Edges with same start and end are equal",
+                TestRunnerConstants.TEST_EDGES_EQUAL,
                 firstEdge.equals(secondEdge)
         );
 
         assertFalse(
-                "Edges with opposite direction are not equal",
+                TestRunnerConstants.TEST_EDGES_OPPOSITE,
                 firstEdge.equals(oppositeEdge)
         );
     }
@@ -116,39 +151,48 @@ public class GeometryTestRunner
      */
     private static void testVectorOperations()
     {
-        Vector3D firstVector = new Vector3D(1.0f, 0.0f, 0.0f);
-        Vector3D secondVector = new Vector3D(0.0f, 1.0f, 0.0f);
+        Vector3D firstVector = new Vector3D(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vector3D secondVector = new Vector3D(
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO
+        );
 
         Vector3D cross = firstVector.cross(secondVector);
         float dot = firstVector.dot(secondVector);
 
         assertFloatEquals(
-                "Cross product x-component",
-                0.0f,
+                TestRunnerConstants.TEST_CROSS_PRODUCT_X,
+                TestRunnerConstants.FLOAT_ZERO,
                 cross.getX()
         );
 
         assertFloatEquals(
-                "Cross product y-component",
-                0.0f,
+                TestRunnerConstants.TEST_CROSS_PRODUCT_Y,
+                TestRunnerConstants.FLOAT_ZERO,
                 cross.getY()
         );
 
         assertFloatEquals(
-                "Cross product z-component",
-                1.0f,
+                TestRunnerConstants.TEST_CROSS_PRODUCT_Z,
+                TestRunnerConstants.FLOAT_ONE,
                 cross.getZ()
         );
 
         assertFloatEquals(
-                "Dot product of orthogonal vectors is zero",
-                0.0f,
+                TestRunnerConstants.TEST_DOT_PRODUCT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO,
                 dot
         );
 
         assertFloatEquals(
-                "Magnitude of unit vector is one",
-                1.0f,
+                TestRunnerConstants.TEST_MAGNITUDE_UNIT_VECTOR,
+                TestRunnerConstants.FLOAT_ONE,
                 firstVector.magnitude()
         );
     }
@@ -161,9 +205,23 @@ public class GeometryTestRunner
      */
     private static void testValidPolygonalChain()
     {
-        Vertex a = new Vertex(0.0f, 0.0f, 0.0f);
-        Vertex b = new Vertex(1.0f, 0.0f, 0.0f);
-        Vertex c = new Vertex(1.0f, 1.0f, 0.0f);
+        Vertex a = new Vertex(
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex b = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex c = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO
+        );
 
         List<Edge> edges = List.of(
                 new Edge(a, b),
@@ -173,8 +231,8 @@ public class GeometryTestRunner
         PolygonalChain polygonalChain = new PolygonalChain(edges);
 
         assertTrue(
-                "Valid polygonal chain is created",
-                polygonalChain.getEdges().size() == 2
+                TestRunnerConstants.TEST_VALID_POLYGONAL_CHAIN,
+                polygonalChain.getEdges().size() == TestRunnerConstants.INT_TWO
         );
     }
 
@@ -186,10 +244,29 @@ public class GeometryTestRunner
      */
     private static void testInvalidPolygonalChain()
     {
-        Vertex a = new Vertex(0.0f, 0.0f, 0.0f);
-        Vertex b = new Vertex(1.0f, 0.0f, 0.0f);
-        Vertex c = new Vertex(1.0f, 1.0f, 0.0f);
-        Vertex d = new Vertex(2.0f, 2.0f, 0.0f);
+        Vertex a = new Vertex(
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex b = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex c = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex d = new Vertex(
+                TestRunnerConstants.FLOAT_TWO,
+                TestRunnerConstants.FLOAT_TWO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
 
         List<Edge> edges = List.of(
                 new Edge(a, b),
@@ -197,7 +274,7 @@ public class GeometryTestRunner
         );
 
         assertThrows(
-                "Invalid polygonal chain is rejected",
+                TestRunnerConstants.TEST_INVALID_POLYGONAL_CHAIN,
                 () -> new PolygonalChain(edges)
         );
     }
@@ -215,8 +292,8 @@ public class GeometryTestRunner
         Polygon polygon = new Polygon(edges);
 
         assertTrue(
-                "Valid closed polygon is created",
-                polygon.getEdges().size() == 3
+                TestRunnerConstants.TEST_VALID_POLYGON,
+                polygon.getEdges().size() == TestRunnerConstants.INT_THREE
         );
     }
 
@@ -228,10 +305,29 @@ public class GeometryTestRunner
      */
     private static void testInvalidOpenPolygon()
     {
-        Vertex a = new Vertex(0.0f, 0.0f, 0.0f);
-        Vertex b = new Vertex(1.0f, 0.0f, 0.0f);
-        Vertex c = new Vertex(1.0f, 1.0f, 0.0f);
-        Vertex d = new Vertex(2.0f, 1.0f, 0.0f);
+        Vertex a = new Vertex(
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex b = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex c = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex d = new Vertex(
+                TestRunnerConstants.FLOAT_TWO,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO
+        );
 
         List<Edge> edges = List.of(
                 new Edge(a, b),
@@ -240,7 +336,7 @@ public class GeometryTestRunner
         );
 
         assertThrows(
-                "Open polygon is rejected",
+                TestRunnerConstants.TEST_OPEN_POLYGON,
                 () -> new Polygon(edges)
         );
     }
@@ -254,15 +350,31 @@ public class GeometryTestRunner
     private static void testValidTriangle()
     {
         Triangle triangle = createTriangle(
-                new Vertex(0.0f, 0.0f, 0.0f),
-                new Vertex(1.0f, 0.0f, 0.0f),
-                new Vertex(0.0f, 1.0f, 0.0f),
-                new Vector3D(0.0f, 0.0f, 1.0f)
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO
+                ),
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO
+                ),
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ZERO
+                ),
+                new Vector3D(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ONE
+                )
         );
 
         assertFloatEquals(
-                "Right triangle area is 0.5",
-                0.5f,
+                TestRunnerConstants.TEST_RIGHT_TRIANGLE_AREA,
+                TestRunnerConstants.FLOAT_HALF,
                 triangle.area()
         );
     }
@@ -276,12 +388,28 @@ public class GeometryTestRunner
     private static void testInvalidDegeneratedTriangle()
     {
         assertThrows(
-                "Degenerated triangle is rejected",
+                TestRunnerConstants.TEST_DEGENERATED_TRIANGLE,
                 () -> createTriangle(
-                        new Vertex(0.0f, 0.0f, 0.0f),
-                        new Vertex(1.0f, 0.0f, 0.0f),
-                        new Vertex(2.0f, 0.0f, 0.0f),
-                        new Vector3D(0.0f, 0.0f, 1.0f)
+                        new Vertex(
+                                TestRunnerConstants.FLOAT_ZERO,
+                                TestRunnerConstants.FLOAT_ZERO,
+                                TestRunnerConstants.FLOAT_ZERO
+                        ),
+                        new Vertex(
+                                TestRunnerConstants.FLOAT_ONE,
+                                TestRunnerConstants.FLOAT_ZERO,
+                                TestRunnerConstants.FLOAT_ZERO
+                        ),
+                        new Vertex(
+                                TestRunnerConstants.FLOAT_TWO,
+                                TestRunnerConstants.FLOAT_ZERO,
+                                TestRunnerConstants.FLOAT_ZERO
+                        ),
+                        new Vector3D(
+                                TestRunnerConstants.FLOAT_ZERO,
+                                TestRunnerConstants.FLOAT_ZERO,
+                                TestRunnerConstants.FLOAT_ONE
+                        )
                 )
         );
     }
@@ -299,8 +427,8 @@ public class GeometryTestRunner
         Mesh mesh = new Mesh(triangles);
 
         assertTrue(
-                "Connected mesh is created",
-                mesh.getTriangleCount() == 4
+                TestRunnerConstants.TEST_CONNECTED_MESH,
+                mesh.getTriangleCount() == TestRunnerConstants.INT_FOUR
         );
     }
 
@@ -313,21 +441,53 @@ public class GeometryTestRunner
     private static void testInvalidDisconnectedMesh()
     {
         Triangle firstTriangle = createTriangle(
-                new Vertex(0.0f, 0.0f, 0.0f),
-                new Vertex(1.0f, 0.0f, 0.0f),
-                new Vertex(0.0f, 1.0f, 0.0f),
-                new Vector3D(0.0f, 0.0f, 1.0f)
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO
+                ),
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO
+                ),
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ZERO
+                ),
+                new Vector3D(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ONE
+                )
         );
 
         Triangle secondTriangle = createTriangle(
-                new Vertex(10.0f, 10.0f, 10.0f),
-                new Vertex(11.0f, 10.0f, 10.0f),
-                new Vertex(10.0f, 11.0f, 10.0f),
-                new Vector3D(0.0f, 0.0f, 1.0f)
+                new Vertex(
+                        TestRunnerConstants.FLOAT_TEN,
+                        TestRunnerConstants.FLOAT_TEN,
+                        TestRunnerConstants.FLOAT_TEN
+                ),
+                new Vertex(
+                        TestRunnerConstants.FLOAT_ELEVEN,
+                        TestRunnerConstants.FLOAT_TEN,
+                        TestRunnerConstants.FLOAT_TEN
+                ),
+                new Vertex(
+                        TestRunnerConstants.FLOAT_TEN,
+                        TestRunnerConstants.FLOAT_ELEVEN,
+                        TestRunnerConstants.FLOAT_TEN
+                ),
+                new Vector3D(
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ZERO,
+                        TestRunnerConstants.FLOAT_ONE
+                )
         );
 
         assertThrows(
-                "Disconnected mesh is rejected",
+                TestRunnerConstants.TEST_DISCONNECTED_MESH,
                 () -> new Mesh(List.of(firstTriangle, secondTriangle))
         );
     }
@@ -345,8 +505,8 @@ public class GeometryTestRunner
         Polyhedron polyhedron = new Polyhedron(triangles);
 
         assertTrue(
-                "Closed tetrahedron polyhedron is created",
-                polyhedron.triangleCount() == 4
+                TestRunnerConstants.TEST_CLOSED_TETRAHEDRON,
+                polyhedron.triangleCount() == TestRunnerConstants.INT_FOUR
         );
     }
 
@@ -358,10 +518,13 @@ public class GeometryTestRunner
      */
     private static void testInvalidOpenPolyhedron()
     {
-        List<Triangle> openTriangles = createTetrahedronTriangles().subList(0, 3);
+        List<Triangle> openTriangles = createTetrahedronTriangles().subList(
+                TestRunnerConstants.INT_ZERO,
+                TestRunnerConstants.INT_THREE
+        );
 
         assertThrows(
-                "Open polyhedron is rejected",
+                TestRunnerConstants.TEST_OPEN_POLYHEDRON,
                 () -> new Polyhedron(openTriangles)
         );
     }
@@ -377,8 +540,8 @@ public class GeometryTestRunner
         Polyhedron polyhedron = new Polyhedron(createTetrahedronTriangles());
 
         assertTrue(
-                "Surface area of tetrahedron is positive",
-                polyhedron.surfaceArea() > 0.0f
+                TestRunnerConstants.TEST_SURFACE_AREA_POSITIVE,
+                polyhedron.surfaceArea() > TestRunnerConstants.FLOAT_ZERO
         );
     }
 
@@ -392,9 +555,23 @@ public class GeometryTestRunner
      */
     private static List<Edge> createTriangleEdges()
     {
-        Vertex a = new Vertex(0.0f, 0.0f, 0.0f);
-        Vertex b = new Vertex(1.0f, 0.0f, 0.0f);
-        Vertex c = new Vertex(0.0f, 1.0f, 0.0f);
+        Vertex a = new Vertex(
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex b = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ZERO
+        );
+
+        Vertex c = new Vertex(
+                TestRunnerConstants.FLOAT_ZERO,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ZERO
+        );
 
         return List.of(
                 new Edge(a, b),
@@ -436,15 +613,73 @@ public class GeometryTestRunner
      */
     private static List<Triangle> createTetrahedronTriangles()
     {
-        Vertex a = new Vertex(1.0f, 1.0f, 1.0f);
-        Vertex b = new Vertex(-1.0f, -1.0f, 1.0f);
-        Vertex c = new Vertex(-1.0f, 1.0f, -1.0f);
-        Vertex d = new Vertex(1.0f, -1.0f, -1.0f);
+        Vertex a = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_ONE
+        );
 
-        Triangle abc = createTriangle(a, c, b, new Vector3D(1.0f, 1.0f, 1.0f));
-        Triangle abd = createTriangle(a, b, d, new Vector3D(1.0f, -1.0f, 1.0f));
-        Triangle acd = createTriangle(a, d, c, new Vector3D(1.0f, 1.0f, -1.0f));
-        Triangle bcd = createTriangle(b, c, d, new Vector3D(-1.0f, -1.0f, -1.0f));
+        Vertex b = new Vertex(
+                TestRunnerConstants.FLOAT_MINUS_ONE,
+                TestRunnerConstants.FLOAT_MINUS_ONE,
+                TestRunnerConstants.FLOAT_ONE
+        );
+
+        Vertex c = new Vertex(
+                TestRunnerConstants.FLOAT_MINUS_ONE,
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_MINUS_ONE
+        );
+
+        Vertex d = new Vertex(
+                TestRunnerConstants.FLOAT_ONE,
+                TestRunnerConstants.FLOAT_MINUS_ONE,
+                TestRunnerConstants.FLOAT_MINUS_ONE
+        );
+
+        Triangle abc = createTriangle(
+                a,
+                c,
+                b,
+                new Vector3D(
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ONE
+                )
+        );
+
+        Triangle abd = createTriangle(
+                a,
+                b,
+                d,
+                new Vector3D(
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_MINUS_ONE,
+                        TestRunnerConstants.FLOAT_ONE
+                )
+        );
+
+        Triangle acd = createTriangle(
+                a,
+                d,
+                c,
+                new Vector3D(
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_ONE,
+                        TestRunnerConstants.FLOAT_MINUS_ONE
+                )
+        );
+
+        Triangle bcd = createTriangle(
+                b,
+                c,
+                d,
+                new Vector3D(
+                        TestRunnerConstants.FLOAT_MINUS_ONE,
+                        TestRunnerConstants.FLOAT_MINUS_ONE,
+                        TestRunnerConstants.FLOAT_MINUS_ONE
+                )
+        );
 
         return List.of(abc, abd, acd, bcd);
     }
@@ -496,7 +731,10 @@ public class GeometryTestRunner
      */
     private static void assertFloatEquals(String testName, float expected, float actual)
     {
-        assertTrue(testName, Math.abs(expected - actual) <= EPSILON);
+        assertTrue(
+                testName,
+                Math.abs(expected - actual) <= TestRunnerConstants.EPSILON
+        );
     }
 
     /**
@@ -532,7 +770,7 @@ public class GeometryTestRunner
     private static void pass(String testName)
     {
         passedTests++;
-        System.out.println("[PASS] " + testName);
+        System.out.println(TestRunnerConstants.GEOMETRY_PASS_PREFIX + testName);
     }
 
     /**
@@ -546,7 +784,7 @@ public class GeometryTestRunner
     private static void fail(String testName)
     {
         failedTests++;
-        System.out.println("[FAIL] " + testName);
+        System.out.println(TestRunnerConstants.GEOMETRY_FAIL_PREFIX + testName);
     }
 
     /**
@@ -558,8 +796,8 @@ public class GeometryTestRunner
     private static void printSummary()
     {
         System.out.println();
-        System.out.println("=== Test Summary ===");
-        System.out.println("Passed: " + passedTests);
-        System.out.println("Failed: " + failedTests);
+        System.out.println(TestRunnerConstants.GEOMETRY_TEST_SUMMARY_HEADER);
+        System.out.println(TestRunnerConstants.GEOMETRY_TEST_PASSED_PREFIX + passedTests);
+        System.out.println(TestRunnerConstants.GEOMETRY_TEST_FAILED_PREFIX + failedTests);
     }
 }

@@ -1,6 +1,7 @@
 package org.alegroup.polyederstlviewer.util;
 
 import javafx.scene.shape.TriangleMesh;
+import org.alegroup.polyederstlviewer.constants.TestRunnerConstants;
 import org.alegroup.polyederstlviewer.model.geometry.mesh.Polyhedron;
 import org.alegroup.polyederstlviewer.model.geometry.polygon.Triangle;
 
@@ -25,7 +26,7 @@ public class TestRunner
      * @precondition None.
      * @postcondition Prints parsing results to console.
      */
-    public static void main(String[] args)
+    public static void main (String[] args)
     {
         testAsciiSTLParsing();
     }
@@ -34,66 +35,106 @@ public class TestRunner
     {
         try
         {
-            File tmp = File.createTempFile("tetra", ".stl");
+            File tmp = File.createTempFile(
+                    TestRunnerConstants.ASCII_TEMP_FILE_PREFIX,
+                    TestRunnerConstants.STL_EXTENSION
+            );
+
             try (FileWriter fw = new FileWriter(tmp))
             {
                 // Normalen sind ausdrücklich richtig orientiert
-                fw.write("solid tetra\n");
-                fw.write("facet normal 7 4 5 \n");
-                fw.write("outer loop\n");
-                fw.write("vertex 2 1 3 \n");
-                fw.write("vertex 4 0 1 \n");
-                fw.write("vertex 3 3 0 \n");
-                fw.write("endloop\n");
-                fw.write("endfacet\n");
-                fw.write("facet normal -6 6 -2 \n");
-                fw.write("outer loop\n");
-                fw.write("vertex 2 1 3 \n");
-                fw.write("vertex 1 1 0 \n");
-                fw.write("vertex 3 3 0 \n");
-                fw.write("endloop\n");
-                fw.write("endfacet\n");
-                fw.write("facet normal -3 -8 1 \n");
-                fw.write("outer loop\n");
-                fw.write("vertex 2 1 3 \n");
-                fw.write("vertex 4 0 1 \n");
-                fw.write("vertex  1 1 0 \n");
-                fw.write("endloop\n");
-                fw.write("endfacet\n");
-                fw.write("facet normal 2 -2 -8 \n");
-                fw.write("outer loop\n");
-                fw.write("vertex 3 3 0 \n");
-                fw.write("vertex 1 1 0 \n");
-                fw.write("vertex 4 0 1 \n");
-                fw.write("endloop\n");
-                fw.write("endfacet\n");
-                fw.write("endsolid tetra\n");
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_SOLID);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_FACET_1);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_OUTER_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_1);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_2);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_3);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_FACET);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_FACET_2);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_OUTER_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_1);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_4);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_3);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_FACET);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_FACET_3);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_OUTER_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_1);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_2);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_5);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_FACET);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_FACET_4);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_OUTER_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_3);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_4);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_VERTEX_2);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_LOOP);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_FACET);
+                fw.write(TestRunnerConstants.ASCII_STL_LINE_END_SOLID);
             }
 
-            System.out.println("Temporary test STL written to: " + tmp.getAbsolutePath());
+            System.out.println(
+                    TestRunnerConstants.ASCII_TEMP_FILE_WRITTEN_PREFIX
+                            + tmp.getAbsolutePath()
+            );
+
             Polyhedron poly = STLParser.parse(tmp).getPolyhedron();
-            System.out.println("Triangles: " + poly.triangleCount());
-            System.out.printf("Surface area: %.6f\n", poly.surfaceArea());
-            System.out.printf("Volume: %.6f\n", poly.volume());
-            System.out.println("Top triangles:");
-            poly.trianglesSortedByAreaDesc().forEach(t -> System.out.printf(" area=%.6f\n", t.area()));
+
+            System.out.println(
+                    TestRunnerConstants.ASCII_TRIANGLES_PREFIX
+                            + poly.triangleCount()
+            );
+
+            System.out.printf(
+                    TestRunnerConstants.ASCII_SURFACE_AREA_FORMAT,
+                    poly.surfaceArea()
+            );
+
+            System.out.printf(
+                    TestRunnerConstants.ASCII_VOLUME_FORMAT,
+                    poly.volume()
+            );
+
+            System.out.println(TestRunnerConstants.ASCII_TOP_TRIANGLES_HEADER);
+
+            poly.trianglesSortedByAreaDesc().forEach(
+                    t -> System.out.printf(
+                            TestRunnerConstants.ASCII_TOP_TRIANGLE_AREA_FORMAT,
+                            t.area()
+                    )
+            );
 
             TriangleMesh mesh = poly.toTriangleMesh();
             float[] points = mesh.getPoints().toArray(null);
 
-            System.out.println("=== Mesh Points ===");
-            for (int i = 0; i < points.length; i += 3)
+            System.out.println(TestRunnerConstants.ASCII_MESH_POINTS_HEADER);
+
+            for (
+                    int i = TestRunnerConstants.INT_ZERO;
+                    i < points.length;
+                    i += TestRunnerConstants.ASCII_MESH_POINT_STEP
+            )
             {
                 float x = points[i];
-                float y = points[i + 1];
-                float z = points[i + 2];
+                float y = points[i + TestRunnerConstants.INT_ONE];
+                float z = points[i + TestRunnerConstants.INT_TWO];
 
-                System.out.printf("Point %d: (%.3f, %.3f, %.3f)%n", i / 3, x, y, z);
+                System.out.printf(
+                        TestRunnerConstants.ASCII_MESH_POINT_FORMAT,
+                        i / TestRunnerConstants.ASCII_MESH_POINT_STEP,
+                        x,
+                        y,
+                        z
+                );
             }
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
-            System.err.println("Test failed: " + e.getMessage());
+            System.err.println(
+                    TestRunnerConstants.ASCII_TEST_FAILED_PREFIX
+                            + e.getMessage()
+            );
             e.printStackTrace(System.err);
         }
     }
@@ -103,7 +144,10 @@ public class TestRunner
         try
         {
             // 1) Temporäre Datei erzeugen
-            File tmp = File.createTempFile("binary_test", ".stl");
+            File tmp = File.createTempFile(
+                    TestRunnerConstants.BINARY_TEMP_FILE_PREFIX,
+                    TestRunnerConstants.STL_EXTENSION
+            );
 
             // 2) Binäre STL-Daten erzeugen (1 Dreieck)
             // Format:
@@ -111,62 +155,84 @@ public class TestRunner
             // 4 Byte: Anzahl Dreiecke (UINT32)
             // Dreieck: 12 floats + 1 short = 50 Bytes
 
-            ByteBuffer bb = ByteBuffer.allocate(80 + 4 + 50);
+            ByteBuffer bb = ByteBuffer.allocate(
+                    TestRunnerConstants.BINARY_STL_HEADER_BYTE_COUNT
+                            + TestRunnerConstants.BINARY_STL_TRIANGLE_COUNT_BYTE_COUNT
+                            + TestRunnerConstants.BINARY_STL_TRIANGLE_BYTE_COUNT
+            );
+
             bb.order(ByteOrder.LITTLE_ENDIAN);
 
             // Header (80 Bytes, egal was drinsteht, nur kein "solid")
-            for (int i = 0; i < 80; i++)
+            for (
+                    int i = TestRunnerConstants.INT_ZERO;
+                    i < TestRunnerConstants.BINARY_STL_HEADER_BYTE_COUNT;
+                    i++
+            )
             {
-                bb.put((byte) 0);
+                bb.put((byte) TestRunnerConstants.BINARY_HEADER_FILL_BYTE);
             }
 
             // Anzahl Dreiecke = 1
-            bb.putInt(1);
+            bb.putInt(TestRunnerConstants.BINARY_STL_TRIANGLE_COUNT);
 
             // Normalenvektor
-            bb.putFloat(0.0f);
-            bb.putFloat(0.0f);
-            bb.putFloat(1.0f);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
+            bb.putFloat(TestRunnerConstants.FLOAT_ONE);
 
             // Vertex 1
-            bb.putFloat(0.0f);
-            bb.putFloat(0.0f);
-            bb.putFloat(0.0f);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
 
             // Vertex 2
-            bb.putFloat(1.0f);
-            bb.putFloat(0.0f);
-            bb.putFloat(0.0f);
+            bb.putFloat(TestRunnerConstants.FLOAT_ONE);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
 
             // Vertex 3
-            bb.putFloat(0.0f);
-            bb.putFloat(1.0f);
-            bb.putFloat(0.0f);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
+            bb.putFloat(TestRunnerConstants.FLOAT_ONE);
+            bb.putFloat(TestRunnerConstants.FLOAT_ZERO);
 
             // Attribute short (immer 0)
-            bb.putShort((short) 0);
+            bb.putShort((short) TestRunnerConstants.BINARY_ATTRIBUTE_BYTE_COUNT);
 
             // 3) Datei schreiben
             java.nio.file.Files.write(tmp.toPath(), bb.array());
 
-            System.out.println("Binary STL test file written to: " + tmp.getAbsolutePath());
+            System.out.println(
+                    TestRunnerConstants.BINARY_TEMP_FILE_WRITTEN_PREFIX
+                            + tmp.getAbsolutePath()
+            );
 
             // 4) Datei einlesen
             Polyhedron poly = STLParser.parse(tmp).getPolyhedron();
 
             // 5) Ergebnisse ausgeben
-            System.out.println("=== BINARY STL PARSE RESULT ===");
-            System.out.println("Triangle count: " + poly.triangleCount());
+            System.out.println(TestRunnerConstants.BINARY_PARSE_RESULT_HEADER);
+
+            System.out.println(
+                    TestRunnerConstants.BINARY_TRIANGLE_COUNT_PREFIX
+                            + poly.triangleCount()
+            );
 
             for (Triangle t : poly.getTriangles())
             {
                 System.out.println(t);
             }
 
-            System.out.println("Surface area: " + poly.surfaceArea());
-            System.out.println("Volume: " + poly.volume());
-        }
-        catch (Exception e)
+            System.out.println(
+                    TestRunnerConstants.BINARY_SURFACE_AREA_PREFIX
+                            + poly.surfaceArea()
+            );
+
+            System.out.println(
+                    TestRunnerConstants.BINARY_VOLUME_PREFIX
+                            + poly.volume()
+            );
+        } catch (Exception e)
         {
             e.printStackTrace();
         }

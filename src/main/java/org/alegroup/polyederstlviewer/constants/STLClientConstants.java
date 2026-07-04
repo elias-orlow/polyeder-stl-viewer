@@ -1,5 +1,12 @@
 package org.alegroup.polyederstlviewer.constants;
 
+/**
+ * Provides centralized constants for STL client socket communication,
+ * server connection messages, command input handling, and client error output.
+ * <p>
+ * This interface is used to avoid hard-coded literals inside the STL client
+ * implementation.
+ */
 public interface STLClientConstants
 {
     boolean AUTO_FLUSH_SERVER_WRITER = true;

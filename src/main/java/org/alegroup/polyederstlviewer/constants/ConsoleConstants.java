@@ -1,9 +1,14 @@
 package org.alegroup.polyederstlviewer.constants;
 
+/**
+ * Provides shared constants for console output, command-line argument handling,
+ * error exit codes, STL file parsing messages, and formatted result output.
+ * <p>
+ * This interface is used as a central place for literal values that are needed
+ * in console-related classes.
+ */
 public interface ConsoleConstants
 {
-
-
     public static final int ARG_COUNT_ZERO = 0;
     public static final int FIRST_INDEX = 0;
     public static final int INDEX_OFFSET = 1;

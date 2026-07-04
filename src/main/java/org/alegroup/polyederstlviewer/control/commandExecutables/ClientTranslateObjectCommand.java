@@ -16,7 +16,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class ClientTranslateObjectCommand implements CommandExecuter
 {
-
+    /**
+     * Sends a translation command (X, Y, Z) to the active STL client.
+     *
+     * @param console the console used to get the current context and output messages
+     * @param args    the command arguments containing the X, Y, and Z translation values
+     * @return {@code true} if the translation data is sent, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition Translation data is sent to the active client if arguments are valid
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

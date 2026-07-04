@@ -18,7 +18,15 @@ import java.util.Arrays;
  */
 public class ReadFileCommand implements CommandExecuter
 {
-
+    /**
+     * Reads an STL file from a provided path and renders it.
+     *
+     * @param console the console used for output messages
+     * @param args    the command arguments containing the STL file path
+     * @return {@code true} if the STL file is parsed and rendered, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition STL file is parsed and rendered if a valid path is provided
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

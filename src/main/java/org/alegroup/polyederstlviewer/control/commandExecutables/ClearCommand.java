@@ -10,7 +10,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class ClearCommand implements CommandExecuter
 {
-
+    /**
+     * Clears the current console output.
+     *
+     * @param console the console whose output is to be cleared
+     * @param args    the command arguments (ignored)
+     * @return {@code true} after the console has been cleared
+     * @precondition console != null AND args != null
+     * @postcondition The console output is cleared and {@code true} is returned
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

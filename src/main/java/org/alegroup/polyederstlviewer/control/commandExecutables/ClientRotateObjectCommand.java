@@ -16,7 +16,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class ClientRotateObjectCommand implements CommandExecuter
 {
-
+    /**
+     * Sends a rotation command (X, Y, Z) to the active STL client.
+     *
+     * @param console the console used to get the current context and output messages
+     * @param args    the command arguments containing the X, Y, and Z rotation values
+     * @return {@code true} if the rotation data is sent, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition Rotation data is sent to the active client if arguments are valid
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

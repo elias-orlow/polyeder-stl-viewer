@@ -15,7 +15,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class ClientConnectCommand implements CommandExecuter
 {
-
+    /**
+     * Connects to an STL server using hostname and port number.
+     *
+     * @param console the console used for output and context handling
+     * @param args    the command arguments containing hostname and port number
+     * @return {@code true} if the client context is loaded, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition Client is created and connected if arguments are valid
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

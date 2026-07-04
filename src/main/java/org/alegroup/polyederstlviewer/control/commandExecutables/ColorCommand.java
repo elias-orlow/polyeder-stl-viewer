@@ -12,7 +12,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class ColorCommand implements CommandExecuter
 {
-
+    /**
+     * Changes the console output color theme.
+     *
+     * @param console the console whose output area style is updated
+     * @param args    the command arguments containing the selected color
+     * @return {@code true} if the color is changed, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition Console output area style is updated if a valid color is provided
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

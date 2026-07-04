@@ -13,7 +13,15 @@ import org.alegroup.polyederstlviewer.model.console.ConsoleObject;
  */
 public class ClientStopCommand implements CommandExecuter
 {
-
+    /**
+     * Stops the active STL client associated with the current console context.
+     *
+     * @param console the console used to get and reset the current context
+     * @param args    the command arguments
+     * @return {@code true} if the client is stopped, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition Client is stopped and context is reset to MAIN if client exists
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {

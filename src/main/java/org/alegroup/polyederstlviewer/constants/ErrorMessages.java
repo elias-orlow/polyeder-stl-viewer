@@ -1,5 +1,12 @@
 package org.alegroup.polyederstlviewer.constants;
 
+/**
+ * Provides centralized error message constants for geometry validation,
+ * mesh construction, polyhedron creation, and STL file parsing.
+ * <p>
+ * This interface is used to avoid hard-coded error message literals
+ * throughout the application.
+ */
 public interface ErrorMessages
 {
     String POLYGONAL_CHAIN_INVALID_MESSAGE = "Edges do not form a polygonal chain.";
@@ -17,5 +24,4 @@ public interface ErrorMessages
     String POLYHEDRON_EMPTY = "Cannot create a mesh from an empty polyhedron.";
     String BINARY_STL_TOO_SHORT = "Binary STL too short";
     String FACET_INCOMPLETE = "Facet ended without 3 vertices";
-
 }

@@ -18,7 +18,15 @@ import java.util.Enumeration;
  */
 public class ServerIPCommand implements CommandExecuter
 {
-
+    /**
+     * Prints all available IP addresses grouped by network interface.
+     *
+     * @param console the console used for output messages
+     * @param args    the command arguments
+     * @return {@code true} if the IP addresses are printed, otherwise {@code false}
+     * @precondition console != null AND args != null
+     * @postcondition IP addresses are printed to the current console context
+     */
     @Override
     public boolean execute (ConsoleObject console, String[] args)
     {
