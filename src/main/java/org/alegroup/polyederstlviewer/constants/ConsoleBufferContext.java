@@ -10,17 +10,34 @@ package org.alegroup.polyederstlviewer.constants;
 public enum ConsoleBufferContext
 {
 
-    MAIN("main"),
-    SERVER("server"),
-    CLIENT("client");
+    MAIN(CommandConstants.CONTEXT_MAIN),
+    SERVER(CommandConstants.CONTEXT_SERVER),
+    CLIENT(CommandConstants.CONTEXT_CLIENT);
 
+    /**
+     * The textual identifier associated with this console buffer context.
+     */
     private final String context;
 
+    /**
+     * Creates a new console buffer context with the given textual identifier.
+     *
+     * @param context the string identifier for this context
+     * @precondition context != null
+     * @postcondition The enum instance stores the provided context string
+     */
     ConsoleBufferContext (String context)
     {
         this.context = context;
     }
 
+    /**
+     * Returns the textual identifier of this console buffer context.
+     *
+     * @return the context string
+     * @precondition none
+     * @postcondition A non-null string representing the context is returned
+     */
     public String context ()
     {
         return this.context;

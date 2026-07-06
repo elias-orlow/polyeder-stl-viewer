@@ -133,4 +133,25 @@ public interface CommandConstants
     String CLIENT_CONNECT_CONTEXT_SEPARATOR =
             "-";
 
+    // --- AllCommands (command names) ---
+    String CMD_CLEAR = "clear";
+    String CMD_COLOR = "color";
+    String CMD_NEW_COMMAND = "new command";
+    String CMD_READ_FILE = "read file";
+
+    String CMD_SERVER_START = "server start";
+    String CMD_SERVER_IP = "server ip";
+    String CMD_SERVER_RETURN = "server return";
+    String CMD_SERVER_STOP = "server stop";
+
+    String CMD_CLIENT_CONNECT = "client connect";
+    String CMD_CLIENT_DATA_SEND = "data send";
+    String CMD_CLIENT_STOP = "client stop";
+    String CMD_CLIENT_TRANSLATE = "object translate";
+    String CMD_CLIENT_ROTATE = "object rotate";
+
+    // --- ConsoleBufferContext ---
+    String CONTEXT_MAIN = "main";
+    String CONTEXT_SERVER = "server";
+    String CONTEXT_CLIENT = "client";
 }

@@ -15,23 +15,23 @@ public enum AllCommands
 {
 
     // Basic
-    CLEAR("clear", new ClearCommand()),
-    COLOR("color", new ColorCommand()),
-    NEW_COMMAND("new command", new NewCommandCommand()),
-    READ_FILE("read file", new ReadFileCommand()),
+    CLEAR(CommandConstants.CMD_CLEAR, new ClearCommand()),
+    COLOR(CommandConstants.CMD_COLOR, new ColorCommand()),
+    NEW_COMMAND(CommandConstants.CMD_NEW_COMMAND, new NewCommandCommand()),
+    READ_FILE(CommandConstants.CMD_READ_FILE, new ReadFileCommand()),
 
     // Server
-    SERVER_START("server start", new ServerStartCommand()),
-    SERVER_IP("server ip", new ServerIPCommand()),
-    SERVER_RETURN("server return", new ServerReturnCommand()),
-    SERVER_STOP("server stop", new ServerStopCommand()),
+    SERVER_START(CommandConstants.CMD_SERVER_START, new ServerStartCommand()),
+    SERVER_IP(CommandConstants.CMD_SERVER_IP, new ServerIPCommand()),
+    SERVER_RETURN(CommandConstants.CMD_SERVER_RETURN, new ServerReturnCommand()),
+    SERVER_STOP(CommandConstants.CMD_SERVER_STOP, new ServerStopCommand()),
 
     // Client
-    CLIENT_CONNECT("client connect", new ClientConnectCommand()),
-    CLIENT_DATA_SEND("data send", new ClientDataSendCommand()),
-    CLIENT_STOP("client stop", new ClientStopCommand()),
-    CLIENT_TRANSLATE("object translate", new ClientTranslateObjectCommand()),
-    CLIENT_ROTATE("object rotate", new ClientRotateObjectCommand());
+    CLIENT_CONNECT(CommandConstants.CMD_CLIENT_CONNECT, new ClientConnectCommand()),
+    CLIENT_DATA_SEND(CommandConstants.CMD_CLIENT_DATA_SEND, new ClientDataSendCommand()),
+    CLIENT_STOP(CommandConstants.CMD_CLIENT_STOP, new ClientStopCommand()),
+    CLIENT_TRANSLATE(CommandConstants.CMD_CLIENT_TRANSLATE, new ClientTranslateObjectCommand()),
+    CLIENT_ROTATE(CommandConstants.CMD_CLIENT_ROTATE, new ClientRotateObjectCommand());
 
     private final String methodName;
     private final CommandExecuter command;
